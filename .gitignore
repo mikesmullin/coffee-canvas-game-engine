@@ -1,0 +1,7 @@
+/LICENSE
+/README.md
+/test/
+/node_modules/
+/public/behaviors/*.coffee
+/public/stylesheets/*.styl
+/publish.sh
