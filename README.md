@@ -1,4 +1,4 @@
-coffee-canvas-game-engine
+Coffee Canvas Game Engine
 =========================
 
-Game Engine with CoffeeScript + HTML5 Canvas 
+* [`src/public/behaviors/global.coffee`](src/public/behaviors/global.coffee) Main code
