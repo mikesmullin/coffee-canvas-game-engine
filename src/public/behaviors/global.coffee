@@ -204,35 +204,40 @@ drawMap = (map) ->
       when 'player2' then '#ff0000'
       else 'yellow'
 
-    l = 0
-    for nil, i in verticies by 3
+    zoom = (p) ->
+      #xs= 10* Video.ctx.canvas.width * p.x / map.width
+      #y = 10* Video.ctx.canvas.height * (1 - p.y / map.height)
+      x: 40 * (p.x+8), y: 40 * (p.y + 6), z: p.z
+
+    for nil, i in verticies by 9
       # parse coordinates
-      continue if i+3 is verticies.length
-      p =
+      p = [zoom({
         x: verticies[i]
         y: verticies[i+1]
         z: verticies[i+2]
-      #console.log p
+      }), zoom({
+        x: verticies[i+3]
+        y: verticies[i+4]
+        z: verticies[i+5]
+      }), zoom({
+        x: verticies[i+6]
+        y: verticies[i+7]
+        z: verticies[i+8]
+      })]
+      console.log "##{(i)/9}: "+ JSON.stringify p
 
-      #xs= 10* Video.ctx.canvas.width * p.x / map.width
-      #y = 10* Video.ctx.canvas.height * (1 - p.y / map.height)
-      x = (10 * p.x) + 100 + 100; y = (10 * p.y) + 75 + 100
+      step = Math.ceil((255-51)/19)
+      color = (51 + (step * (i/9))).toString(16)
+      Video.ctx.strokeStyle = "#{color}#{color}#{color}"
 
-      if l % 3 is 0
-        Video.ctx.beginPath()
-        Video.ctx.moveTo x, y
-      else
-        Video.ctx.lineTo x, y
-        Video.ctx.stroke()
-        console.log "##{l} lineTo #{x}, #{y}, #{p.z}"
-        #debugger
+      Video.ctx.beginPath()
+      Video.ctx.moveTo p[0].x, p[0].y
+      Video.ctx.lineTo p[1].x, p[1].y
+      Video.ctx.lineTo p[2].x, p[2].y
+      Video.ctx.closePath()
+      Video.ctx.stroke()
 
-        Video.ctx.beginPath()
-        Video.ctx.moveTo x, y
-
-      l++
-
-
+      #debugger
 
 
 
