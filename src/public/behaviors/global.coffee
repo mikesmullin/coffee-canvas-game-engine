@@ -147,65 +147,73 @@ class Box extends Behavior
 
 
 
+mapRoot = '/models/map1'
+map = 'map1.gltf'
 
+getFile = (type, url, cb) ->
+  xhr = new XMLHttpRequest()
+  xhr.onreadystatechange = ->
+    if @readyState is 4 and @status is 200
+      cb @response
+  xhr.open 'GET', url
+  xhr.responseType = type
+  xhr.send()
 
+getAttrVal = (data, accessor_id, cb) ->
+  accessor = data.accessors[accessor_id]
+  bufferView = data.bufferViews[accessor.bufferView]
+  buffer = data.buffers[bufferView.buffer]
 
+  a = (next) ->
+    next() if buffer.data
+    getFile 'blob', "#{mapRoot}/#{buffer.uri}", (bin) ->
+      console.log bin, typeof bin
+      console.log accessor: accessor, bufferView: bufferView, buffer: buffer
+      if buffer.type is 'arraybuffer'
+        reader = new FileReader
+        reader.addEventListener 'loadend', ->
+          buffer.data = reader.result
+          next()
+        reader.readAsArrayBuffer bin
 
+  b = ->
+    viewSlice = buffer.data.slice bufferView.byteOffset, bufferView.byteLength
+    attrSlice = viewSlice.slice accessor.byteOffset, accessor.byteStride * accessor.count
+    switch accessor.type
+      when 'VEC3'
+        cb new Float32Array attrSlice
 
+  a b
+
+loadMap = (map, cb) ->
+  getFile 'application/json', map, (data) ->
+    data = JSON.parse data
+    console.log data
+    getAttrVal data, data.meshes['wall-mesh'].primitives[0].attributes.POSITION, (verticies) ->
+      cb verticies
 
 drawMap = (map) ->
-  #for name of map
-  #  objs = map[name]
-  #  if objs[0] and objs[0].faces
-  #    ctx.fillStyle = 'red'
-  #    i = 0
+  loadMap "#{mapRoot}/#{map}", (verticies) ->
+    console.log verticies
 
-  #    while i < objs.length
-  #      obj = objs[i]
-  #      f = 0
-
-  #      while f < obj.faces.length
-  #        face = obj.faces[f]
-  #        ctx.beginPath()
-  #        v = 0
-
-  #        while v < face.length
-  #          vertice = obj.vertices[face[v]]
-  #          x = ctx.canvas.width * vertice.x / map.width
-  #          y = ctx.canvas.height * (1 - vertice.y / map.height)
-  #          if v is 0
-  #            ctx.moveTo x, y
-  #          else
-  #            ctx.lineTo x, y
-  #          ++v
-  #        ctx.fill()
-  #        ++f
-  #      ++i
-  #    addLegend color, name, true
-
-  console.log map
-
-  for name, node of map.nodes
-    continue if name is 'node_3' # not sure what to do with this yet
-    # parse coordinates
-    points = []
-    for nil, i in node.matrix by 3
-      points.push
-        x: parseFloat node.matrix[i]
-        y: parseFloat node.matrix[i+1]
-        z: parseFloat node.matrix[i+2]
-
-    console.log "drawing #{name}..."
+    Video.ctx.lineWidth = 1
     Video.ctx.strokeStyle = switch name
       when 'wall' then '#0000ff'
       when 'player1' then '#00ff00'
       when 'player2' then '#ff0000'
-    Video.ctx.lineWidth = 1
+      else 'blue'
+
     fp = null
-    for p in points
+    for nil, i in verticies by 3
+      # parse coordinates
+      p =
+        x: verticies[i]
+        y: verticies[i+1]
+        z: verticies[i+2]
+
       #x = 10* Video.ctx.canvas.width * p.x / map.width
       #y = 10* Video.ctx.canvas.height * (1 - p.y / map.height)
-      x = (10 * p.x) + 100; y = (10 * p.y) + 100
+      x = (10 * p.x) + 75; y = (10 * p.y) + 75
       unless fp
         Video.ctx.beginPath()
         console.log "moveTo #{x}, #{y}"
@@ -218,8 +226,7 @@ drawMap = (map) ->
         Video.ctx.beginPath()
         console.log "moveTo #{x}, #{y}"
         Video.ctx.moveTo x, y
-      debugger
-    fp.x = (10 * fp.x) + 100; fp.y = (10 * fp.y) + 100
+    fp.x = (10 * fp.x) + 75; fp.y = (10 * fp.y) + 75
     Video.ctx.lineTo fp.x, fp.y
     Video.ctx.stroke()
 
