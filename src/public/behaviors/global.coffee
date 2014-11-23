@@ -218,37 +218,24 @@ drawMap = (map) ->
       #y = 10* Video.ctx.canvas.height * (1 - p.y / map.height)
       x = (10 * p.x) + 100 + 100; y = (10 * p.y) + 75 + 100
 
-      if -1 isnt [
-          #1, 2,
-          3, 4,
-          5, 6, 7, 8,
-          15, 16,
-          #17
-          #18,
-          19, 20,
-          28, 29,
-          33, 34,
-          38, 39,
-          45, 46,
-          49, 50,
-          52, 53
-        ].indexOf l++
-          Video.ctx.strokeStyle = 'yellow'
+      # 0 - 255
+      # step 255/30
+      # + 51
+      step = Math.ceil((255-51)/70) # 7
+      color = (51 + (step * l++)).toString(16)
+      Video.ctx.strokeStyle = "#{color}#{color}#{color}"
+      Video.ctx.strokeRect x, y, 2, 2
+      console.log "##{l} strokeRect #{color} #{x}, #{y}, #{p.z}"
 
-          Video.ctx.lineTo x, y
-          Video.ctx.stroke()
-          console.log "##{l} lineTo #{x}, #{y}, #{p.z}"
-          Video.ctx.beginPath()
-          #console.log "moveTo #{x}, #{y}"
-          Video.ctx.moveTo x, y
-      #else
-      #  Video.ctx.strokeStyle = 'red'
-      #  Video.ctx.strokeRect x, y, 2, 2
-      #  console.log "##{l} strokeRect #{x}, #{y}, #{p.z}"
-      #  Video.ctx.beginPath()
-      #  Video.ctx.moveTo pp.x, pp.y if pp
+      #Video.ctx.strokeStyle = 'yellow'
+      #Video.ctx.lineTo x, y
+      #Video.ctx.stroke()
+      #console.log "##{l} lineTo #{x}, #{y}, #{p.z}"
+      #Video.ctx.beginPath()
+      ##console.log "moveTo #{x}, #{y}"
+      #Video.ctx.moveTo x, y
 
-      #debugger
+      debugger
 
 
 
