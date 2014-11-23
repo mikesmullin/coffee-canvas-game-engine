@@ -177,8 +177,8 @@ getAttrVal = (data, accessor_id, cb) ->
         reader.readAsArrayBuffer bin
 
   b = ->
-    viewSlice = buffer.data.slice bufferView.byteOffset, bufferView.byteLength
-    attrSlice = viewSlice.slice accessor.byteOffset, accessor.byteStride * accessor.count
+    viewSlice = buffer.data.slice bufferView.byteOffset, bufferView.byteOffset + bufferView.byteLength
+    attrSlice = viewSlice.slice accessor.byteOffset, accessor.byteOffset + (accessor.byteStride * accessor.count)
     switch accessor.type
       when 'VEC3'
         cb new Float32Array attrSlice
@@ -189,7 +189,7 @@ loadMap = (map, cb) ->
   getFile 'application/json', map, (data) ->
     data = JSON.parse data
     console.log data
-    getAttrVal data, data.meshes['player1-mesh'].primitives[0].attributes.POSITION, (verticies) ->
+    getAttrVal data, data.meshes['wall-mesh'].primitives[0].attributes.POSITION, (verticies) ->
       cb verticies
 
 drawMap = (map) ->
