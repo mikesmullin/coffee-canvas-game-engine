@@ -207,29 +207,46 @@ drawMap = (map) ->
     l = 0
     for nil, i in verticies by 3
       # parse coordinates
-      continue if i+3 is verticies.length 
+      continue if i+3 is verticies.length
       p =
         x: verticies[i]
         y: verticies[i+1]
         z: verticies[i+2]
-      console.log p
+      #console.log p
 
       #x = 10* Video.ctx.canvas.width * p.x / map.width
       #y = 10* Video.ctx.canvas.height * (1 - p.y / map.height)
-      x = (10 * p.x) + 100; y = (10 * p.y) + 75
-      console.log "##{l} lineTo #{x}, #{y}"
+      x = (10 * p.x) + 100 + 100; y = (10 * p.y) + 75 + 100
 
-      #if -1 is [1, 2, 4, 5, 6, 7, 8, 15, 16, 18, 19, 20, 28, 29, 33, 34, 38, 39, 45, 46, 49, 50, 52, 53].indexOf l++
-      #  Video.ctx.strokeStyle = 'yellow'
+      if -1 isnt [
+          #1, 2,
+          3, 4,
+          5, 6, 7, 8,
+          15, 16,
+          #17
+          #18,
+          19, 20,
+          28, 29,
+          33, 34,
+          38, 39,
+          45, 46,
+          49, 50,
+          52, 53
+        ].indexOf l++
+          Video.ctx.strokeStyle = 'yellow'
 
-      #  Video.ctx.lineTo x, y
-      #  Video.ctx.stroke()
-      #  Video.ctx.beginPath()
-      #  #console.log "moveTo #{x}, #{y}"
-      #  Video.ctx.moveTo x, y
+          Video.ctx.lineTo x, y
+          Video.ctx.stroke()
+          console.log "##{l} lineTo #{x}, #{y}, #{p.z}"
+          Video.ctx.beginPath()
+          #console.log "moveTo #{x}, #{y}"
+          Video.ctx.moveTo x, y
       #else
-      Video.ctx.strokeStyle = 'red'
-      Video.ctx.strokeRect x, y, 2, 2
+      #  Video.ctx.strokeStyle = 'red'
+      #  Video.ctx.strokeRect x, y, 2, 2
+      #  console.log "##{l} strokeRect #{x}, #{y}, #{p.z}"
+      #  Video.ctx.beginPath()
+      #  Video.ctx.moveTo pp.x, pp.y if pp
 
       #debugger
 
