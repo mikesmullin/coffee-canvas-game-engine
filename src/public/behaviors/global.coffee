@@ -186,16 +186,16 @@ getAttrVal = (data, accessor_id, cb) ->
   a b
 
 loadMap = (map, cb) ->
-  getFile 'application/json', map, (data) ->
-    data = JSON.parse data
+  getFile 'application/json', map, (response) ->
+    data = JSON.parse response
     console.log data
-    getAttrVal data, data.meshes['wall-mesh'].primitives[0].attributes.POSITION, (verticies) ->
-      cb verticies
+    for name, mesh of data.meshes
+      getAttrVal data, mesh.primitives[0].attributes.POSITION, (vertices) ->
+        cb name, vertices
 
 drawMap = (map) ->
-  loadMap "#{mapRoot}/#{map}", (verticies) ->
-    console.log verticies
-    console.log 'drawing...'
+  loadMap "#{mapRoot}/#{map}", (name, vertices) ->
+    console.log "drawing #{name}..."
 
     Video.ctx.lineWidth = 1
     Video.ctx.strokeStyle = switch name
@@ -209,20 +209,20 @@ drawMap = (map) ->
       #y = 10* Video.ctx.canvas.height * (1 - p.y / map.height)
       x: 40 * (p.x+8), y: 40 * (p.y + 6), z: p.z
 
-    for nil, i in verticies by 9
+    for nil, i in vertices by 9
       # parse coordinates
       p = [zoom({
-        x: verticies[i]
-        y: verticies[i+1]
-        z: verticies[i+2]
+        x: vertices[i]
+        y: vertices[i+1]
+        z: vertices[i+2]
       }), zoom({
-        x: verticies[i+3]
-        y: verticies[i+4]
-        z: verticies[i+5]
+        x: vertices[i+3]
+        y: vertices[i+4]
+        z: vertices[i+5]
       }), zoom({
-        x: verticies[i+6]
-        y: verticies[i+7]
-        z: verticies[i+8]
+        x: vertices[i+6]
+        y: vertices[i+7]
+        z: vertices[i+8]
       })]
       console.log "##{(i)/9}: "+ JSON.stringify p
 
