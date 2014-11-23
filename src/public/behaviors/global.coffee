@@ -189,46 +189,43 @@ loadMap = (map, cb) ->
   getFile 'application/json', map, (data) ->
     data = JSON.parse data
     console.log data
-    getAttrVal data, data.meshes['wall-mesh'].primitives[0].attributes.POSITION, (verticies) ->
+    getAttrVal data, data.meshes['player1-mesh'].primitives[0].attributes.POSITION, (verticies) ->
       cb verticies
 
 drawMap = (map) ->
   loadMap "#{mapRoot}/#{map}", (verticies) ->
     console.log verticies
+    console.log 'drawing...'
 
     Video.ctx.lineWidth = 1
     Video.ctx.strokeStyle = switch name
       when 'wall' then '#0000ff'
       when 'player1' then '#00ff00'
       when 'player2' then '#ff0000'
-      else 'blue'
+      else 'yellow'
 
-    fp = null
     for nil, i in verticies by 3
       # parse coordinates
+      continue if i+3 is verticies.length 
       p =
         x: verticies[i]
         y: verticies[i+1]
         z: verticies[i+2]
 
+      console.log p
+
       #x = 10* Video.ctx.canvas.width * p.x / map.width
       #y = 10* Video.ctx.canvas.height * (1 - p.y / map.height)
       x = (10 * p.x) + 75; y = (10 * p.y) + 75
-      unless fp
-        Video.ctx.beginPath()
-        console.log "moveTo #{x}, #{y}"
-        Video.ctx.moveTo x, y
-        fp = p
-      else
-        console.log "lineTo #{x}, #{y}"
-        Video.ctx.lineTo x, y
-        Video.ctx.stroke()
-        Video.ctx.beginPath()
-        console.log "moveTo #{x}, #{y}"
-        Video.ctx.moveTo x, y
-    fp.x = (10 * fp.x) + 75; fp.y = (10 * fp.y) + 75
-    Video.ctx.lineTo fp.x, fp.y
-    Video.ctx.stroke()
+      console.log "lineTo #{x}, #{y}"
+      Video.ctx.lineTo x, y
+      Video.ctx.stroke()
+      Video.ctx.beginPath()
+      #console.log "moveTo #{x}, #{y}"
+      Video.ctx.moveTo x, y
+    #fp.x = (10 * fp.x) + 75; fp.y = (10 * fp.y) + 75
+    #Video.ctx.lineTo fp.x, fp.y
+    #Video.ctx.stroke()
 
 
 
