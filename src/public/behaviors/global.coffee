@@ -214,28 +214,24 @@ drawMap = (map) ->
         z: verticies[i+2]
       #console.log p
 
-      #x = 10* Video.ctx.canvas.width * p.x / map.width
+      #xs= 10* Video.ctx.canvas.width * p.x / map.width
       #y = 10* Video.ctx.canvas.height * (1 - p.y / map.height)
       x = (10 * p.x) + 100 + 100; y = (10 * p.y) + 75 + 100
 
-      # 0 - 255
-      # step 255/30
-      # + 51
-      step = Math.ceil((255-51)/70) # 7
-      color = (51 + (step * l++)).toString(16)
-      Video.ctx.strokeStyle = "#{color}#{color}#{color}"
-      Video.ctx.strokeRect x, y, 2, 2
-      console.log "##{l} strokeRect #{color} #{x}, #{y}, #{p.z}"
+      if l % 3 is 0
+        Video.ctx.beginPath()
+        Video.ctx.moveTo x, y
+      else
+        Video.ctx.lineTo x, y
+        Video.ctx.stroke()
+        console.log "##{l} lineTo #{x}, #{y}, #{p.z}"
+        #debugger
 
-      #Video.ctx.strokeStyle = 'yellow'
-      #Video.ctx.lineTo x, y
-      #Video.ctx.stroke()
-      #console.log "##{l} lineTo #{x}, #{y}, #{p.z}"
-      #Video.ctx.beginPath()
-      ##console.log "moveTo #{x}, #{y}"
-      #Video.ctx.moveTo x, y
+        Video.ctx.beginPath()
+        Video.ctx.moveTo x, y
 
-      debugger
+      l++
+
 
 
 
