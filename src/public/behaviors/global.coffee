@@ -24,6 +24,7 @@ class Engine
   @running: true
   @run: ->
     console.log 'Starting at '+(new Date())
+    @startup()
 
     updateInterval = 1000/VideoSettings.fps
     maxUpdateLatency = updateInterval * 1
@@ -32,7 +33,7 @@ class Engine
     maxSkipFrames  = 5
     nextUpdate     = Time.now()
     framesRendered = 0
-    setInterval (-> console.log "#{framesRendered}fps"; framesRendered = 0), 1000
+    #setInterval (-> console.log "#{framesRendered}fps"; framesRendered = 0), 1000
 
     tick = =>
       next = => requestAnimationFrame tick if @running # loop no more than 60fps
@@ -69,7 +70,9 @@ class Engine
           return delay sleepTime, next
 
       next()
-    tick()
+    #tick()
+
+    @draw()
 
   @stop: ->
   @startup: ->
@@ -78,9 +81,13 @@ class Engine
 
   @draw: ->
     Video.pixelBuf = Video.ctx.createImageData Video.canvas.width, Video.canvas.height
-    for i in [0...10]
-      Video.drawPixel Math.rand(0, Video.canvas.width), Math.rand(0, Video.canvas.height), 255, 0, 0, 255
+
+
+    #for i in [0...10]
+    #  Video.drawPixel Math.rand(0, Video.canvas.width), Math.rand(0, Video.canvas.height), 255, 0, 0, 255
+
     Video.updateCanvas()
+    drawMap map
 
 
 # 3D Space
@@ -125,4 +132,110 @@ class Box extends Behavior
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+drawMap = (map) ->
+  #for name of map
+  #  objs = map[name]
+  #  if objs[0] and objs[0].faces
+  #    ctx.fillStyle = 'red'
+  #    i = 0
+
+  #    while i < objs.length
+  #      obj = objs[i]
+  #      f = 0
+
+  #      while f < obj.faces.length
+  #        face = obj.faces[f]
+  #        ctx.beginPath()
+  #        v = 0
+
+  #        while v < face.length
+  #          vertice = obj.vertices[face[v]]
+  #          x = ctx.canvas.width * vertice.x / map.width
+  #          y = ctx.canvas.height * (1 - vertice.y / map.height)
+  #          if v is 0
+  #            ctx.moveTo x, y
+  #          else
+  #            ctx.lineTo x, y
+  #          ++v
+  #        ctx.fill()
+  #        ++f
+  #      ++i
+  #    addLegend color, name, true
+
+  console.log map
+
+  for name, node of map.nodes
+    continue if name is 'node_3' # not sure what to do with this yet
+    # parse coordinates
+    points = []
+    for nil, i in node.matrix by 3
+      points.push
+        x: parseFloat node.matrix[i]
+        y: parseFloat node.matrix[i+1]
+        z: parseFloat node.matrix[i+2]
+
+    console.log "drawing #{name}..."
+    Video.ctx.strokeStyle = switch name
+      when 'wall' then '#0000ff'
+      when 'player1' then '#00ff00'
+      when 'player2' then '#ff0000'
+    Video.ctx.lineWidth = 1
+    fp = null
+    for p in points
+      #x = 10* Video.ctx.canvas.width * p.x / map.width
+      #y = 10* Video.ctx.canvas.height * (1 - p.y / map.height)
+      x = (10 * p.x) + 100; y = (10 * p.y) + 100
+      unless fp
+        Video.ctx.beginPath()
+        console.log "moveTo #{x}, #{y}"
+        Video.ctx.moveTo x, y
+        fp = p
+      else
+        console.log "lineTo #{x}, #{y}"
+        Video.ctx.lineTo x, y
+        Video.ctx.stroke()
+        Video.ctx.beginPath()
+        console.log "moveTo #{x}, #{y}"
+        Video.ctx.moveTo x, y
+      debugger
+    fp.x = (10 * fp.x) + 100; fp.y = (10 * fp.y) + 100
+    Video.ctx.lineTo fp.x, fp.y
+    Video.ctx.stroke()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Engine.run()
+
