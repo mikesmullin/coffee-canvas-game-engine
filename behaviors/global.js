@@ -10,7 +10,7 @@ delay = function(s, f) {
   return setTimeout(f, s);
 };
 
-mapRoot = '/models/map1';
+mapRoot = 'models/map1';
 
 map = 'map1.gltf';
 

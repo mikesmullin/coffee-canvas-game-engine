@@ -1,6 +1,6 @@
 Math.rand = (m,x) -> Math.round(Math.random() * (x-m)) + m
 delay = (s, f) -> setTimeout f, s
-mapRoot = '/models/map1'
+mapRoot = 'models/map1'
 map = 'map1.gltf'
 objects = {}
 
