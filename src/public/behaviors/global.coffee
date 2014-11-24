@@ -78,15 +78,15 @@ class Engine
 
   @stop: ->
   @startup: (cb) ->
-    focused = false
+    #focused = false
     step = 10
     document.addEventListener 'mousedown', ((e) ->
       focused = e.target is Video.canvas
-      return unless focused
+      #return unless focused
       #console.log 'buttons: ', e.buttons
     ), true
     document.addEventListener 'keydown', ((e) ->
-      return unless focused
+      #return unless focused
       #console.log 'keyCode: ', e.keyCode
       switch e.keyCode
         when 87 # w
