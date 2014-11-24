@@ -190,19 +190,20 @@ loadMap = (map, cb) ->
     data = JSON.parse response
     console.log data
     for name, mesh of data.meshes
-      getAttrVal data, mesh.primitives[0].attributes.POSITION, (vertices) ->
-        cb name, vertices
+      color = ''
+      rgba = data.materials[mesh.primitives[0].material].instanceTechnique.values?.diffuse
+      color = "rgba(#{Math.ceil 60+(255*rgba[0])}, #{Math.ceil 30+(255*rgba[1])}, #{Math.ceil 0+(255*rgba[2])}, #{Math.round rgba[3], 1})"
+      ((color) ->
+        getAttrVal data, mesh.primitives[0].attributes.POSITION, (vertices) ->
+          cb name, color, vertices
+      )(color)
 
 drawMap = (map) ->
-  loadMap "#{mapRoot}/#{map}", (name, vertices) ->
+  loadMap "#{mapRoot}/#{map}", (name, fill_color, vertices) ->
     console.log "drawing #{name}..."
 
     Video.ctx.lineWidth = 1
-    Video.ctx.strokeStyle = switch name
-      when 'wall' then '#0000ff'
-      when 'player1' then '#00ff00'
-      when 'player2' then '#ff0000'
-      else 'yellow'
+    Video.ctx.strokeStyle = 'rgba(255, 255, 255, .15)'
 
     zoom = (p) ->
       #xs= 10* Video.ctx.canvas.width * p.x / map.width
@@ -226,15 +227,13 @@ drawMap = (map) ->
       })]
       console.log "##{(i)/9}: "+ JSON.stringify p
 
-      step = Math.ceil((255-51)/19)
-      color = (51 + (step * (i/9))).toString(16)
-      Video.ctx.strokeStyle = "#{color}#{color}#{color}"
-
+      Video.ctx.fillStyle = fill_color
       Video.ctx.beginPath()
       Video.ctx.moveTo p[0].x, p[0].y
       Video.ctx.lineTo p[1].x, p[1].y
       Video.ctx.lineTo p[2].x, p[2].y
       Video.ctx.closePath()
+      Video.ctx.fill()
       Video.ctx.stroke()
 
       #debugger
