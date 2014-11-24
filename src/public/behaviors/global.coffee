@@ -76,9 +76,32 @@ class Engine
 
   @stop: ->
   @startup: (cb) ->
+    focused = false
+    document.addEventListener 'mousedown', ((e) ->
+      focused = e.target is Video.canvas
+      return unless focused
+      #console.log 'buttons: ', e.buttons
+    ), true
+    document.addEventListener 'keydown', ((e) ->
+      return unless focused
+      #console.log 'keyCode: ', e.keyCode
+      switch e.keyCode
+        when 87 # w
+          # TODO: use MonoBehavior style Transform with Vector here
+          1 #objects['player1'].x
+        when 65 # a
+          1
+        when 83 # s
+          1
+        when 68 # d
+          1
+    ), true
     initMap map, cb
   @shutdown: ->
+
+
   @update: ->
+    
 
   @draw: ->
     #Video.pixelBuf = Video.ctx.createImageData Video.canvas.width, Video.canvas.height
@@ -293,13 +316,36 @@ initMap = (map, cb) ->
       name: name
       vertices: []
       fill: fill_color
+      x: null
+      y: null
+      z: null
+      width: null
+      height: null
+      depth: null
+      bounding_box:
+        min: [null,null,null]
+        max: [null,null,null]
     for nil, i in vertices by 3
-      object.vertices.push zoom(transform { # transform coordinates
+      p = zoom(transform { # transform coordinates
         x: vertices[i]
         y: vertices[i+1]
         z: vertices[i+2]
       })
+      object.bounding_box.min[0] = Math.min p.x, object.bounding_box.min[0] or p.x
+      object.bounding_box.min[1] = Math.min p.y, object.bounding_box.min[1] or p.y
+      object.bounding_box.min[2] = Math.min p.z, object.bounding_box.min[2] or p.z
+      object.bounding_box.max[0] = Math.max p.x, object.bounding_box.max[0] or p.x
+      object.bounding_box.max[1] = Math.max p.y, object.bounding_box.max[1] or p.y
+      object.bounding_box.max[2] = Math.max p.z, object.bounding_box.max[2] or p.z
+      object.vertices.push p
+    object.width = object.bounding_box.max[0] - object.bounding_box.min[0]
+    object.height = object.bounding_box.max[1] - object.bounding_box.min[1]
+    object.depth = object.bounding_box.max[2] - object.bounding_box.min[2]
+    object.x = object.bounding_box.min[0] + (object.width / 2)
+    object.y = object.bounding_box.min[1] + (object.height / 2)
+    object.z = object.bounding_box.min[2] + (object.depth / 2)
     objects[name] = object
+    console.log objects[name]
 
 drawMap = ->
   for name, object of objects
