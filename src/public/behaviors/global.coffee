@@ -35,7 +35,7 @@ class Engine
       maxSkipFrames  = 5
       nextUpdate     = Time.now()
       framesRendered = 0
-      setInterval (-> console.log "#{framesRendered}fps"; framesRendered = 0), 1000
+      #setInterval (-> console.log "#{framesRendered}fps"; framesRendered = 0), 1000
 
       tick = =>
         next = => requestAnimationFrame tick if @running # loop no more than 60fps
@@ -72,7 +72,8 @@ class Engine
             return delay sleepTime, next
 
         next()
-      tick()
+      #tick()
+      @draw()
 
   @stop: ->
   @startup: (cb) ->
@@ -101,7 +102,7 @@ class Engine
 
 
   @update: ->
-    
+
 
   @draw: ->
     #Video.pixelBuf = Video.ctx.createImageData Video.canvas.width, Video.canvas.height
@@ -267,10 +268,10 @@ loadMap = (map, done_cb, cb) ->
           color = ''
           rgba = data.materials[data.meshes[id].primitives[0].material].instanceTechnique.values?.diffuse
           color = "rgba(#{Math.ceil 60+(255*rgba[0])}, #{Math.ceil 30+(255*rgba[1])}, #{Math.ceil 0+(255*rgba[2])}, #{Math.round rgba[3], 1})"
-          ((id, matrixHierarchy, color) ->
+          ((id, h, color) ->
             flow.serial (next) ->
               getAttrVal data, data.meshes[id].primitives[0].attributes.POSITION, (vertices) ->
-                cb data.meshes[id].name, matrixHierarchy, color, vertices
+                cb data.meshes[id].name, h, color, vertices
                 next()
           )(id, matrixHierarchy.slice(0), color)
         matrixHierarchy.pop()
@@ -279,38 +280,7 @@ loadMap = (map, done_cb, cb) ->
 
 
 initMap = (map, cb) ->
-  loadMap "#{mapRoot}/#{map}", cb, (name, hierarchy, fill_color, vertices) ->
-    hierarchy.reverse()
-    # flip y-axis so we're looking at the same perspective as blender's Front Ortho
-    hierarchy.push [
-      1, 0, 0, 0
-      0, -1, 0, 0,
-      0, 0, 1, 0,
-      0, 0, 0, 1
-    ]
-    #hierarchy.push [ # Rotate 45 CCW for fun
-    #  Math.cos(45), -1 * Math.sin(45), 0, 0,
-    #  Math.sin(45), Math.cos(45), 0, 0,
-    #  0, 0, 1, 0,
-    #  0, 0, 0, 1
-    #]
-    transform = (p) ->
-      for matrix in hierarchy
-        [p.x, p.y, p.z] = dotProductVec4 [p.x, p.y, p.z, 1], matrix
-      return p
-      ## poor man's dot product *<:o)~
-      #return {
-      #  x: (p.x * hierarchy[0][0])  + hierarchy[0][12]
-      #  y: (p.y * hierarchy[0][5])  + hierarchy[0][13]
-      #  z: (p.z * hierarchy[0][10]) + hierarchy[0][14]
-      #}
-
-    zoom = (p) ->
-      #xs= 10* Video.ctx.canvas.width * p.x / map.width
-      #y = 10* Video.ctx.canvas.height * (1 - p.y / map.height)
-      #x: (30 * p.x) + 300, y: (30 * p.y) + 300, z: p.z
-      x: 40*(p.x+4), y: 40*(p.y+6.5), z: 0
-
+  loadMap "#{mapRoot}/#{map}", cb, (name, h, fill_color, vertices) ->
     # push all vertices into a new game object
     object =
       name: name
@@ -322,30 +292,82 @@ initMap = (map, cb) ->
       width: null
       height: null
       depth: null
-      bounding_box:
-        min: [null,null,null]
-        max: [null,null,null]
+      min: [null,null,null]
+      max: [null,null,null]
+
+    [world, local] = h
+    h = [
+      local
+
+      world
+
+      ## rotate to top orthogonal perspective
+      #[
+      #  1, 0, 0, 0,
+      #  0, Math.cos(90), -1 * Math.sin(90), 0,
+      #  0, Math.sin(90), Math.cos(90), 0,
+      #  0, 0, 0, 1
+      #]
+
+      # flip along x-axis
+      [
+        1, 0, 0, 0
+        0, -1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+      ]
+
+      # and zoom to fit canvas
+      [
+        40, 0, 0, 0
+        0, 40, 0, 0,
+        0, 0, 40, 0,
+        0, 0, 0, 1
+      ]
+
+      # center
+      [
+        1, 0, 0, 0
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        170, 270, 0, 1
+      ]
+
+    ]
+
+    #xmin = ymin = zmin = xmax = ymax = zmax = null
     for nil, i in vertices by 3
-      p = zoom(transform { # transform coordinates
+      p = transform h, {
         x: vertices[i]
         y: vertices[i+1]
         z: vertices[i+2]
-      })
-      object.bounding_box.min[0] = Math.min p.x, object.bounding_box.min[0] or p.x
-      object.bounding_box.min[1] = Math.min p.y, object.bounding_box.min[1] or p.y
-      object.bounding_box.min[2] = Math.min p.z, object.bounding_box.min[2] or p.z
-      object.bounding_box.max[0] = Math.max p.x, object.bounding_box.max[0] or p.x
-      object.bounding_box.max[1] = Math.max p.y, object.bounding_box.max[1] or p.y
-      object.bounding_box.max[2] = Math.max p.z, object.bounding_box.max[2] or p.z
+      }
+      #xmin = Math.min p.x, if null is xmin then p.x else xmin
+      #ymin = Math.min p.y, if null is ymin then p.y else ymin
+      #zmin = Math.min p.z, if null is zmin then p.z else zmin
+      #xmax = Math.max p.x, if null is xmax then p.x else xmax
+      #ymax = Math.max p.y, if null is ymax then p.y else ymax
+      #zmax = Math.max p.z, if null is zmax then p.z else zmax
       object.vertices.push p
-    object.width = object.bounding_box.max[0] - object.bounding_box.min[0]
-    object.height = object.bounding_box.max[1] - object.bounding_box.min[1]
-    object.depth = object.bounding_box.max[2] - object.bounding_box.min[2]
-    object.x = object.bounding_box.min[0] + (object.width / 2)
-    object.y = object.bounding_box.min[1] + (object.height / 2)
-    object.z = object.bounding_box.min[2] + (object.depth / 2)
+
+    #object.width = object.bounding_box.max[0] - object.bounding_box.min[0]
+    #object.height = object.bounding_box.max[1] - object.bounding_box.min[1]
+    #object.depth = object.bounding_box.max[2] - object.bounding_box.min[2]
+    #object.x = object.bounding_box.min[0]
+    #object.y = object.bounding_box.min[1]
+    #object.z = object.bounding_box.min[2]
+
     objects[name] = object
-    console.log objects[name]
+    _v = ''
+    for v in object.vertices
+      _v += "[#{v.x},#{v.y},#{v.z}],"
+    console.log "#{object.name}: #{_v}"
+
+
+transform = (h, p) ->
+  for matrix in h
+    [p.x, p.y, p.z] = dotProductVec4 [p.x, p.y, p.z, 1], matrix
+  return p
 
 drawMap = ->
   for name, object of objects
