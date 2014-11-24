@@ -35,7 +35,7 @@ class Engine
       maxSkipFrames  = 5
       nextUpdate     = Time.now()
       framesRendered = 0
-      #setInterval (-> console.log "#{framesRendered}fps"; framesRendered = 0), 1000
+      setInterval (-> console.log "#{framesRendered}fps"; framesRendered = 0), 1000
 
       tick = =>
         next = => requestAnimationFrame tick if @running # loop no more than 60fps
@@ -72,9 +72,7 @@ class Engine
             return delay sleepTime, next
 
         next()
-      #tick()
-
-      @draw()
+      tick()
 
   @stop: ->
   @startup: (cb) ->
@@ -87,6 +85,7 @@ class Engine
     #for i in [0...10]
     #  Video.drawPixel Math.rand(0, Video.canvas.width), Math.rand(0, Video.canvas.height), 255, 0, 0, 255
     #Video.updateCanvas()
+    Video.ctx.clearRect 0 , 0 , Video.canvas.width, Video.canvas.height
     drawMap()
 
 
@@ -213,8 +212,6 @@ getAttrVal = (data, accessor_id, cb) ->
   a = (next) ->
     return next() if buffer.data
     getFile 'blob', "#{mapRoot}/#{buffer.uri}", (bin) ->
-      console.log bin, typeof bin
-      console.log accessor: accessor, bufferView: bufferView, buffer: buffer
       if buffer.type is 'arraybuffer'
         reader = new FileReader
         reader.addEventListener 'loadend', ->
@@ -237,7 +234,6 @@ recursivelyFindSceneMeshesWithTransforms = (data) ->
 loadMap = (map, done_cb, cb) ->
   getFile 'application/json', map, (response) ->
     data = JSON.parse response
-    console.log data
     flow = new async
     matrixHierarchy = []
     for node in data.scenes[data.scene].nodes
@@ -307,9 +303,6 @@ initMap = (map, cb) ->
 
 drawMap = ->
   for name, object of objects
-    console.log "\ndrawing #{name}..."
-    console.log JSON.stringify object.vertices
-
     Video.ctx.lineWidth = 1
     Video.ctx.strokeStyle = 'rgba(255, 255, 255, .15)'
 
@@ -324,9 +317,6 @@ drawMap = ->
       Video.ctx.closePath()
       Video.ctx.fill()
       Video.ctx.stroke()
-
-      #debugger
-
 
 
 
