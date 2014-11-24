@@ -92,11 +92,66 @@ class Engine
 
 # 3D Space
 
-class Vector3
-  constructor: (@x, @y, @z) ->
+#class Vector3
+#  constructor: (@x, @y, @z) ->
+# minimal vector lib
+Vector =
+  UP: x: 0, y: 1, z: 0
+  ZERO: x: 0, y: 0, z: 0
+  dotProduct: (a, b) ->
+    (a.x*b.x)+(a.y*b.y)+(a.z*b.z)
+  crossProduct: (a, b) ->
+    x: (a.y * b.z) - (a.z * b.y)
+    y: (a.z * b.x) - (a.x * b.z)
+    z: (a.x & b.y) - (a.y * b.x)
+  scale: (a, t) ->
+    x: a.x * t
+    y: a.y * t
+    z: a.z * t
+  unitVector: (a) ->
+    Vector.scale a, 1 / Vector.length a
+  add: (a, b) ->
+    x: a.x + b.x
+    y: a.y + b.y
+    z: a.z + b.z
+  add3: (a, b, c) ->
+    x: a.x + b.x + c.x
+    y: a.y + b.y + c.y
+    z: a.z + b.z + c.z
+  subtract: (a, b) ->
+    x: a.x - b.x
+    y: a.y - b.y
+    z: a.z - b.z
+  length: (a) -> # measured by Euclidean norm
+    Math.sqrt Vector.dotProduct a, a
+
+
+
+dotProductVec4 = (a, b) ->
+  [ # column-major
+    (a[0]*b[0])  + (a[1]*b[1])  + (a[2]*b[2])  + (a[3]*b[3]),
+    (a[0]*b[4])  + (a[1]*b[5])  + (a[2]*b[6])  + (a[3]*b[7]),
+    (a[0]*b[8])  + (a[1]*b[9])  + (a[2]*b[10]) + (a[3]*b[11]),
+    (a[0]*b[12]) + (a[1]*b[13]) + (a[2]*b[14]) + (a[3]*b[15])
+  ]
+
+#1 0 0 0
+#0 1 0 0
+#0 0 1 0
+#3.46364 2.45909 0 1
+
+
+  #[ # row-major
+  #  (a[0]*b[0]) + (a[1]*b[4]) + (a[2]*b[8])  + (a[3]*b[12]),
+  #  (a[0]*b[1]) + (a[1]*b[5]) + (a[2]*b[9])  + (a[3]*b[13]),
+  #  (a[0]*b[2]) + (a[1]*b[6]) + (a[2]*b[10]) + (a[3]*b[14]),
+  #  (a[0]*b[3]) + (a[1]*b[7]) + (a[2]*b[11]) + (a[3]*b[15])
+  #]
+
+
 
 class Transform
-  position: new Vector3 0, 0, 0
+  #position: new Vector3 0, 0, 0
   #rotation
   #localPosition
   #localRotation
@@ -185,42 +240,68 @@ getAttrVal = (data, accessor_id, cb) ->
 
   a b
 
+recursivelyFindSceneMeshesWithTransforms = (data) ->
+
+
 loadMap = (map, cb) ->
   getFile 'application/json', map, (response) ->
     data = JSON.parse response
     console.log data
-    for name, mesh of data.meshes
-      color = ''
-      rgba = data.materials[mesh.primitives[0].material].instanceTechnique.values?.diffuse
-      color = "rgba(#{Math.ceil 60+(255*rgba[0])}, #{Math.ceil 30+(255*rgba[1])}, #{Math.ceil 0+(255*rgba[2])}, #{Math.round rgba[3], 1})"
-      ((color) ->
-        getAttrVal data, mesh.primitives[0].attributes.POSITION, (vertices) ->
-          cb name, color, vertices
-      )(color)
+    matrixHierarchy = []
+    for node in data.scenes[data.scene].nodes
+      matrixHierarchy.push data.nodes[node].matrix
+      for child in data.nodes[node].children
+        matrixHierarchy.push data.nodes[child].matrix
+        for name in data.nodes[child].meshes
+          color = ''
+          rgba = data.materials[data.meshes[name].primitives[0].material].instanceTechnique.values?.diffuse
+          color = "rgba(#{Math.ceil 60+(255*rgba[0])}, #{Math.ceil 30+(255*rgba[1])}, #{Math.ceil 0+(255*rgba[2])}, #{Math.round rgba[3], 1})"
+          ((name, matrixHierarchy, color) ->
+            getAttrVal data, data.meshes[name].primitives[0].attributes.POSITION, (vertices) ->
+              cb name, matrixHierarchy, color, vertices
+          )(name, matrixHierarchy.slice(0), color)
+        matrixHierarchy.pop()
 
 drawMap = (map) ->
-  loadMap "#{mapRoot}/#{map}", (name, fill_color, vertices) ->
-    console.log "drawing #{name}..."
+  loadMap "#{mapRoot}/#{map}", (name, hierarchy, fill_color, vertices) ->
+    console.log "\n\ndrawing #{name}..."
 
     Video.ctx.lineWidth = 1
     Video.ctx.strokeStyle = 'rgba(255, 255, 255, .15)'
 
+    hierarchy.reverse()
+    console.log hierarchy: hierarchy
+    transform = (p) ->
+      #console.log 'p_before: '+JSON.stringify p
+      #for matrix in hierarchy
+      #  console.log 'matrix: '+matrix.join ' '
+      #  [p.x, p.y, p.z] = dotProductVec4 [p.x, p.y, p.z, 0], matrix
+      #  console.log 'p_after: '+JSON.stringify p
+      #return p
+      # poor man's dot product *<:o)~
+      return {
+        x: (p.x * hierarchy[0][0])  + hierarchy[0][12]
+        y: (p.y * hierarchy[0][5])  + hierarchy[0][13]
+        z: (p.z * hierarchy[0][10]) + hierarchy[0][14]
+      }
+
     zoom = (p) ->
       #xs= 10* Video.ctx.canvas.width * p.x / map.width
       #y = 10* Video.ctx.canvas.height * (1 - p.y / map.height)
-      x: 40 * (p.x+8), y: 40 * (p.y + 6), z: p.z
+      #x: (30 * p.x) + 300, y: (30 * p.y) + 300, z: p.z
+      x: 40*(p.x+4), y: 40*(p.y+3), z: 0
 
     for nil, i in vertices by 9
       # parse coordinates
-      p = [zoom({
+      p = [zoom(transform {
         x: vertices[i]
         y: vertices[i+1]
         z: vertices[i+2]
-      }), zoom({
+      }), zoom(transform {
         x: vertices[i+3]
         y: vertices[i+4]
         z: vertices[i+5]
-      }), zoom({
+      }), zoom(transform {
         x: vertices[i+6]
         y: vertices[i+7]
         z: vertices[i+8]
