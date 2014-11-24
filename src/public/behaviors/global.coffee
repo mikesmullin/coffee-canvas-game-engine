@@ -37,7 +37,9 @@ class Engine
       framesRendered = 0
       setInterval (-> console.log "#{framesRendered}fps"; framesRendered = 0), 1000
 
+      #ticks = 0
       tick = =>
+        #return if ticks++ > 7
         next = => requestAnimationFrame tick if @running # loop no more than 60fps
         now = Time.now()
 
@@ -89,20 +91,30 @@ class Engine
       switch e.keyCode
         when 87 # w
           # TODO: use MonoBehavior style Transform with Vector here
-          objects.player1.y -= step
+          objects.player1.yT -= step
         when 65 # a
-          objects.player1.x -= step
+          objects.player1.xT -= step
         when 83 # s
-          objects.player1.y += step
+          objects.player1.yT += step
         when 68 # d
-          objects.player1.x += step
+          objects.player1.xT += step
     ), true
     initMap map, cb
   @shutdown: ->
 
 
   @update: ->
-
+    # check player collision
+    for name in ['player1', 'player2']
+      obj = objects[name]
+      if obj.xT or obj.yT or obj.zT
+        if collidesWall obj, objects['wall']
+          console.log 'collide'
+        else
+          obj.x += obj.xT
+          obj.y += obj.yT
+          obj.z += obj.zT
+        obj.xT = obj.yT = obj.zT = 0
 
   @draw: ->
     #Video.pixelBuf = Video.ctx.createImageData Video.canvas.width, Video.canvas.height
@@ -111,6 +123,49 @@ class Engine
     #Video.updateCanvas()
     Video.ctx.clearRect 0 , 0 , Video.canvas.width, Video.canvas.height
     drawMap()
+
+collidesWall = (o, wall) ->
+  for nil, i in o.vertices by 3
+    oT = [{
+      x: o.vertices[i].x + o.x + o.xT
+      y: o.vertices[i].y + o.y + o.yT
+    },{
+      x: o.vertices[i+1].x + o.x + o.xT
+      y: o.vertices[i+1].y + o.y + o.yT
+    },{
+      x: o.vertices[i+2].x + o.x + o.xT
+      y: o.vertices[i+2].y + o.y + o.yT
+    }]
+    for nil, ii in wall.vertices by 3
+      wT = [{
+        x: wall.vertices[ii].x
+        y: wall.vertices[ii].y
+      },{
+        x: wall.vertices[ii+1].x
+        y: wall.vertices[ii+1].y
+      },{
+        x: wall.vertices[ii+2].x
+        y: wall.vertices[ii+2].y
+      }]
+      if trianglesIntersect oT, wT
+        return true
+  return false
+
+trianglesIntersect = (a, b) ->
+  # cheating by converting them to rectangles
+  # because they're always at 90 degree angles right now
+  l1x = Math.min a[0].x, a[1].x, a[2].x
+  r1x = Math.max a[0].x, a[1].x, a[2].x
+  l1y = Math.max a[0].y, a[1].y, a[2].y
+  r1y = Math.min a[0].y, a[1].y, a[2].y
+  l2x = Math.min b[0].x, b[1].x, b[2].x
+  r2x = Math.max b[0].x, b[1].x, b[2].x
+  l2y = Math.max b[0].y, b[1].y, b[2].y
+  r2y = Math.min b[0].y, b[1].y, b[2].y
+
+  return false if l1x > r2x || l2x > r1x # aside
+  return false if l1y < r2y || l2y < r1y # above or below
+  return true
 
 
 # 3D Space
@@ -289,6 +344,9 @@ initMap = (map, cb) ->
       x: null
       y: null
       z: null
+      xT: 0
+      yT: 0
+      zT: 0
       width: null
       height: null
       depth: null
