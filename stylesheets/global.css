@@ -90,10 +90,14 @@ a img {
   border: none;
 }
 html,
-body,
-canvas {
+body {
   width: 100%;
   height: 100%;
-  background: #000;
+  background: #333;
   overflow: hidden;
+}
+canvas {
+  display: block;
+  margin: 0 auto;
+  background: #000;
 }
