@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.71.0 commit date:2014-06-25, commit time:18:36, hash:9337574</authoring_tool>
     </contributor>
-    <created>2014-11-23T18:34:06</created>
-    <modified>2014-11-23T18:34:06</modified>
+    <created>2014-11-23T18:41:12</created>
+    <modified>2014-11-23T18:41:12</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -106,9 +106,9 @@
     <geometry id="wall-mesh" name="wall">
       <mesh>
         <source id="wall-mesh-positions">
-          <float_array id="wall-mesh-positions-array" count="69">-6.463637 -4.459091 0 -6.463637 -0.4590914 0 -6.463637 -0.4590914 0 -1.463637 -0.4590914 0 -1.463636 0.04090952 0 -6.963637 0.04090952 0 -6.963637 -4.959092 0 7.036366 -4.959092 0 7.036366 5.040911 0 2.536365 3.04091 0 2.536365 -0.4590907 0 6.536366 -0.4590907 0 6.536366 -4.459092 0 6.536366 0.04090952 0 6.536366 5.040911 0 -6.963637 5.040911 0 6.536366 4.540911 0 -6.463637 4.540911 0 -6.963637 0.04090952 0 -6.463637 0.04091 0 -6.463637 0.04090952 0 3.036365 0.04090952 0 3.036365 3.04091 0</float_array>
+          <float_array id="wall-mesh-positions-array" count="75">-6.463637 -4.459091 0 -6.463637 -0.4590914 0 -6.463637 -0.4590914 0 -1.463635 -2.972727 0.01363456 -1.463636 0.04090952 0 -6.963637 0.04090952 0 -6.963637 -4.959092 0 7.036366 -4.959092 0 7.036366 5.040911 0 2.536365 3.04091 0 2.536365 -0.4590907 0 6.536366 -0.4590907 0 6.536366 -4.459092 0 6.536366 0.04090952 0 6.536366 5.040911 0 -6.963637 5.040911 0 6.536366 4.540911 0 -6.463637 4.540911 0 -6.963637 0.04090952 0 -6.463637 0.04091 0 -6.463637 0.04090952 0 3.036365 0.04090952 0 3.036365 3.04091 0 -1.963636 -0.4590914 0 -1.963635 -2.972727 0.01363456</float_array>
           <technique_common>
-            <accessor source="#wall-mesh-positions-array" count="23" stride="3">
+            <accessor source="#wall-mesh-positions-array" count="25" stride="3">
               <param name="X" type="float"/>
               <param name="Y" type="float"/>
               <param name="Z" type="float"/>
@@ -116,9 +116,9 @@
           </technique_common>
         </source>
         <source id="wall-mesh-normals">
-          <float_array id="wall-mesh-normals-array" count="63">0 0 1 0 0 0 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1</float_array>
+          <float_array id="wall-mesh-normals-array" count="69">0 0 1 0 0 0 0 0.005424141 0.9999853 0 0 1 0 0 1 0 0 1 0 0 1 -0.004524171 0.004524171 0.9999795 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1</float_array>
           <technique_common>
-            <accessor source="#wall-mesh-normals-array" count="21" stride="3">
+            <accessor source="#wall-mesh-normals-array" count="23" stride="3">
               <param name="X" type="float"/>
               <param name="Y" type="float"/>
               <param name="Z" type="float"/>
@@ -128,11 +128,11 @@
         <vertices id="wall-mesh-vertices">
           <input semantic="POSITION" source="#wall-mesh-positions"/>
         </vertices>
-        <polylist material="wall-material" count="21">
+        <polylist material="wall-material" count="23">
           <input semantic="VERTEX" source="#wall-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#wall-mesh-normals" offset="1"/>
-          <vcount>3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
-          <p>1 0 5 0 6 0 1 1 2 1 3 1 3 2 4 2 20 2 0 3 1 3 6 3 14 4 16 4 8 4 19 5 17 5 18 5 21 6 22 6 9 6 1 7 3 7 20 7 7 8 13 8 11 8 21 9 9 9 10 9 20 10 5 10 1 10 14 11 15 11 17 11 10 12 11 12 21 12 14 13 17 13 16 13 17 14 15 14 18 14 12 15 0 15 6 15 8 16 16 16 13 16 12 17 7 17 11 17 12 18 6 18 7 18 7 19 8 19 13 19 11 20 13 20 21 20</p>
+          <vcount>3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
+          <p>6 0 7 0 12 0 1 1 2 1 23 1 23 2 24 2 3 2 0 3 1 3 6 3 14 4 16 4 8 4 19 5 17 5 18 5 21 6 22 6 9 6 23 7 3 7 4 7 7 8 13 8 11 8 21 9 9 9 10 9 4 10 20 10 23 10 14 11 15 11 17 11 10 12 11 12 21 12 17 13 15 13 18 13 14 14 17 14 16 14 20 15 1 15 23 15 20 16 5 16 1 16 8 17 16 17 13 17 12 18 7 18 11 18 7 19 8 19 13 19 12 20 0 20 6 20 1 21 5 21 6 21 11 22 13 22 21 22</p>
         </polylist>
       </mesh>
     </geometry>
