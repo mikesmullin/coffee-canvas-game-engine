@@ -244,16 +244,16 @@ loadMap = (map, done_cb, cb) ->
       matrixHierarchy.push data.nodes[node].matrix
       for child in data.nodes[node].children
         matrixHierarchy.push data.nodes[child].matrix
-        for name in data.nodes[child].meshes
+        for id in data.nodes[child].meshes
           color = ''
-          rgba = data.materials[data.meshes[name].primitives[0].material].instanceTechnique.values?.diffuse
+          rgba = data.materials[data.meshes[id].primitives[0].material].instanceTechnique.values?.diffuse
           color = "rgba(#{Math.ceil 60+(255*rgba[0])}, #{Math.ceil 30+(255*rgba[1])}, #{Math.ceil 0+(255*rgba[2])}, #{Math.round rgba[3], 1})"
-          ((name, matrixHierarchy, color) ->
+          ((id, matrixHierarchy, color) ->
             flow.serial (next) ->
-              getAttrVal data, data.meshes[name].primitives[0].attributes.POSITION, (vertices) ->
-                cb name, matrixHierarchy, color, vertices
+              getAttrVal data, data.meshes[id].primitives[0].attributes.POSITION, (vertices) ->
+                cb data.meshes[id].name, matrixHierarchy, color, vertices
                 next()
-          )(name, matrixHierarchy.slice(0), color)
+          )(id, matrixHierarchy.slice(0), color)
         matrixHierarchy.pop()
     flow.go (err) ->
       done_cb()
