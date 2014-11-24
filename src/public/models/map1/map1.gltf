@@ -5,7 +5,7 @@
             "byteOffset": 24,
             "byteStride": 0,
             "componentType": 5123,
-            "count": 57,
+            "count": 63,
             "type": "SCALAR"
         },
         "accessor_18": {
@@ -13,7 +13,7 @@
             "byteOffset": 288,
             "byteStride": 12,
             "componentType": 5126,
-            "count": 57,
+            "count": 63,
             "max": [
                 7.03637,
                 5.04091,
@@ -28,10 +28,10 @@
         },
         "accessor_20": {
             "bufferView": "bufferView_63",
-            "byteOffset": 972,
+            "byteOffset": 1044,
             "byteStride": 12,
             "componentType": 5126,
-            "count": 57,
+            "count": 63,
             "max": [
                 0,
                 0,
@@ -143,20 +143,20 @@
     "bufferViews": {
         "bufferView_62": {
             "buffer": "map1",
-            "byteLength": 140,
+            "byteLength": 152,
             "byteOffset": 0,
             "target": 34963
         },
         "bufferView_63": {
             "buffer": "map1",
-            "byteLength": 1656,
-            "byteOffset": 140,
+            "byteLength": 1800,
+            "byteOffset": 152,
             "target": 34962
         }
     },
     "buffers": {
         "map1": {
-            "byteLength": 1796,
+            "byteLength": 1952,
             "type": "arraybuffer",
             "uri": "map1.bin"
         }
@@ -173,9 +173,9 @@
                         1
                     ],
                     "diffuse": [
-                        0.113237,
-                        0.64,
-                        0.090854,
+                        0.113011,
+                        0.639282,
+                        0.0915483,
                         1
                     ],
                     "emission": [

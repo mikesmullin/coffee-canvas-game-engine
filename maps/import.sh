@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-./collada2gltf -d -f $1 -o ../src/public/models/$2/$2
+rm -rf ../src/public/models/$1/
+mkdir -p ../src/public/models/$1/
+./collada2gltf -d -f $1.dae -o ../src/public/models/$1/$1
