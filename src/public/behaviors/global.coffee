@@ -35,7 +35,7 @@ class Engine
       maxSkipFrames  = 5
       nextUpdate     = Time.now()
       framesRendered = 0
-      #setInterval (-> console.log "#{framesRendered}fps"; framesRendered = 0), 1000
+      setInterval (-> console.log "#{framesRendered}fps"; framesRendered = 0), 1000
 
       tick = =>
         next = => requestAnimationFrame tick if @running # loop no more than 60fps
@@ -72,12 +72,12 @@ class Engine
             return delay sleepTime, next
 
         next()
-      #tick()
-      @draw()
+      tick()
 
   @stop: ->
   @startup: (cb) ->
     focused = false
+    step = 10
     document.addEventListener 'mousedown', ((e) ->
       focused = e.target is Video.canvas
       return unless focused
@@ -89,13 +89,13 @@ class Engine
       switch e.keyCode
         when 87 # w
           # TODO: use MonoBehavior style Transform with Vector here
-          1 #objects['player1'].x
+          objects.player1.y -= step
         when 65 # a
-          1
+          objects.player1.x -= step
         when 83 # s
-          1
+          objects.player1.y += step
         when 68 # d
-          1
+          objects.player1.x += step
     ), true
     initMap map, cb
   @shutdown: ->
@@ -302,6 +302,8 @@ initMap = (map, cb) ->
       world
 
       ## rotate to top orthogonal perspective
+      # this doesn't work perfectly because its rotating around an arbitrary origin
+      # so for now i rotate everything in blender first, instead
       #[
       #  1, 0, 0, 0,
       #  0, Math.cos(90), -1 * Math.sin(90), 0,
@@ -335,33 +337,32 @@ initMap = (map, cb) ->
 
     ]
 
-    #xmin = ymin = zmin = xmax = ymax = zmax = null
+    xmin = ymin = zmin = xmax = ymax = zmax = null
     for nil, i in vertices by 3
       p = transform h, {
         x: vertices[i]
         y: vertices[i+1]
         z: vertices[i+2]
       }
-      #xmin = Math.min p.x, if null is xmin then p.x else xmin
-      #ymin = Math.min p.y, if null is ymin then p.y else ymin
-      #zmin = Math.min p.z, if null is zmin then p.z else zmin
-      #xmax = Math.max p.x, if null is xmax then p.x else xmax
-      #ymax = Math.max p.y, if null is ymax then p.y else ymax
-      #zmax = Math.max p.z, if null is zmax then p.z else zmax
+      xmin = Math.min p.x, if null is xmin then p.x else xmin
+      ymin = Math.min p.y, if null is ymin then p.y else ymin
+      zmin = Math.min p.z, if null is zmin then p.z else zmin
+      xmax = Math.max p.x, if null is xmax then p.x else xmax
+      ymax = Math.max p.y, if null is ymax then p.y else ymax
+      zmax = Math.max p.z, if null is zmax then p.z else zmax
       object.vertices.push p
 
-    #object.width = object.bounding_box.max[0] - object.bounding_box.min[0]
-    #object.height = object.bounding_box.max[1] - object.bounding_box.min[1]
-    #object.depth = object.bounding_box.max[2] - object.bounding_box.min[2]
-    #object.x = object.bounding_box.min[0]
-    #object.y = object.bounding_box.min[1]
-    #object.z = object.bounding_box.min[2]
+    object.min = [xmin, ymin, zmin]
+    object.max = [xmax, ymax, zmax]
+    object.width = xmax - xmin
+    object.height = ymax - ymin
+    object.depth = zmax - zmin
+    object.x = 0
+    object.y = 0
+    object.z = 0
 
     objects[name] = object
-    _v = ''
-    for v in object.vertices
-      _v += "[#{v.x},#{v.y},#{v.z}],"
-    console.log "#{object.name}: #{_v}"
+    console.log object
 
 
 transform = (h, p) ->
@@ -379,9 +380,9 @@ drawMap = ->
     for nil, i in p by 3
       Video.ctx.fillStyle = object.fill
       Video.ctx.beginPath()
-      Video.ctx.moveTo p[i].x, p[i].y
-      Video.ctx.lineTo p[i+1].x, p[i+1].y
-      Video.ctx.lineTo p[i+2].x, p[i+2].y
+      Video.ctx.moveTo p[i].x+object.x, p[i].y+object.y
+      Video.ctx.lineTo p[i+1].x+object.x, p[i+1].y+object.y
+      Video.ctx.lineTo p[i+2].x+object.x, p[i+2].y+object.y
       Video.ctx.closePath()
       Video.ctx.fill()
       Video.ctx.stroke()
