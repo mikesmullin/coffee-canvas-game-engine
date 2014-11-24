@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.71.0 commit date:2014-06-25, commit time:18:36, hash:9337574</authoring_tool>
     </contributor>
-    <created>2014-11-23T18:19:21</created>
-    <modified>2014-11-23T18:19:21</modified>
+    <created>2014-11-23T18:34:06</created>
+    <modified>2014-11-23T18:34:06</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -207,7 +207,7 @@
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
       <node id="wall" name="wall" type="NODE">
-        <matrix sid="transform">1 0 0 3.463636 0 1 0 2.459091 0 0 1 0 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 3.463635 0 -6.39758e-7 1 1.486364 0 -1 -6.39758e-7 1.027274 0 0 0 1</matrix>
         <instance_geometry url="#wall-mesh">
           <bind_material>
             <technique_common>
@@ -217,7 +217,7 @@
         </instance_geometry>
       </node>
       <node id="player1" name="player1" type="NODE">
-        <matrix sid="transform">0.4 0 0 -2.250001 0 0.4 0 -1.25 0 0 0.4 1 0 0 0 1</matrix>
+        <matrix sid="transform">0.4 0 0 -2.25 0 -2.55903e-7 0.4 2.486365 0 -0.4 -2.55903e-7 4.736365 0 0 0 1</matrix>
         <instance_geometry url="#player1-mesh">
           <bind_material>
             <technique_common>
@@ -227,7 +227,7 @@
         </instance_geometry>
       </node>
       <node id="player2" name="player2" type="NODE">
-        <matrix sid="transform">0.4 0 0 -2.250001 0 0.4 0 6.250001 0 0 0.4 2 0 0 0 1</matrix>
+        <matrix sid="transform">0.4 0 0 -2.25 0 -2.55903e-7 0.4 3.486363 0 -0.4 -2.55903e-7 -2.763637 0 0 0 1</matrix>
         <instance_geometry url="#player2-mesh">
           <bind_material>
             <technique_common>
