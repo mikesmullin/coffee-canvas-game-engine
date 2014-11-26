@@ -1,4 +1,4 @@
-var Behavior, Box, Engine, Time, Transform, Vector, Video, VideoSettings, address, collidesWith, delay, dotProductVec4, drawMap, getAttrVal, getFile, initMap, loadMap, map, mapRoot, myid, objects, recursivelyFindSceneMeshesWithTransforms, socket, transform, trianglesIntersect, whoami,
+var Behavior, Box, Engine, Time, Transform, Vector, Video, VideoSettings, collidesWith, delay, dotProductVec4, drawMap, getAttrVal, getFile, initMap, loadMap, map, mapRoot, myid, objects, recursivelyFindSceneMeshesWithTransforms, transform, trianglesIntersect, whoami,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -15,6 +15,8 @@ mapRoot = 'models/map1';
 map = 'map1.gltf';
 
 objects = {};
+
+whoami = null;
 
 VideoSettings = (function() {
   function VideoSettings() {}
@@ -120,7 +122,7 @@ Engine = (function() {
   Engine.stop = function() {};
 
   Engine.startup = function(cb) {
-    var step;
+    var startX, startY, step;
     step = 10;
     document.addEventListener('mousedown', (function(e) {
       var focused;
@@ -139,6 +141,32 @@ Engine = (function() {
           return (_ref3 = objects[whoami]) != null ? _ref3.xT += step : void 0;
       }
     }), true);
+    startX = startY = 0;
+    Video.canvas.addEventListener('touchstart', function(e) {
+      startX = e.touches[0].pageX;
+      startY = e.touches[0].pageY;
+      return e.preventDefault();
+    });
+    Video.canvas.addEventListener('touchend', function(e) {
+      var distance, endX, endY, _ref, _ref1, _ref2, _ref3;
+      endX = e.changedTouches[0].pageX;
+      endY = e.changedTouches[0].pageY;
+      distance = Math.sqrt(Math.pow(startX - endX, 2) + Math.pow(startY - endY, 2));
+      if (endX < startX) {
+        if ((_ref = objects[whoami]) != null) {
+          _ref.xT -= step;
+        }
+      } else {
+        if ((_ref1 = objects[whoami]) != null) {
+          _ref1.xT += step;
+        }
+      }
+      if (endy < startY) {
+        return (_ref2 = objects[whoami]) != null ? _ref2.yT -= step : void 0;
+      } else {
+        return (_ref3 = objects[whoami]) != null ? _ref3.yT += step : void 0;
+      }
+    });
     return initMap(map, cb);
   };
 
@@ -514,26 +542,5 @@ drawMap = function() {
 Engine.run();
 
 myid = 1;
-whoami = 'player1'
-address = window.location.href.split('/')[2].split(':')[0];
 
-/*
-socket = new eio.Socket('ws://' + address + '/');
-
-socket.on('open', function() {
-  socket.on('message', function(data) {
-    var player_name, x, y, _ref;
-    console.log(data);
-    data = JSON.parse(data);
-    if (data.player != null) {
-      whoami = data.player.name;
-      return myid = data.player.id;
-    } else if (data.pm != null) {
-      _ref = data.pm, player_name = _ref[0], x = _ref[1], y = _ref[2];
-      objects[player_name].x = x;
-      return objects[player_name].y = y;
-    }
-  });
-  return socket.on('close', function() {});
-});
-*/
+whoami = 'player1';
