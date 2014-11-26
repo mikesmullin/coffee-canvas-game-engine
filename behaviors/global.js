@@ -1,4 +1,4 @@
-var Behavior, Box, Engine, Time, Transform, Vector, Video, VideoSettings, collidesWith, delay, dotProductVec4, drawMap, getAttrVal, getFile, initMap, loadMap, map, mapRoot, myid, objects, recursivelyFindSceneMeshesWithTransforms, transform, trianglesIntersect, whoami,
+var Behavior, Box, Engine, Time, Transform, Vector, Video, VideoSettings, address, collidesWith, delay, dotProductVec4, drawMap, getAttrVal, getFile, initMap, loadMap, map, mapRoot, myid, objects, recursivelyFindSceneMeshesWithTransforms, socket, transform, trianglesIntersect, whoami,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -184,6 +184,8 @@ Engine = (function() {
           console.log('collide');
         } else if (collidesWith(obj, objects[whoami === 'player1' ? 'player2' : 'player1'])) {
           console.log('collide');
+          alert('game over!');
+          location.reload();
         } else {
           obj.x += obj.xT;
           obj.y += obj.yT;
@@ -539,5 +541,4 @@ drawMap = function() {
 Engine.run();
 
 myid = 1;
-
 whoami = 'player1';
