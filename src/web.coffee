@@ -43,15 +43,39 @@ http = app.listen app.PORT, '0.0.0.0', ->
 
   # add websocket support
   server = engine.attach http
-  players = {}
+  players = []
   player_count = 0
+  rooms = []
+  room_count = 0
+
+  broadcast = (players, exclude_id, msg) ->
+    for player in players when player.id isnt exclude_id
+      player.socket.send JSON.stringify msg
 
   server.on 'connection', (socket) ->
     players[++player_count] = player =
-      new Player id: player_count, name: "player#{player_count%2+1}"
-    socket.send JSON.stringify player: player
+      new Player id: player_count, name: "player#{(player_count-1)%2+1}", socket: socket
+    if rooms[room_count]?.players.length < 2 # not full
+      room = rooms[room_count]
+    else
+      rooms[++room_count] = room =
+        new Room id: room_count
+    room.players.push player
+    player.room_id = room.id
+    socket.send JSON.stringify player: id: player.id, name: player.name
+    socket.on 'message', (data) ->
+      console.log data
+      data = JSON.parse data
+      if data.pm?
+        [player_id, x, y] = data.pm
+        player = players[player_id]
+        broadcast rooms[player.room_id].players, player.id, pm: [player.name, x, y]
     socket.on 'close', ->
       delete players[player.id]
 
 class Player
-  constructor: ({@id, @name}) ->
+  constructor: ({@id, @name, @room_id, @socket}) ->
+
+class Room
+  constructor: ({@id, @players}) ->
+    @players ||= []

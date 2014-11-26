@@ -108,7 +108,7 @@ class Engine
     # check player collision
     for name in ['player1', 'player2']
       obj = objects[name]
-      if obj.xT or obj.yT or obj.zT
+      if obj.xT or obj.yT
         if collidesWith obj, objects['wall']
           console.log 'collide'
         else if collidesWith obj, objects[if whoami is 'player1' then 'player2' else 'player1']
@@ -116,7 +116,7 @@ class Engine
         else
           obj.x += obj.xT
           obj.y += obj.yT
-          obj.z += obj.zT
+          socket.send JSON.stringify pm: [myid, obj.x, obj.y]
         obj.xT = obj.yT = obj.zT = 0
 
   @draw: ->
@@ -141,14 +141,14 @@ collidesWith = (a, b) ->
     }]
     for nil, ii in b.vertices by 3
       bT = [{
-        x: b.vertices[ii].x
-        y: b.vertices[ii].y
+        x: b.vertices[ii].x + b.y
+        y: b.vertices[ii].y + b.y
       },{
-        x: b.vertices[ii+1].x
-        y: b.vertices[ii+1].y
+        x: b.vertices[ii+1].x + b.x
+        y: b.vertices[ii+1].y + b.y
       },{
-        x: b.vertices[ii+2].x
-        y: b.vertices[ii+2].y
+        x: b.vertices[ii+2].x + b.x
+        y: b.vertices[ii+2].y + b.y
       }]
       if trianglesIntersect aT, bT
         return true
@@ -468,6 +468,7 @@ Engine.run()
 
 
 # TODO: implement my fancy binary xor comm protocol later
+myid = null
 
 address = window.location.href.split('/')[2].split(':')[0]
 socket = new eio.Socket 'ws://'+address+'/'
@@ -477,4 +478,12 @@ socket.on 'open', ->
     data = JSON.parse data
     if data.player?
       whoami = data.player.name
+      myid = data.player.id
+    else if data.pm?
+      [player_name, x, y] = data.pm
+      objects[player_name].x = x
+      objects[player_name].y = y
+
   socket.on 'close', ->
+
+
