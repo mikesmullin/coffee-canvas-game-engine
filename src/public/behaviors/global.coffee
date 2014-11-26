@@ -4,6 +4,7 @@ mapRoot = 'models/map1'
 map = 'map1.gltf'
 objects = {}
 whoami = null
+MULTIPLAYER = true
 
 class VideoSettings
   @fps: 24 # TODO: find out why mathematically using 60 here lowers it to 10 actual fps
@@ -144,7 +145,8 @@ class Engine
         else
           obj.x += obj.xT
           obj.y += obj.yT
-          socket.send JSON.stringify pm: [myid, obj.x, obj.y]
+          if MULTIPLAYER
+            socket.send JSON.stringify pm: [myid, obj.x, obj.y]
         obj.xT = obj.yT = obj.zT = 0
 
   @draw: ->
@@ -495,21 +497,26 @@ Engine.run()
 
 
 
-# TODO: implement my fancy binary xor comm protocol later
-myid = null
+unless MULTIPLAYER
+  myid = 1
+  whoami = 'player1'
+else
+  # TODO: implement my fancy binary xor comm protocol later
+  myid = null
 
-address = window.location.href.split('/')[2].split(':')[0]
-socket = new eio.Socket 'ws://'+address+'/'
-socket.on 'open', ->
-  socket.on 'message', (data) ->
-    console.log data
-    data = JSON.parse data
-    if data.player?
-      whoami = data.player.name
-      myid = data.player.id
-    else if data.pm?
-      [player_name, x, y] = data.pm
-      objects[player_name].x = x
-      objects[player_name].y = y
+  address = window.location.href.split('/')[2].split(':')[0]
+  socket = new eio.Socket 'ws://'+address+'/'
+  socket.on 'open', ->
+    socket.on 'message', (data) ->
+      console.log data
+      data = JSON.parse data
+      if data.player?
+        whoami = data.player.name
+        myid = data.player.id
+      else if data.pm?
+        [player_name, x, y] = data.pm
+        objects[player_name].x = x
+        objects[player_name].y = y
 
-  socket.on 'close', ->
+    socket.on 'close', ->
+
