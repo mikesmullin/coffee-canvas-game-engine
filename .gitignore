@@ -1,4 +1,4 @@
 /node_modules/
 /src/public/stylesheets/*.css
-/src/public/behaviors/*.js
+/src/public/behaviors/global.js
 /todo.txt
