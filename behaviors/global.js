@@ -1,4 +1,4 @@
-var Behavior, Box, Engine, Time, Transform, Vector, Video, VideoSettings, address, collidesWith, delay, dotProductVec4, drawMap, getAttrVal, getFile, initMap, loadMap, map, mapRoot, myid, objects, recursivelyFindSceneMeshesWithTransforms, socket, transform, trianglesIntersect, whoami,
+var Behavior, Box, Engine, MULTIPLAYER, Time, Transform, Vector, Video, VideoSettings, address, collidesWith, delay, dotProductVec4, drawMap, getAttrVal, getFile, initMap, loadMap, map, mapRoot, myid, objects, recursivelyFindSceneMeshesWithTransforms, socket, transform, trianglesIntersect, whoami,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -17,6 +17,8 @@ map = 'map1.gltf';
 objects = {};
 
 whoami = null;
+
+MULTIPLAYER = false;
 
 VideoSettings = (function() {
   function VideoSettings() {}
@@ -126,20 +128,33 @@ Engine = (function() {
     step = 10;
     document.addEventListener('mousedown', (function(e) {
       var focused;
-      return focused = e.target === Video.canvas;
+      focused = e.target === Video.canvas;
+      return e.preventDefault();
     }), true);
     document.addEventListener('keydown', (function(e) {
       var _ref, _ref1, _ref2, _ref3;
       switch (e.keyCode) {
         case 87:
-          return (_ref = objects[whoami]) != null ? _ref.yT -= step : void 0;
+          if ((_ref = objects[whoami]) != null) {
+            _ref.yT -= step;
+          }
+          break;
         case 65:
-          return (_ref1 = objects[whoami]) != null ? _ref1.xT -= step : void 0;
+          if ((_ref1 = objects[whoami]) != null) {
+            _ref1.xT -= step;
+          }
+          break;
         case 83:
-          return (_ref2 = objects[whoami]) != null ? _ref2.yT += step : void 0;
+          if ((_ref2 = objects[whoami]) != null) {
+            _ref2.yT += step;
+          }
+          break;
         case 68:
-          return (_ref3 = objects[whoami]) != null ? _ref3.xT += step : void 0;
+          if ((_ref3 = objects[whoami]) != null) {
+            _ref3.xT += step;
+          }
       }
+      return e.preventDefault();
     }), true);
     startX = startY = 0;
     Video.canvas.addEventListener('touchstart', function(e) {
@@ -162,10 +177,15 @@ Engine = (function() {
         }
       }
       if (endY < startY) {
-        return (_ref2 = objects[whoami]) != null ? _ref2.yT -= step : void 0;
+        if ((_ref2 = objects[whoami]) != null) {
+          _ref2.yT -= step;
+        }
       } else {
-        return (_ref3 = objects[whoami]) != null ? _ref3.yT += step : void 0;
+        if ((_ref3 = objects[whoami]) != null) {
+          _ref3.yT += step;
+        }
       }
+      return e.preventDefault();
     });
     return initMap(map, cb);
   };
@@ -189,6 +209,11 @@ Engine = (function() {
         } else {
           obj.x += obj.xT;
           obj.y += obj.yT;
+          if (MULTIPLAYER) {
+            socket.send(JSON.stringify({
+              pm: [myid, obj.x, obj.y]
+            }));
+          }
         }
         _results.push(obj.xT = obj.yT = obj.zT = 0);
       } else {
@@ -471,7 +496,7 @@ initMap = function(map, cb) {
       max: [null, null, null]
     };
     world = h[0], local = h[1];
-    h = [local, world, [1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1], [40, 0, 0, 0, 0, 40, 0, 0, 0, 0, 40, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 170, 270, 0, 1]];
+    h = [local, world, [1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1], [35, 0, 0, 0, 0, 35, 0, 0, 0, 0, 35, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 180, 320, 0, 1]];
     xmin = ymin = zmin = xmax = ymax = zmax = null;
     for (i = _i = 0, _len = vertices.length; _i < _len; i = _i += 3) {
       nil = vertices[i];
@@ -540,5 +565,27 @@ drawMap = function() {
 
 Engine.run();
 
-myid = 1;
-whoami = 'player1';
+if (!MULTIPLAYER) {
+  myid = 1;
+  whoami = 'player1';
+} else {
+  myid = null;
+  address = window.location.href.split('/')[2].split(':')[0];
+  socket = new eio.Socket('ws://' + address + '/');
+  socket.on('open', function() {
+    socket.on('message', function(data) {
+      var player_name, x, y, _ref;
+      console.log(data);
+      data = JSON.parse(data);
+      if (data.player != null) {
+        whoami = data.player.name;
+        return myid = data.player.id;
+      } else if (data.pm != null) {
+        _ref = data.pm, player_name = _ref[0], x = _ref[1], y = _ref[2];
+        objects[player_name].x = x;
+        return objects[player_name].y = y;
+      }
+    });
+    return socket.on('close', function() {});
+  });
+}
