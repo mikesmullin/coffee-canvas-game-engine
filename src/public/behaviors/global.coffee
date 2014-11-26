@@ -467,7 +467,7 @@ Engine.run()
 
 
 
-
+# TODO: implement my fancy binary xor comm protocol later
 
 address = window.location.href.split('/')[2].split(':')[0]
 socket = new eio.Socket 'ws://'+address+'/'
