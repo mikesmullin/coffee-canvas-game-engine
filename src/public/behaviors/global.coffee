@@ -136,6 +136,8 @@ class Engine
           console.log 'collide'
         else if collidesWith obj, objects[if whoami is 'player1' then 'player2' else 'player1']
           console.log 'collide'
+          alert 'game over!'
+          location.reload()
         else
           obj.x += obj.xT
           obj.y += obj.yT
