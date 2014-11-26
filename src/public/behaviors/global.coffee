@@ -4,10 +4,10 @@ mapRoot = 'models/map1'
 map = 'map1.gltf'
 objects = {}
 whoami = null
-MULTIPLAYER = true
+MULTIPLAYER = false
 
 class VideoSettings
-  @fps: 24 # TODO: find out why mathematically using 60 here lowers it to 10 actual fps
+  @fps: 1 # TODO: find out why mathematically using 60 here lowers it to 10 actual fps
 
 class Time
   @now: -> (new Date()).getTime()
@@ -80,16 +80,16 @@ class Engine
 
   @stop: ->
   @startup: (cb) ->
-    #focused = false
+    focused = false
     step = 10
     document.addEventListener 'mousedown', ((e) ->
       focused = e.target is Video.canvas
-      #return unless focused
+      return unless focused
       #console.log 'buttons: ', e.buttons
       e.preventDefault()
     ), true
     document.addEventListener 'keydown', ((e) ->
-      #return unless focused
+      return unless focused
       #console.log 'keyCode: ', e.keyCode
       switch e.keyCode
         when 87 # w
@@ -127,6 +127,36 @@ class Engine
       e.preventDefault()
 
 
+    # mouse capture
+    prefix = if Video.canvas.requestPointerLock then '' else if Video.canvas.mozRequestPointerLock then 'moz' else 'webkit'
+    Video.canvas.onclick = ->
+      Video.canvas[(if prefix then prefix+'R' else 'r')+'equestPointerLock']()
+
+    capturedMouseMove = (e) ->
+      # store the min/max so we can draw a rect
+      # and calculate angles and vector between
+      # calls to update()
+      movX = e[(if prefix then prefix+'M' else 'm') + 'ovementX']
+      movY = e[(if prefix then prefix+'M' else 'm') + 'ovementY']
+      x = e.clientX + movX
+      y = e.clientY + movY
+      objects[whoami]?.lastX ||= x
+      objects[whoami]?.targetX = x
+      objects[whoami]?.lastY ||= y
+      objects[whoami]?.targetY = y
+      #console.log movX: movX, movY: movY, x: x, y: y
+      e.preventDefault()
+
+    document.addEventListener prefix+'pointerlockchange', (->
+      if document[(if prefix then prefix+'P' else 'p') + 'ointerLockElement'] is Video.canvas
+        console.log 'The pointer lock status is now locked'
+        document.addEventListener 'mousemove', capturedMouseMove, false
+      else
+        console.log 'The pointer lock status is now unlocked'
+        document.removeEventListener 'mousemove', capturedMouseMove, false
+    ), false
+
+
     initMap map, cb
   @shutdown: ->
 
@@ -135,6 +165,23 @@ class Engine
     # check player collision
     for name in ['player1', 'player2']
       obj = objects[name]
+      if obj.lastX and obj.targetX and obj.lastY and obj.targetY
+        rad = getAngle obj.lastX, obj.lastY, obj.targetX, obj.targetY
+        deg = rad2deg rad
+        console.log name: name, deg: deg
+
+        # rotate player
+        rot = [
+          1, 0, 0, 0,
+          0, Math.cos(deg), -1 * Math.sin(deg), 0,
+          0, Math.sin(deg), Math.cos(deg), 0,
+          0, 0, 0, 1
+        ]
+        for nil, i in obj.vertices
+          obj.vertices[i] = transform rot, obj.vertices[i]
+
+      obj.lastX = obj.targetX = obj.lastY = obj.targetY = null
+
       if obj.xT or obj.yT
         if collidesWith obj, objects['wall']
           console.log 'collide'
@@ -297,6 +344,16 @@ class Box extends Behavior
 
 
 
+getAngle = (x1, y1, x2, y2) ->
+  distY = Math.abs(y2-y1) # opposite
+  distX = Math.abs(x2-x1) # adjacent
+  dist  = Math.sqrt((distY*distY)+(distX*distX)) # hypotenuse
+  asin  = Math.asin(distY/dist) # return angle in radians
+  #console.log x1: x1, y1: y1, x2: x2, y2: y2, distX: distX, distY: distY, dist: dist, asin: asin
+  return asin or 0
+
+rad2deg = (radians) ->
+  return radians*(180/Math.PI)
 
 
 
