@@ -100,6 +100,29 @@ class Engine
         when 68 # d
           objects[whoami]?.xT += step
     ), true
+
+ 
+    # Touch events
+    startX = startY = 0
+    Video.canvas.addEventListener 'touchstart', (e) ->
+      startX = e.touches[0].pageX
+      startY = e.touches[0].pageY
+      e.preventDefault() # disable double-tap zoom
+
+    Video.canvas.addEventListener 'touchend', (e) ->
+      endX = e.changedTouches[0].pageX
+      endY = e.changedTouches[0].pageY
+      distance = Math.sqrt(Math.pow(startX - endX, 2) + Math.pow(startY - endY, 2))
+      if endX < startX
+        objects[whoami]?.xT -= step
+      else
+        objects[whoami]?.xT += step
+      if endY < startY
+        objects[whoami]?.yT -= step
+      else
+        objects[whoami]?.yT += step
+
+
     initMap map, cb
   @shutdown: ->
 
@@ -485,5 +508,3 @@ socket.on 'open', ->
       objects[player_name].y = y
 
   socket.on 'close', ->
-
-
