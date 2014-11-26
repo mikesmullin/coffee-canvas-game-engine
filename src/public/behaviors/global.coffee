@@ -3,7 +3,7 @@ delay = (s, f) -> setTimeout f, s
 mapRoot = 'models/map1'
 map = 'map1.gltf'
 objects = {}
-whoami = 'player1'
+whoami = null
 
 class VideoSettings
   @fps: 24 # TODO: find out why mathematically using 60 here lowers it to 10 actual fps
@@ -92,13 +92,13 @@ class Engine
       switch e.keyCode
         when 87 # w
           # TODO: use MonoBehavior style Transform with Vector here
-          objects.player1.yT -= step
+          objects[whoami]?.yT -= step
         when 65 # a
-          objects.player1.xT -= step
+          objects[whoami]?.xT -= step
         when 83 # s
-          objects.player1.yT += step
+          objects[whoami]?.yT += step
         when 68 # d
-          objects.player1.xT += step
+          objects[whoami]?.xT += step
     ), true
     initMap map, cb
   @shutdown: ->
@@ -473,6 +473,8 @@ address = window.location.href.split('/')[2].split(':')[0]
 socket = new eio.Socket 'ws://'+address+'/'
 socket.on 'open', ->
   socket.on 'message', (data) ->
-    data = JSON.parse data
     console.log data
+    data = JSON.parse data
+    if data.player?
+      whoami = data.player.name
   socket.on 'close', ->

@@ -43,11 +43,15 @@ http = app.listen app.PORT, '0.0.0.0', ->
 
   # add websocket support
   server = engine.attach http
-  server.on 'connection', (socket) ->
-    timer = undefined
-    socket.on 'close', -> clearTimeout timer
-    broadcast = ->
-      socket.send JSON.stringify 'hi'
-      timer = setTimeout broadcast, 3000 # repeat every 3 sec
-    broadcast() # kick-start immediately upon connection
+  players = {}
+  player_count = 0
 
+  server.on 'connection', (socket) ->
+    players[++player_count] = player =
+      new Player id: player_count, name: "player#{player_count%2+1}"
+    socket.send JSON.stringify player: player
+    socket.on 'close', ->
+      delete players[player.id]
+
+class Player
+  constructor: ({@id, @name}) ->
