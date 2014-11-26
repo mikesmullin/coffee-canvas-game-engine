@@ -1,8 +1,9 @@
 Math.rand = (m,x) -> Math.round(Math.random() * (x-m)) + m
 delay = (s, f) -> setTimeout f, s
-mapRoot = '/models/map1'
+mapRoot = 'models/map1'
 map = 'map1.gltf'
 objects = {}
+whoami = 'player1'
 
 class VideoSettings
   @fps: 24 # TODO: find out why mathematically using 60 here lowers it to 10 actual fps
@@ -108,7 +109,9 @@ class Engine
     for name in ['player1', 'player2']
       obj = objects[name]
       if obj.xT or obj.yT or obj.zT
-        if collidesWall obj, objects['wall']
+        if collidesWith obj, objects['wall']
+          console.log 'collide'
+        else if collidesWith obj, objects[if whoami is 'player1' then 'player2' else 'player1']
           console.log 'collide'
         else
           obj.x += obj.xT
@@ -124,30 +127,30 @@ class Engine
     Video.ctx.clearRect 0 , 0 , Video.canvas.width, Video.canvas.height
     drawMap()
 
-collidesWall = (o, wall) ->
-  for nil, i in o.vertices by 3
-    oT = [{
-      x: o.vertices[i].x + o.x + o.xT
-      y: o.vertices[i].y + o.y + o.yT
+collidesWith = (a, b) ->
+  for nil, i in a.vertices by 3
+    aT = [{
+      x: a.vertices[i].x + a.x + a.xT
+      y: a.vertices[i].y + a.y + a.yT
     },{
-      x: o.vertices[i+1].x + o.x + o.xT
-      y: o.vertices[i+1].y + o.y + o.yT
+      x: a.vertices[i+1].x + a.x + a.xT
+      y: a.vertices[i+1].y + a.y + a.yT
     },{
-      x: o.vertices[i+2].x + o.x + o.xT
-      y: o.vertices[i+2].y + o.y + o.yT
+      x: a.vertices[i+2].x + a.x + a.xT
+      y: a.vertices[i+2].y + a.y + a.yT
     }]
-    for nil, ii in wall.vertices by 3
-      wT = [{
-        x: wall.vertices[ii].x
-        y: wall.vertices[ii].y
+    for nil, ii in b.vertices by 3
+      bT = [{
+        x: b.vertices[ii].x
+        y: b.vertices[ii].y
       },{
-        x: wall.vertices[ii+1].x
-        y: wall.vertices[ii+1].y
+        x: b.vertices[ii+1].x
+        y: b.vertices[ii+1].y
       },{
-        x: wall.vertices[ii+2].x
-        y: wall.vertices[ii+2].y
+        x: b.vertices[ii+2].x
+        y: b.vertices[ii+2].y
       }]
-      if trianglesIntersect oT, wT
+      if trianglesIntersect aT, bT
         return true
   return false
 
