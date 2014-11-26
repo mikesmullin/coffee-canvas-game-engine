@@ -461,3 +461,18 @@ drawMap = ->
 
 Engine.run()
 
+
+
+
+
+
+
+
+
+address = window.location.href.split('/')[2].split(':')[0]
+socket = new eio.Socket 'ws://'+address+'/'
+socket.on 'open', ->
+  socket.on 'message', (data) ->
+    data = JSON.parse data
+    console.log data
+  socket.on 'close', ->

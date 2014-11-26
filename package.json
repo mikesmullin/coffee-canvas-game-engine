@@ -21,6 +21,8 @@
     "async2": "^0.1.7",
     "coffee-script": "^1.8.0",
     "connect-coffee-script": "^0.2.0",
+    "engine.io": "^1.4.3",
+    "engine.io-client": "^1.4.3",
     "express": "^4.9.7",
     "jade": "^1.7.0",
     "nib": "^1.0.4",
