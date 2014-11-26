@@ -161,7 +161,7 @@ Engine = (function() {
           _ref1.xT += step;
         }
       }
-      if (endy < startY) {
+      if (endY < startY) {
         return (_ref2 = objects[whoami]) != null ? _ref2.yT -= step : void 0;
       } else {
         return (_ref3 = objects[whoami]) != null ? _ref3.yT += step : void 0;
@@ -187,9 +187,6 @@ Engine = (function() {
         } else {
           obj.x += obj.xT;
           obj.y += obj.yT;
-          socket.send(JSON.stringify({
-            pm: [myid, obj.x, obj.y]
-          }));
         }
         _results.push(obj.xT = obj.yT = obj.zT = 0);
       } else {
