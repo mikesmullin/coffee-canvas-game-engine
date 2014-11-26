@@ -85,6 +85,7 @@ class Engine
       focused = e.target is Video.canvas
       #return unless focused
       #console.log 'buttons: ', e.buttons
+      e.preventDefault()
     ), true
     document.addEventListener 'keydown', ((e) ->
       #return unless focused
@@ -99,6 +100,7 @@ class Engine
           objects[whoami]?.yT += step
         when 68 # d
           objects[whoami]?.xT += step
+      e.preventDefault()
     ), true
 
  
@@ -107,7 +109,7 @@ class Engine
     Video.canvas.addEventListener 'touchstart', (e) ->
       startX = e.touches[0].pageX
       startY = e.touches[0].pageY
-      e.preventDefault() # disable double-tap zoom
+      e.preventDefault()
 
     Video.canvas.addEventListener 'touchend', (e) ->
       endX = e.changedTouches[0].pageX
@@ -121,6 +123,7 @@ class Engine
         objects[whoami]?.yT -= step
       else
         objects[whoami]?.yT += step
+      e.preventDefault()
 
 
     initMap map, cb
