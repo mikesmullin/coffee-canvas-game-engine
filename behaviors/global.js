@@ -1,4 +1,4 @@
-var Behavior, Box, Engine, Time, Transform, Vector, Video, VideoSettings, collidesWall, delay, dotProductVec4, drawMap, getAttrVal, getFile, initMap, loadMap, map, mapRoot, objects, recursivelyFindSceneMeshesWithTransforms, transform, trianglesIntersect,
+var Behavior, Box, Engine, Time, Transform, Vector, Video, VideoSettings, address, collidesWith, delay, dotProductVec4, drawMap, getAttrVal, getFile, initMap, loadMap, map, mapRoot, myid, objects, recursivelyFindSceneMeshesWithTransforms, socket, transform, trianglesIntersect, whoami,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -127,15 +127,16 @@ Engine = (function() {
       return focused = e.target === Video.canvas;
     }), true);
     document.addEventListener('keydown', (function(e) {
+      var _ref, _ref1, _ref2, _ref3;
       switch (e.keyCode) {
         case 87:
-          return objects.player1.yT -= step;
+          return (_ref = objects[whoami]) != null ? _ref.yT -= step : void 0;
         case 65:
-          return objects.player1.xT -= step;
+          return (_ref1 = objects[whoami]) != null ? _ref1.xT -= step : void 0;
         case 83:
-          return objects.player1.yT += step;
+          return (_ref2 = objects[whoami]) != null ? _ref2.yT += step : void 0;
         case 68:
-          return objects.player1.xT += step;
+          return (_ref3 = objects[whoami]) != null ? _ref3.xT += step : void 0;
       }
     }), true);
     return initMap(map, cb);
@@ -150,13 +151,17 @@ Engine = (function() {
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       name = _ref[_i];
       obj = objects[name];
-      if (obj.xT || obj.yT || obj.zT) {
-        if (collidesWall(obj, objects['wall'])) {
+      if (obj.xT || obj.yT) {
+        if (collidesWith(obj, objects['wall'])) {
+          console.log('collide');
+        } else if (collidesWith(obj, objects[whoami === 'player1' ? 'player2' : 'player1'])) {
           console.log('collide');
         } else {
           obj.x += obj.xT;
           obj.y += obj.yT;
-          obj.z += obj.zT;
+          socket.send(JSON.stringify({
+            pm: [myid, obj.x, obj.y]
+          }));
         }
         _results.push(obj.xT = obj.yT = obj.zT = 0);
       } else {
@@ -175,39 +180,39 @@ Engine = (function() {
 
 })();
 
-collidesWall = function(o, wall) {
-  var i, ii, nil, oT, wT, _i, _j, _len, _len1, _ref, _ref1;
-  _ref = o.vertices;
+collidesWith = function(a, b) {
+  var aT, bT, i, ii, nil, _i, _j, _len, _len1, _ref, _ref1;
+  _ref = a.vertices;
   for (i = _i = 0, _len = _ref.length; _i < _len; i = _i += 3) {
     nil = _ref[i];
-    oT = [
+    aT = [
       {
-        x: o.vertices[i].x + o.x + o.xT,
-        y: o.vertices[i].y + o.y + o.yT
+        x: a.vertices[i].x + a.x + a.xT,
+        y: a.vertices[i].y + a.y + a.yT
       }, {
-        x: o.vertices[i + 1].x + o.x + o.xT,
-        y: o.vertices[i + 1].y + o.y + o.yT
+        x: a.vertices[i + 1].x + a.x + a.xT,
+        y: a.vertices[i + 1].y + a.y + a.yT
       }, {
-        x: o.vertices[i + 2].x + o.x + o.xT,
-        y: o.vertices[i + 2].y + o.y + o.yT
+        x: a.vertices[i + 2].x + a.x + a.xT,
+        y: a.vertices[i + 2].y + a.y + a.yT
       }
     ];
-    _ref1 = wall.vertices;
+    _ref1 = b.vertices;
     for (ii = _j = 0, _len1 = _ref1.length; _j < _len1; ii = _j += 3) {
       nil = _ref1[ii];
-      wT = [
+      bT = [
         {
-          x: wall.vertices[ii].x,
-          y: wall.vertices[ii].y
+          x: b.vertices[ii].x + b.y,
+          y: b.vertices[ii].y + b.y
         }, {
-          x: wall.vertices[ii + 1].x,
-          y: wall.vertices[ii + 1].y
+          x: b.vertices[ii + 1].x + b.x,
+          y: b.vertices[ii + 1].y + b.y
         }, {
-          x: wall.vertices[ii + 2].x,
-          y: wall.vertices[ii + 2].y
+          x: b.vertices[ii + 2].x + b.x,
+          y: b.vertices[ii + 2].y + b.y
         }
       ];
-      if (trianglesIntersect(oT, wT)) {
+      if (trianglesIntersect(aT, bT)) {
         return true;
       }
     }
@@ -507,3 +512,28 @@ drawMap = function() {
 };
 
 Engine.run();
+
+myid = 1;
+whoami = 'player1'
+address = window.location.href.split('/')[2].split(':')[0];
+
+/*
+socket = new eio.Socket('ws://' + address + '/');
+
+socket.on('open', function() {
+  socket.on('message', function(data) {
+    var player_name, x, y, _ref;
+    console.log(data);
+    data = JSON.parse(data);
+    if (data.player != null) {
+      whoami = data.player.name;
+      return myid = data.player.id;
+    } else if (data.pm != null) {
+      _ref = data.pm, player_name = _ref[0], x = _ref[1], y = _ref[2];
+      objects[player_name].x = x;
+      return objects[player_name].y = y;
+    }
+  });
+  return socket.on('close', function() {});
+});
+*/
