@@ -27,6 +27,7 @@ app.use require('coffee-middleware')
   src: path.join app.PUBLIC
   bare: true
   force: true
+  encodeSrc: false # way cool src map feature, but easier to debug js
 
 app.use express.static app.PUBLIC # static file server
 

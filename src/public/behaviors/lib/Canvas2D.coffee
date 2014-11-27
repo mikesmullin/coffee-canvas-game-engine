@@ -5,15 +5,15 @@ define -> class Canvas2D
     @ctx = @canvas.getContext '2d'
     @pixelBuf = undefined
 
-  clear: ->
+  Clear: ->
     @ctx.clearRect 0, 0, @canvas.width, @canvas.height
 
-  drawPixel: (x, y, r, g, b, a) ->
+  DrawPixel: (x, y, r, g, b, a) ->
     index = (x + y * @canvas.width) * 4
     @pixelBuf.data[index + 0] = r
     @pixelBuf.data[index + 1] = g
     @pixelBuf.data[index + 2] = b
     @pixelBuf.data[index + 3] = a
 
-  updateCanvas: ->
+  UpdateCanvas: ->
     @ctx.putImageData @pixelBuf, 0, 0

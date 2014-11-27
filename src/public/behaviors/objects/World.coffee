@@ -2,7 +2,9 @@ define [
   '../components/Behavior'
   '../lib/GlTF'
   '../components/Transform'
-], (Behavior, GlTF, Transform) ->
+  '../components/MeshRenderer'
+  '../lib/Vector3'
+], (Behavior, GlTF, Transform, MeshRenderer, Vector3) ->
   class World extends Behavior
     constructor: ->
       @name = 'World'
@@ -10,46 +12,44 @@ define [
       @map = 'map1.gltf'
       super
 
-    start: (cb) ->
-      GlTF.LoadMap @mapRoot, @map, cb, (name, h, fill_color, vertices) =>
-        console.log name: name, vertices: vertices
+    Start: (engine, cb) ->
+      GlTF.LoadMap @mapRoot, @map, cb, (name, model_transforms, fill, vertices) =>
+        engine.Log name: name, vertices: vertices
 
         # push all vertices into a new game object
         obj = new Behavior
+        obj.name = name # TODO: reconcile with prefabs and objects
         obj.transform = new Transform
-        obj.transform.position
         obj.renderer = new MeshRenderer
-        obj.renderer.materials = [{ color: fill_color }]
-
-        h.reverse()
-        h.push [ # flip along x-axis
-          1, 0, 0, 0
-          0, -1, 0, 0,
-          0, 0, 1, 0,
-          0, 0, 0, 1
-        ]
-        h.push [ # and zoom to fit canvas
-          35, 0, 0, 0
-          0, 35, 0, 0,
-          0, 0, 35, 0,
-          0, 0, 0, 1
-        ]
-        h.push [ # center
-          1, 0, 0, 0
-          0, 1, 0, 0,
-          0, 0, 1, 0,
-          180, 320, 0, 1
-        ]
+        obj.renderer.materials = [{ color: fill }]
 
         for nil, i in vertices by 3
-          p = Vector.transform h, {
-            x: vertices[i]
-            y: vertices[i+1]
-            z: vertices[i+2]
-          }
-          object.renderer.vertices.push p
+          obj.renderer.vertices.push(
+            Vector3.FromArray(vertices, i)
+              # apply transformations to
+              # position model within game world
+              # TODO: may want to store these as obj.transform.position, .rotation, etc.
+              .Transform model_transforms[1] # world
+              .Transform model_transforms[0] # local
+              .Transform [ # flip along x-axis
+                  1, 0 , 0, 0
+                  0, -1, 0, 0
+                  0, 0,  1, 0
+                  0, 0,  0, 1
+                ]
+              .Transform [ # and zoom to fit canvas
+                  35, 0,  0,  0
+                  0,  35, 0,  0
+                  0,  0,  35, 0
+                  0,  0,  0,  1
+                ]
+              .Transform [ # center
+                  1,   0,   0, 0
+                  0,   1,   0, 0
+                  0,   0,   1, 0
+                  180, 320, 0, 1
+                ])
 
-        @bind object
-        console.log object
-
+        engine.Bind obj
+        engine.Log obj
         cb()

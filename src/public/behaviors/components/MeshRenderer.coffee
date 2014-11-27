@@ -7,7 +7,7 @@ define -> class MeshRenderer
       color: [1,1,1,1] # white
     }]
 
-  draw: ->
+  Draw: ->
     for name, object of objects
       Video.ctx.lineWidth = 1
       Video.ctx.strokeStyle = 'rgba(255, 255, 255, .15)'

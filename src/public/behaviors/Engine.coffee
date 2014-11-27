@@ -9,14 +9,14 @@ define [
     @objects = []
     @running = false
 
-  log: (msg) ->
+  Log: (msg) ->
     console.log msg
 
-  run: ->
+  Run: ->
     @running = true
-    @log 'Starting at '+(new Date())
+    @Log 'Starting at '+(new Date())
 
-    @trigger 'start', =>
+    @Trigger 'Start', =>
       updateInterval   = 1000/@video.fps
       maxUpdateLatency = updateInterval * 1
       drawInterval     = 1000/@video.fps # should be >= update interval
@@ -24,7 +24,7 @@ define [
       maxSkipFrames    = 5
       nextUpdate       = Time.now()
       framesRendered   = 0
-      Time.delay 1000, => @log "#{framesRendered}fps"; framesRendered = 0
+      Time.delay 1000, => @Log "#{framesRendered}fps"; framesRendered = 0
 
       #ticks = 0
       tick = =>
@@ -43,7 +43,7 @@ define [
 
         if now >= nextUpdate # past-due for an update
           nextUpdate += updateInterval # schedule next update an interval apart
-          @triggerSync 'update'
+          @TriggerSync 'Update'
 
           # notice that without an update, we won't have anything new to draw.
 
@@ -54,7 +54,7 @@ define [
             skippedFrames < maxSkipFrames # we can still afford to skip a few frames
                skippedFrames++ # skip one more frame
           else # we have time, or we can't afford to skip any more frames
-            @triggerSync 'draw' # take time to draw
+            @TriggerSync 'Draw' # take time to draw
             framesRendered++ # for measuring actual fps
             skippedFrames = 0 # frames may be skipped from here, if needed
         else
@@ -65,28 +65,28 @@ define [
         next()
       tick()
 
-  start: (cb) -> cb()
-  update: ->
-  draw: ->
-    @video.clear()
-  #stop: (cb) -> cb()
-  #shutdown: (cb) -> cb()
+  Start: (engine, cb) -> cb()
+  Update: (engine) ->
+  Draw: (engine) ->
+    @video.Clear()
+  #stop: (engine, cb) -> cb()
+  #shutdown: (engine, cb) -> cb()
 
-  bind: (obj) ->
+  Bind: (obj) ->
     @objects.push obj
 
-  triggerSync: (event) ->
+  TriggerSync: (event) ->
     @[event]()
-    for obj in @objects when obj.enabled
-      obj[event]()
+    for obj in @objects when obj.enabled and obj[event]
+      obj[event](@)
 
-  trigger: (event, cb) ->
+  Trigger: (event, cb) ->
     flow = new async
     o = [this].concat @objects
-    for obj in o
-      ((obj) ->
-        flow.parallel (next) ->
-          obj[event].call obj, cb
+    for obj in o when obj[event]
+      ((obj) =>
+        flow.parallel (next) =>
+          obj[event].call obj, @, cb
       )(obj)
     flow.go (err) ->
       cb err

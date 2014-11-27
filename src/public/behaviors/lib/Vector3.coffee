@@ -1,47 +1,39 @@
 define -> class Vector3
-  constructor: (@x, @y, @z) ->
-  UP: x: 0, y: 1, z: 0
-  ZERO: x: 0, y: 0, z: 0
-  dotProduct: (a, b) ->
-    (a.x*b.x)+(a.y*b.y)+(a.z*b.z)
-  crossProduct: (a, b) ->
-    x: (a.y * b.z) - (a.z * b.y)
-    y: (a.z * b.x) - (a.x * b.z)
-    z: (a.x & b.y) - (a.y * b.x)
-  scale: (a, t) ->
-    x: a.x * t
-    y: a.y * t
-    z: a.z * t
-  unitVector: (a) ->
-    Vector.scale a, 1 / Vector.length a
-  add: (a, b) ->
-    x: a.x + b.x
-    y: a.y + b.y
-    z: a.z + b.z
-  add3: (a, b, c) ->
-    x: a.x + b.x + c.x
-    y: a.y + b.y + c.y
-    z: a.z + b.z + c.z
-  subtract: (a, b) ->
-    x: a.x - b.x
-    y: a.y - b.y
-    z: a.z - b.z
-  length: (a) -> # measured by Euclidean norm
-    Math.sqrt Vector.dotProduct a, a
+  constructor: (@x=0, @y=0, @z=0) ->
+  @FromArray: (a, i=0) ->
+    new Vector3 a[i], a[i+1], a[i+2]
+  @UP: x: 0, y: 1, z: 0
+  @ZERO: x: 0, y: 0, z: 0
 
-  dotProductVec4: (a, b) ->
-    #[ # column-major
-    #  (a[0]*b[0])  + (a[1]*b[1])  + (a[2]*b[2])  + (a[3]*b[3]),
-    #  (a[0]*b[4])  + (a[1]*b[5])  + (a[2]*b[6])  + (a[3]*b[7]),
-    #  (a[0]*b[8])  + (a[1]*b[9])  + (a[2]*b[10]) + (a[3]*b[11]),
-    #  (a[0]*b[12]) + (a[1]*b[13]) + (a[2]*b[14]) + (a[3]*b[15])
-    #]
-    [ # row-major
-      (a[0]*b[0]) + (a[1]*b[4]) + (a[2]*b[8])  + (a[3]*b[12]),
-      (a[0]*b[1]) + (a[1]*b[5]) + (a[2]*b[9])  + (a[3]*b[13]),
-      (a[0]*b[2]) + (a[1]*b[6]) + (a[2]*b[10]) + (a[3]*b[14]),
-      (a[0]*b[3]) + (a[1]*b[7]) + (a[2]*b[11]) + (a[3]*b[15])
-    ]
+  Transform: (b) -> # 4x4 row-major
+    @x = (@x*b[0]) + (@y*b[4]) + (@z*b[8])  + (1*b[12])
+    @y = (@x*b[1]) + (@y*b[5]) + (@z*b[9])  + (1*b[13])
+    @z = (@x*b[2]) + (@y*b[6]) + (@z*b[10]) + (1*b[14])
+    @
 
-
-
+  Dot: (b) ->
+    (@x*b.x)+(@y*b.y)+(@z*b.z)
+  Cross: (b) ->
+    @x = (@y * b.z) - (@z * b.y)
+    @y = (@z * b.x) - (@x * b.z)
+    @z = (@x & b.y) - (@y * b.x)
+    @
+  Scale: (t) ->
+    @x *= t
+    @y *= t
+    @z *= t
+    @
+  Unit: -> # aka normalize?
+    @Scale 1 / @Length()
+  Add: (b) ->
+    @x += b.x
+    @y += b.y
+    @z += b.z
+    @
+  Subtract: (b) ->
+    @x -= b.x
+    @y -= b.y
+    @z -= b.z
+    @
+  Length: -> # measured by Euclidean norm
+    Math.sqrt @Dot @

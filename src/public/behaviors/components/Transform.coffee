@@ -1,4 +1,6 @@
-define -> class Transform
+define [
+  '../lib/Vector3'
+], (Vector3) -> class Transform
   constructor: ->
     @position = new Vector3
     @rotation = new Vector3
