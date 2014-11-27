@@ -37,7 +37,7 @@ define [
   @LoadMap: (mapRoot, map, done_cb, cb) ->
     @GetFile 'application/json', "#{mapRoot}/#{map}", (response) =>
       data = JSON.parse response
-      flow = async.new()
+      flow = new async
       matrixHierarchy = []
       for node in data.scenes[data.scene].nodes
         matrixHierarchy.push data.nodes[node].matrix

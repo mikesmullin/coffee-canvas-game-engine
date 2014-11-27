@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/mikesmullin/coffee-canvas-game-engine",
   "dependencies": {
-    "async2": "^0.1.8",
+    "async2": "^0.1.9",
     "coffee-middleware": "^0.2.1",
     "coffee-script": "^1.8.0",
     "engine.io": "^1.4.3",

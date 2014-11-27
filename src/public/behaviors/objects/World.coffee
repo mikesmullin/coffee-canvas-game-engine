@@ -8,6 +8,7 @@ define [
 
     @start: (cb) ->
       GlTF.LoadMap @mapRoot, @map, cb, (name, h, fill_color, vertices) =>
+        console.log name: name, vertices: vertices
         # push all vertices into a new game object
         object =
           name: name

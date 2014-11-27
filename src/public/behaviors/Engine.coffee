@@ -81,7 +81,7 @@ define [
       obj[event]()
 
   trigger: (event, cb) ->
-    flow = async.new()
+    flow = new async
     o = [this].concat @objects
     for obj in o
       ((obj) ->
