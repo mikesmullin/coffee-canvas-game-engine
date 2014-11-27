@@ -1,21 +1,31 @@
 define [
+  'async2'
   'lib/Time',
   'lib/Input',
   'lib/Canvas2D'
-], (Time, Input, Canvas2D) -> class Engine
-  @run: (obj) ->
-    console.log 'Starting at '+(new Date())
+], (async, Time, Input, Canvas2D) -> class Engine
+  constructor: ({ canvas_id }) ->
+    @video = new Canvas2D canvas_id
+    @ojects = []
+    @running = false
+
+  log: (msg) ->
+    console.log msg
+
+  run: ->
+    @running = true
+    @log 'Starting at '+(new Date())
     return
 
-    @startup =>
-      updateInterval = 1000/VideoSettings.fps
+    @trigger 'startup', =>
+      updateInterval   = 1000/@video.fps
       maxUpdateLatency = updateInterval * 1
-      drawInterval   = 1000/VideoSettings.fps # should be >= update interval
-      skippedFrames  = 1
-      maxSkipFrames  = 5
-      nextUpdate     = Time.now()
-      framesRendered = 0
-      setInterval (-> console.log "#{framesRendered}fps"; framesRendered = 0), 1000
+      drawInterval     = 1000/@video.fps # should be >= update interval
+      skippedFrames    = 1
+      maxSkipFrames    = 5
+      nextUpdate       = Time.now()
+      framesRendered   = 0
+      Time.delay 1000, => @log "#{framesRendered}fps"; framesRendered = 0
 
       #ticks = 0
       tick = =>
@@ -34,7 +44,7 @@ define [
 
         if now >= nextUpdate # past-due for an update
           nextUpdate += updateInterval # schedule next update an interval apart
-          @update()
+          @trigger 'update'
 
           # notice that without an update, we won't have anything new to draw.
 
@@ -56,9 +66,25 @@ define [
         next()
       tick()
 
-  @stop: ->
-  @startup: (cb) ->
-  @shutdown: ->
-  @update: ->
-  @draw: ->
-    Video.ctx.clearRect 0 , 0 , Video.canvas.width, Video.canvas.height
+  #stop: (cb) -> cb()
+  #startup: (cb) -> cb()
+  #shutdown: (cb) -> cb()
+  #update: ->
+  draw: ->
+    @video.clear()
+
+  bind: (obj) ->
+    @objects.push obj
+
+  trigger: (event, [args]..., cb) ->
+    flow = new async
+    o = [this].concat @objects
+    for obj in o
+      ((obj) ->
+        flow.parallel (next) ->
+          args ||= []
+          args.push next
+          obj[event]?.apply null, args
+      )(obj)
+    flow.go (err) ->
+      cb err
