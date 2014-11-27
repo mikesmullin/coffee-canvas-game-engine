@@ -47,10 +47,10 @@ define [
 
           # notice that without an update, we won't have anything new to draw.
 
-          # notice some upates can take too long;
+          # notice some updates can take too long;
           # here we're allowed to skip drawing a few frames per second,
           # in order to catch-up.
-          if now > nextUpdate and # if past time for the next scheduled update, and
+          if Time.Now() > nextUpdate and # if past time for the next scheduled update, and
             skippedFrames < maxSkipFrames # we can still afford to skip a few frames
                skippedFrames++ # skip one more frame
           else # we have time, or we can't afford to skip any more frames

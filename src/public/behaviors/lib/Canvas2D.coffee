@@ -1,6 +1,6 @@
 define -> class Canvas2D
   constructor: ({ @id }) ->
-    @fps = 1 # TODO: find out why mathematically using 60 here lowers it to 10 actual fps
+    @fps = 60
     @canvas = document.getElementById @id
     @ctx = @canvas.getContext '2d'
     @pixelBuf = undefined
