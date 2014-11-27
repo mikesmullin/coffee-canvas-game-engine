@@ -3,8 +3,7 @@ define [
   '../components/Transform'
   '../components/MeshRenderer'
   '../lib/Vector3'
-  '../lib/Time'
-], (Behavior, Transform, MeshRenderer, Vector3, Time) ->
+], (Behavior, Transform, MeshRenderer, Vector3) ->
   class Cube extends Behavior
     constructor: ->
       @name = 'Cube'
@@ -42,4 +41,6 @@ define [
       #@transform.position = new Vector3 100, 100, 0
       #@transform.localScale.Add new Vector3 100, 100, 0
       #@transform.localRotation = new Quaternion 0, 0, 0
-      console.log time: engine.time, deltaTime: engine.deltaTime
+      t = (amplitude, period, x0, time) -> amplitude * Math.sin(time * 2 * Math.PI / period) + x0
+      @transform.position.x = t 4, 3, @transform.position.x, engine.time
+      @transform.position.y = t 2, 5, @transform.position.y, engine.time

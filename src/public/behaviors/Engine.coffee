@@ -79,7 +79,7 @@ define [
   Draw: (engine) ->
     # engine.time is seconds since start of game; used for interpolation
     # only updated once per frame
-    @time = Time.Now() - @started
+    @time = (Time.Now() - @started) / 1000
 
     @canvas.Clear()
 
