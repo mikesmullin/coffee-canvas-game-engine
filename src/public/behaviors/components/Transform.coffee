@@ -1,7 +1,7 @@
 define [
   '../lib/Vector3'
 ], (Vector3) -> class Transform
-  constructor: ->
+  constructor: ({ @parent }) ->
     @position = new Vector3
     @rotation = new Vector3
     @scale = new Vector3

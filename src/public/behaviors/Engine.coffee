@@ -5,7 +5,7 @@ define [
   'lib/Canvas2D'
 ], (async, Time, Input, Canvas2D) -> class Engine
   constructor: ({ canvas_id }) ->
-    @video = new Canvas2D id: canvas_id
+    @canvas = new Canvas2D id: canvas_id
     @objects = []
     @running = false
 
@@ -17,9 +17,9 @@ define [
     @Log 'Starting at '+(new Date())
 
     @Trigger 'Start', =>
-      updateInterval   = 1000/@video.fps
+      updateInterval   = 1000/@canvas.fps
       maxUpdateLatency = updateInterval * 1
-      drawInterval     = 1000/@video.fps # should be >= update interval
+      drawInterval     = 1000/@canvas.fps # should be >= update interval
       skippedFrames    = 1
       maxSkipFrames    = 5
       nextUpdate       = Time.now()
@@ -68,17 +68,19 @@ define [
   Start: (engine, cb) -> cb()
   Update: (engine) ->
   Draw: (engine) ->
-    @video.Clear()
-  #stop: (engine, cb) -> cb()
-  #shutdown: (engine, cb) -> cb()
+    @canvas.Clear()
+  #Stop: (engine, cb) -> cb()
+  #Shutdown: (engine, cb) -> cb()
 
   Bind: (obj) ->
     @objects.push obj
 
   TriggerSync: (event) ->
     @[event]()
-    for obj in @objects when obj.enabled and obj[event]
-      obj[event](@)
+    for obj in @objects when obj.enabled
+      for component in ['renderer'] when obj[component]?.enabled
+        obj[component][event]?(@)
+      obj[event]?(@)
 
   Trigger: (event, cb) ->
     flow = new async
@@ -86,7 +88,7 @@ define [
     for obj in o when obj[event]
       ((obj) =>
         flow.parallel (next) =>
-          obj[event].call obj, @, cb
+          obj[event].call obj, @, next
       )(obj)
     flow.go (err) ->
       cb err

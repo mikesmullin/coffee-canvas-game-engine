@@ -19,8 +19,8 @@ define [
         # push all vertices into a new game object
         obj = new Behavior
         obj.name = name # TODO: reconcile with prefabs and objects
-        obj.transform = new Transform
-        obj.renderer = new MeshRenderer
+        obj.transform = new Transform object: obj
+        obj.renderer = new MeshRenderer object: obj
         obj.renderer.materials = [{ color: fill }]
 
         for nil, i in vertices by 3
@@ -29,8 +29,8 @@ define [
               # apply transformations to
               # position model within game world
               # TODO: may want to store these as obj.transform.position, .rotation, etc.
-              .Transform model_transforms[1] # world
-              .Transform model_transforms[0] # local
+              .Transform model_transforms[1] # local
+              .Transform model_transforms[0] # world
               .Transform [ # flip along x-axis
                   1, 0 , 0, 0
                   0, -1, 0, 0

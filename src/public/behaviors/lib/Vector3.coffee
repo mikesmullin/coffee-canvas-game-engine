@@ -1,4 +1,6 @@
-define -> class Vector3
+define [
+  './Trig'
+], (Trig) -> class Vector3
   constructor: (@x=0, @y=0, @z=0) ->
   @FromArray: (a, i=0) ->
     new Vector3 a[i], a[i+1], a[i+2]
@@ -10,6 +12,13 @@ define -> class Vector3
     @y = (@x*b[1]) + (@y*b[5]) + (@z*b[9])  + (1*b[13])
     @z = (@x*b[2]) + (@y*b[6]) + (@z*b[10]) + (1*b[14])
     @
+
+  # TODO: make Rotate by X, Y, Z in the Transform and apply during draw?
+  #Rotate: (angle) ->
+  #  nx = @x * Math.cos(angle)) - (@y * Math.sin(angle)
+  #  ny = @x * Math.sin(angle)) + (@y * Math.cos(angle)
+  #  @x = nx; @y = ny
+  #  @
 
   Dot: (b) ->
     (@x*b.x)+(@y*b.y)+(@z*b.z)
