@@ -12,6 +12,12 @@ define [
   Log: (msg) ->
     console.log msg
 
+  Info: (msg, line=1, color='white', size=9) ->
+    msg = ''+msg
+    @canvas.ctx.font = "normal #{size}px silkscreennormal"
+    @canvas.ctx.fillStyle = color
+    @canvas.ctx.fillText msg, @canvas.canvas.width - (size*msg.length) - 10, 10+(line*size)
+
   Run: ->
     @running = true
     @Log 'Starting at '+(new Date())
@@ -24,7 +30,8 @@ define [
       maxSkipFrames    = 5
       nextUpdate       = Time.Now()
       framesRendered   = 0
-      Time.Interval    1000, => @Log "#{framesRendered}fps"; framesRendered = 0
+      @fps             = 0
+      Time.Interval    1000, => @fps = framesRendered; framesRendered = 0
       @deltaTime       = 0 # time to complete last frame; makes interpolation frame-rate independent
       lastFrameStarted = 0
 
@@ -82,6 +89,8 @@ define [
     @time = (Time.Now() - @started) / 1000
 
     @canvas.Clear()
+
+    @Info @fps, 1, 'lime', 45
 
   #Stop: (engine, cb) -> cb()
   #Shutdown: (engine, cb) -> cb()
