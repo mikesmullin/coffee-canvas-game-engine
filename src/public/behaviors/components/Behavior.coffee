@@ -1,5 +1,5 @@
 define -> class Behavior
-  constructor: (@gameObject) ->
+  constructor: (@name, @gameObject) ->
     @enabled = true # enabled behaviors are updated, disabled are not
 
     @components = []

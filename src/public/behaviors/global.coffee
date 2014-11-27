@@ -4,5 +4,5 @@ require [
   'objects/World'
 ], (Engine, World) ->
   engine = new Engine canvas_id: 'main'
-  engine.bind World
+  engine.bind new World
   engine.run()
