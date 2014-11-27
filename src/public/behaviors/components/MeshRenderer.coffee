@@ -21,11 +21,11 @@ define -> class MeshRenderer
     wv = [] # world vertices
     for vec3 in @vertices
       wv.push( vec3.Clone()
+        .RotateX @object.transform.rotation.x
         .Scale @object.transform.localScale
         .Add @object.transform.position
-        #.RotateX @object.transform.rotate.x
-        #.RotateY @object.transform.rotate.y
-        #.RotateZ @object.transform.rotate.z
+        #.RotateY @object.transform.rotation.y
+        #.RotateZ @object.transform.rotation.z
         )
 
     step = switch @arrayType

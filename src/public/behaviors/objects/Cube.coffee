@@ -44,3 +44,6 @@ define [
       t = (amplitude, period, x0, time) -> amplitude * Math.sin(time * 2 * Math.PI / period) + x0
       @transform.position.x = t 4, 3, @transform.position.x, engine.time
       @transform.position.y = t 2, 5, @transform.position.y, engine.time
+      @transform.localScale.x = t 2, 5, @transform.localScale.x, engine.time
+      @transform.localScale.y = t 2, 5, @transform.localScale.y, engine.time
+      @transform.rotation.x = t 2, 3, 0, engine.time

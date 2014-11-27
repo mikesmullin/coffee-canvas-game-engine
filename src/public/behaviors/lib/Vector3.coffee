@@ -15,9 +15,14 @@ define [
     @
 
   # TODO: make Rotate by X, Y, Z in the Transform and apply during draw?
+  RotateX: (angle) ->
+    nx = (@x * Math.cos(angle)) - (@y * Math.sin(angle))
+    ny = (@x * Math.sin(angle)) + (@y * Math.cos(angle))
+    @x = nx; @y = ny
+    @
   #Rotate: (angle) ->
-  #  nx = @x * Math.cos(angle)) - (@y * Math.sin(angle)
-  #  ny = @x * Math.sin(angle)) + (@y * Math.cos(angle)
+  # nx = (@x * Math.cos(angle)) - (@y * Math.sin(angle))
+  # ny = (@x * Math.sin(angle)) + (@y * Math.cos(angle))
   #  @x = nx; @y = ny
   #  @
 
