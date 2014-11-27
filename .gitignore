@@ -1,4 +1,3 @@
 /node_modules/
 /src/public/stylesheets/*.css
-/src/public/behaviors/**/*.js
 /todo.txt

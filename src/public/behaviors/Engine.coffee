@@ -61,5 +61,4 @@ define [
   @shutdown: ->
   @update: ->
   @draw: ->
-  @draw: ->
     Video.ctx.clearRect 0 , 0 , Video.canvas.width, Video.canvas.height

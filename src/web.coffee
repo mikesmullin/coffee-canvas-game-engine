@@ -23,9 +23,8 @@ app.locals.pretty = true
 app.use stylus.middleware src: path.join(app.PUBLIC), compile: (str, path) ->
   stylus(str).set('filename', path).use nib()
 
-app.use require('connect-coffee-script')
+app.use require('coffee-middleware')
   src: path.join app.PUBLIC
-  dest: path.join app.PUBLIC
   bare: true
   force: true
 
