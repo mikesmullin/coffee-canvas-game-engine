@@ -5,8 +5,8 @@ define [
   'lib/Canvas2D'
 ], (async, Time, Input, Canvas2D) -> class Engine
   constructor: ({ canvas_id }) ->
-    @video = new Canvas2D canvas_id
-    @ojects = []
+    @video = new Canvas2D id: canvas_id
+    @objects = []
     @running = false
 
   log: (msg) ->
@@ -15,9 +15,8 @@ define [
   run: ->
     @running = true
     @log 'Starting at '+(new Date())
-    return
 
-    @trigger 'startup', =>
+    @trigger 'start', =>
       updateInterval   = 1000/@video.fps
       maxUpdateLatency = updateInterval * 1
       drawInterval     = 1000/@video.fps # should be >= update interval
@@ -44,7 +43,7 @@ define [
 
         if now >= nextUpdate # past-due for an update
           nextUpdate += updateInterval # schedule next update an interval apart
-          @trigger 'update'
+          @triggerSync 'update'
 
           # notice that without an update, we won't have anything new to draw.
 
@@ -55,36 +54,39 @@ define [
             skippedFrames < maxSkipFrames # we can still afford to skip a few frames
                skippedFrames++ # skip one more frame
           else # we have time, or we can't afford to skip any more frames
-            @draw() # take time to draw
+            @triggerSync 'draw' # take time to draw
             framesRendered++ # for measuring actual fps
             skippedFrames = 0 # frames may be skipped from here, if needed
         else
           sleepTime = nextUpdate - now
           if sleepTime > 0
-            return delay sleepTime, next
+            return Time.delay sleepTime, next
 
         next()
       tick()
 
-  #stop: (cb) -> cb()
-  #startup: (cb) -> cb()
-  #shutdown: (cb) -> cb()
-  #update: ->
+  start: (cb) -> cb()
+  update: ->
   draw: ->
     @video.clear()
+  #stop: (cb) -> cb()
+  #shutdown: (cb) -> cb()
 
   bind: (obj) ->
     @objects.push obj
 
-  trigger: (event, [args]..., cb) ->
-    flow = new async
+  triggerSync: (event) ->
+    @[event]()
+    for obj in @objects when obj.enabled
+      obj[event]()
+
+  trigger: (event, cb) ->
+    flow = async.new()
     o = [this].concat @objects
     for obj in o
       ((obj) ->
         flow.parallel (next) ->
-          args ||= []
-          args.push next
-          obj[event]?.apply null, args
+          obj[event].call obj, cb
       )(obj)
     flow.go (err) ->
       cb err

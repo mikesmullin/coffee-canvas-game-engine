@@ -1,5 +1,3 @@
-behaviors = []
-
 define -> class Behavior
   constructor: (@gameObject) ->
     @enabled = true # enabled behaviors are updated, disabled are not
@@ -16,8 +14,6 @@ define -> class Behavior
     @rigidbody2D = null
     @transform = null
 
-    @id = behaviors.push this
-
-  start: ->
+  start: (cb) -> cb()
   update: ->
   draw: ->
