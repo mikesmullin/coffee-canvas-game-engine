@@ -6,10 +6,8 @@ define [
 ], (Behavior, Transform, MeshRenderer, Vector3) ->
   class Cube extends Behavior
     constructor: ->
-      @name = 'Cube'
       super
-
-    Start: (engine, cb) ->
+      @name = 'Cube'
       @transform = new Transform object: @
       @renderer = new MeshRenderer object: @
       @renderer.materials = [{
@@ -25,11 +23,11 @@ define [
         new Vector3 1, 1, 0
         new Vector3 0, 1, 0
       ]
-
       # position model within game world
       @transform.position = new Vector3 100, 100, 0
       @transform.localScale.Add new Vector3 100, 100, 0
 
+    Start: (engine, cb) ->
       engine.Log @
       cb()
 
