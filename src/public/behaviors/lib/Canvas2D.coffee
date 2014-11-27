@@ -1,6 +1,6 @@
 define -> class Canvas2D
   constructor: ({ @id }) ->
-    @fps = 60
+    @fps = 1
     @canvas = document.getElementById @id
     @ctx = @canvas.getContext '2d'
     @pixelBuf = undefined

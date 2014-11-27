@@ -24,13 +24,17 @@ define [
       maxSkipFrames    = 5
       nextUpdate       = Time.Now()
       framesRendered   = 0
-      Time.Interval 1000, => @Log "#{framesRendered}fps"; framesRendered = 0
+      Time.Interval    1000, => @Log "#{framesRendered}fps"; framesRendered = 0
+      @deltaTime       = 0 # time to complete last frame; makes interpolation frame-rate independent
+      lastFrameStarted = 0
 
       #ticks = 0
       tick = =>
         #return if ticks++ > 7
         next = => requestAnimationFrame tick if @running # loop no more than 60fps
         now = Time.Now()
+        @deltaTime = (now - lastFrameStarted) / 1000
+        lastFrameStarted = now
 
         # if the time to update + draw has left the nextUpdate scheduled
         # ridiculously far behind in the past, then resync the period for

@@ -5,9 +5,7 @@ define -> class MeshRenderer
     #@receiveShadows = false
     @arrayType = 'triangles'
     @vertices = []
-    @materials = [{
-      color: 'white'
-    }]
+    @materials = [{}]
 
   Draw: (engine) ->
     ctx = engine.canvas.ctx
