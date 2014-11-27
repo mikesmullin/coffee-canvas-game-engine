@@ -1,6 +1,6 @@
-#Engine = require './Engine'
 requirejs.config baseUrl: 'behaviors'
-require ['./app/World'], (World) ->
-
-#engine = new Engine
-#engine.run()
+require [
+  './Engine'
+  'objects/World'
+], (Engine, World) ->
+  Engine.run World

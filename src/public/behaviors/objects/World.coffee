@@ -7,10 +7,14 @@ define [
       @mapRoot = 'models/map1'
       @map = 'map1.gltf'
 
-    startup: ->
-      obj = GlTF.InitMap @mapRoot, @map
-      @renderer = new MeshRenderer obj
+    startup: (cb) ->
+      obj = GlTF.InitMap @mapRoot, @map, ->
+        @renderer = new MeshRenderer obj
+        cb()
 
     start: ->
 
     update: ->
+
+    draw: ->
+      GlTF.DrawMap()
