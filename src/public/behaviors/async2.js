@@ -1,1 +1,1 @@
-../../../node_modules/async2/js/async2.js
+../../../node_modules/async2/js/async2.min.js
