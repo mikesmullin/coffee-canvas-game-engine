@@ -22,15 +22,15 @@ define [
       drawInterval     = 1000/@canvas.fps # should be >= update interval
       skippedFrames    = 1
       maxSkipFrames    = 5
-      nextUpdate       = Time.now()
+      nextUpdate       = Time.Now()
       framesRendered   = 0
-      Time.delay 1000, => @Log "#{framesRendered}fps"; framesRendered = 0
+      Time.Interval 1000, => @Log "#{framesRendered}fps"; framesRendered = 0
 
       #ticks = 0
       tick = =>
         #return if ticks++ > 7
         next = => requestAnimationFrame tick if @running # loop no more than 60fps
-        now = Time.now()
+        now = Time.Now()
 
         # if the time to update + draw has left the nextUpdate scheduled
         # ridiculously far behind in the past, then resync the period for
@@ -60,15 +60,25 @@ define [
         else
           sleepTime = nextUpdate - now
           if sleepTime > 0
-            return Time.delay sleepTime, next
+            return Time.Delay sleepTime, next
 
         next()
       tick()
 
-  Start: (engine, cb) -> cb()
-  Update: (engine) ->
+  Start: (engine, cb) ->
+    @started = Time.Now()
+    @time = 0
+    cb()
+
+  #Update: (engine) ->
+
   Draw: (engine) ->
+    # engine.time is seconds since start of game; used for interpolation
+    # only updated once per frame
+    @time = Time.Now() - @started
+
     @canvas.Clear()
+
   #Stop: (engine, cb) -> cb()
   #Shutdown: (engine, cb) -> cb()
 
@@ -76,11 +86,11 @@ define [
     @objects.push obj
 
   TriggerSync: (event) ->
-    @[event]()
+    @[event]?()
     for obj in @objects when obj.enabled
+      obj[event]?(@)
       for component in ['renderer'] when obj[component]?.enabled
         obj[component][event]?(@)
-      obj[event]?(@)
 
   Trigger: (event, cb) ->
     flow = new async

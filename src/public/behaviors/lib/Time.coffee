@@ -1,3 +1,4 @@
 define -> class Time
-  @now: -> (new Date()).getTime()
-  @delay: (s, f) -> setTimeout f, s
+  @Now: -> (new Date()).getTime()
+  @Delay: (s, f) -> setTimeout f, s
+  @Interval: (s, f) -> setInterval f, s
