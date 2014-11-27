@@ -17,17 +17,30 @@ define -> class MeshRenderer
 
     pos = @object.transform.position
 
+    # apply Transform
+    # TODO: stop performing this on every draw
+    #        instead do it with Updates to Transform vectors
+    wv = [] # world vertices
+    for vec3 in @vertices
+      wv.push( vec3.Clone()
+        .Scale @object.transform.localScale
+        .Add @object.transform.position
+        #.RotateX @object.transform.rotate.x
+        #.RotateY @object.transform.rotate.y
+        #.RotateZ @object.transform.rotate.z
+        )
+
     step = switch @arrayType
       when 'triangles' then 3
       when 'quads' then 4
 
-    for nil, i in @vertices by step
+    for nil, i in wv by step
         ctx.beginPath()
-        ctx.moveTo @vertices[i].x+pos.x,   @vertices[i].y+pos.y
-        ctx.lineTo @vertices[i+1].x+pos.x, @vertices[i+1].y+pos.y
-        ctx.lineTo @vertices[i+2].x+pos.x, @vertices[i+2].y+pos.y
+        ctx.moveTo wv[i].x,   wv[i].y
+        ctx.lineTo wv[i+1].x, wv[i+1].y
+        ctx.lineTo wv[i+2].x, wv[i+2].y
         if @arrayType is 'quads'
-          ctx.lineTo @vertices[i+3].x+pos.x, @vertices[i+3].y+pos.y
+          ctx.lineTo wv[i+3].x, wv[i+3].y
         ctx.closePath()
         ctx.fill()
         ctx.stroke()

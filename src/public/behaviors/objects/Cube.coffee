@@ -27,20 +27,8 @@ define [
       ]
 
       # position model within game world
-      for vec3 in @renderer.vertices
-        vec3
-          .Transform [ # and zoom to fit canvas
-              100, 0,  0,  0
-              0,  100, 0,  0
-              0,  0,   1,  0
-              0,  0,   0,  1
-            ]
-          .Transform [ # center
-              1,   0,   0, 0
-              0,   1,   0, 0
-              0,   0,   1, 0
-              100, 100, 0, 1
-            ]
+      @transform.position = new Vector3 100, 100, 0
+      @transform.localScale.Add new Vector3 100, 100, 0
 
       engine.Log @
       cb()
@@ -48,6 +36,8 @@ define [
     Update: (engine) ->
       # TODO: cause these to pulse in a loop over time
       # TODO: demonstrate control over all 3 axis of rotation
-      #@transform.position
-      #@transform.rotation
-      #@transform.scale
+      # NOTICE: order shouldn't matter here like it did when applying matrix transformations
+      #   since the draw will always apply them in a certain [correct?] order
+      #@transform.position = new Vector3 100, 100, 0
+      #@transform.localScale.Add new Vector3 100, 100, 0
+      #@transform.localRotation = new Quaternion 0, 0, 0

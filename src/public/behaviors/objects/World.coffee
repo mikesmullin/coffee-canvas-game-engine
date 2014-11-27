@@ -29,21 +29,21 @@ define [
               # apply transformations to
               # position model within game world
               # TODO: may want to store these as obj.transform.position, .rotation, etc.
-              .Transform model_transforms[1] # local
-              .Transform model_transforms[0] # world
-              .Transform [ # flip along x-axis
+              .TransformMatrix4 model_transforms[1] # local
+              .TransformMatrix4 model_transforms[0] # world
+              .TransformMatrix4 [ # flip along x-axis
                   1, 0 , 0, 0
                   0, -1, 0, 0
                   0, 0,  1, 0
                   0, 0,  0, 1
                 ]
-              .Transform [ # and zoom to fit canvas
+              .TransformMatrix4 [ # and zoom to fit canvas
                   35, 0,  0,  0
                   0,  35, 0,  0
                   0,  0,  35, 0
                   0,  0,  0,  1
                 ]
-              .Transform [ # center
+              .TransformMatrix4 [ # center
                   1,   0,   0, 0
                   0,   1,   0, 0
                   0,   0,   1, 0
