@@ -92,8 +92,12 @@ define [
 
     @Info @fps, 1, 'lime', 45
 
-  #Stop: (engine, cb) -> cb()
-  #Shutdown: (engine, cb) -> cb()
+  Stop: (engine) ->
+    @running = false
+    @TriggerSync 'Shutdown'
+
+  Shutdown: (engine) ->
+    #TODO: we may want to make this async
 
   Bind: (obj) ->
     @objects.push obj

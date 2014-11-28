@@ -21,5 +21,6 @@ Code is here:
 
 Statically-hosted demos:
 
-* [`http://mikesmullin.github.io/coffee-canvas-game-engine`](http://mikesmullin.github.io/coffee-canvas-game-engine/) Demo 1
-* [`http://mikesmullin.github.io/coffee-canvas-game-engine/snapshots/2`](http://mikesmullin.github.io/coffee-canvas-game-engine/snapshots/2) Demo 2
+* [`http://mikesmullin.github.io/coffee-canvas-game-engine`](http://mikesmullin.github.io/coffee-canvas-game-engine/) Demo 1: Simple maze game
+* [`http://mikesmullin.github.io/coffee-canvas-game-engine/snapshots/2`](http://mikesmullin.github.io/coffee-canvas-game-engine/snapshots/2) Demo 2: Transformations
+* [`http://mikesmullin.github.io/coffee-canvas-game-engine/snapshots/3`](http://mikesmullin.github.io/coffee-canvas-game-engine/snapshots/3) Demo 3: Visibility and lighting
