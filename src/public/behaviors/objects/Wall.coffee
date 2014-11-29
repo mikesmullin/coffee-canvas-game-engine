@@ -9,6 +9,6 @@ define [
       @transform = new Transform object: @
       # TODO: going to need a more complex collider than this
       #         something that understands N polys
-      @collider = new BoxCollider
+      #@collider = new BoxCollider
 
     Update: ->

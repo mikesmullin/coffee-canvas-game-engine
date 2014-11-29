@@ -1,7 +1,7 @@
 define [
   'async2'
   'lib/Time',
-  'lib/Input',
+  'scripts/Input',
   'lib/Canvas2D'
 ], (async, Time, Input, Canvas2D) -> class Engine
   constructor: ({ canvas_id }) ->
@@ -17,6 +17,11 @@ define [
     @canvas.ctx.font = "normal #{size}px silkscreennormal"
     @canvas.ctx.fillStyle = color
     @canvas.ctx.fillText msg, @canvas.canvas.width - (size*msg.length) - 10, 10+(line*size)
+
+  Start: (engine, cb) ->
+    @started = Time.Now()
+    @time = 0
+    Input.Start engine, cb
 
   Run: ->
     @running = true
@@ -75,11 +80,6 @@ define [
 
         next()
       tick()
-
-  Start: (engine, cb) ->
-    @started = Time.Now()
-    @time = 0
-    cb()
 
   #Update: (engine) ->
 

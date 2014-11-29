@@ -4,9 +4,15 @@ define [
   constructor: (@x=0, @y=0, @z=0) ->
   @FromArray: (a, i=0) ->
     new Vector3 a[i], a[i+1], a[i+2]
-  @UP: x: 0, y: 1, z: 0
-  @ZERO: x: 0, y: 0, z: 0
-  @ONE: x: 1, y: 1, z: 1
+
+  @back:    x: 0,  y: 0,  z: -1
+  @down:    x: 0,  y: -1, z: 0
+  @forward: x: 0,  y: 0,  z: 1
+  @left:    x: -1, y: 0,  z: 0
+  @one:     x: 1,  y: 1,  z: 1
+  @right:   x: 1,  y: 0,  z: 0
+  @up:      x: 0,  y: 1,  z: 0
+  @zero:    x: 0,  y: 0,  z: 0
 
   TransformMatrix4: (b) -> # 4x4 column-major
     @x = (@x*b[0]) + (@y*b[1]) + (@z*b[2])  + (1*b[3])
@@ -45,7 +51,7 @@ define [
     @z *= b.z
     @
   Unit: -> # aka normalize?
-    @Scale @ONE / @Length()
+    @Scale @one / @Length()
   Add: (b) ->
     @x += b.x
     @y += b.y

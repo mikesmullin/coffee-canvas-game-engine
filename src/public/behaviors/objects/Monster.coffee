@@ -7,6 +7,6 @@ define [
     constructor: ->
       super
       @transform = new Transform object: @
-      @collider = new BoxCollider
+      @collider = new BoxCollider object: @
 
-    Update: ->
+    OnTriggerEnter: (collidingObject) ->
