@@ -1,8 +1,8 @@
 define [
-  '../components/Behavior'
-  '../components/Transform'
-  '../components/MeshRenderer'
-  '../lib/Vector3'
+  'components/Behavior'
+  'components/Transform'
+  'components/MeshRenderer'
+  'lib/Vector3'
 ], (Behavior, Transform, MeshRenderer, Vector3) ->
   class Cube extends Behavior
     constructor: ->

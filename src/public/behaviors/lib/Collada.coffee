@@ -1,7 +1,7 @@
 define [
-  '../components/MeshRenderer'
-  '../lib/Vector3'
-  '../lib/Trig'
+  'components/MeshRenderer'
+  'lib/Vector3'
+  'lib/Trig'
 ], (MeshRenderer, Vector3, Trig) ->
   class Collada
     @GetFile: (type, url, cb) ->

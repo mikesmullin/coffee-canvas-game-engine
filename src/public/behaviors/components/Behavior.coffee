@@ -11,7 +11,7 @@ define -> class Behavior
     @renderer ||= null
     #@rigidbody2D = null
     @transform = null
+    @scripts = {}
 
-  start: (cb) -> cb()
-  update: ->
-  draw: ->
+  BindScript: (cls) ->
+    @scripts[cls.name] = new cls object: @

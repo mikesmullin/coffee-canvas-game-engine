@@ -1,7 +1,7 @@
 define [
   'async2'
   'lib/Time',
-  'scripts/Input',
+  'lib/Input',
   'lib/Canvas2D'
 ], (async, Time, Input, Canvas2D) -> class Engine
   constructor: ({ canvas_id }) ->
@@ -70,7 +70,7 @@ define [
             skippedFrames < maxSkipFrames # we can still afford to skip a few frames
                skippedFrames++ # skip one more frame
           else # we have time, or we can't afford to skip any more frames
-            @TriggerSync 'Draw' # take time to draw
+            @TriggerSync 'Draw'; @TriggerSync 'DrawGUI' # take time to draw
             framesRendered++ # for measuring actual fps
             skippedFrames = 0 # frames may be skipped from here, if needed
         else
@@ -87,9 +87,9 @@ define [
     # engine.time is seconds since start of game; used for interpolation
     # only updated once per frame
     @time = (Time.Now() - @started) / 1000
-
     @canvas.Clear()
 
+  DrawGUI: (engine) ->
     @Info @fps, 1, 'lime', 45
 
   Stop: (engine) ->
@@ -109,6 +109,9 @@ define [
       for component in ['renderer', 'collider']
         if obj[component]?.enabled
           obj[component][event]?(@)
+      for cls, script of obj.scripts when script.enabled
+        script[event]?(@)
+    return
 
   Trigger: (event, cb) ->
     flow = new async

@@ -1,5 +1,5 @@
 define [
-  '../objects/Player'
+  'objects/Player'
 ], (Player) ->
   class Player1 extends Player
     constructor: ->

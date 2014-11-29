@@ -1,8 +1,9 @@
 define [
-  '../components/Behavior'
-  '../lib/Vector3'
-], (Behavior, Vector3) ->
-  class TopDownController2D extends Behavior
+  'components/Script'
+  'lib/Input'
+  'lib/Vector3'
+], (Script, Input, Vector3) ->
+  class TopDownController2D extends Script
     constructor: ->
       super
 
@@ -46,15 +47,21 @@ define [
       # TODO: make this work, if needed (e.g., waking from pause or hibernate)
 
     Update: (engine) ->
-      @UpdateSmoothedMovementDirection()
+      #console.log 'update ', Input.axis
+      speed = 420.0 # pixels per second
+      @object.transform.position.x += (speed * engine.deltaTime * Input.GetAxisRaw 'Horizontal')
+      @object.transform.position.y += (speed * engine.deltaTime * Input.GetAxisRaw 'Vertical')
+      return
 
-      # Calculate actual motion
-      movement = moveDirection * moveSpeed + Vector3 (0, verticalSpeed, 0) + inAirVelocity
-      movement *= Time.deltaTime
+      #@UpdateSmoothedMovementDirection()
 
-      # Move the controller
-      controller = GetComponent(CharacterController)
-      collisionFlags = controller.Move(movement)
+      ## Calculate actual motion
+      #movement = moveDirection * moveSpeed + Vector3 (0, verticalSpeed, 0) + inAirVelocity
+      #movement *= Time.deltaTime
+
+      ## Move the controller
+      #controller = GetComponent(CharacterController)
+      #collisionFlags = controller.Move(movement)
 
     UpdateSmoothedMovementDirection: ->
       cameraTransform = Camera.main.transform # TODO: need Camera object?

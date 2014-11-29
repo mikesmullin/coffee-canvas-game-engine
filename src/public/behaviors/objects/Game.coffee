@@ -1,9 +1,9 @@
 define [
-  '../components/Behavior'
-  '../lib/Collada'
-  '../objects/Player'
-  '../objects/Monster'
-  '../objects/Wall'
+  'components/Behavior'
+  'lib/Collada'
+  'objects/Player'
+  'objects/Monster'
+  'objects/Wall'
 ], (Behavior, Collada, Player, Monster, Wall) ->
   class Game extends Behavior
     Start: (engine, cb) ->

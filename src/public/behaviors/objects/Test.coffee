@@ -1,6 +1,6 @@
 define [
-  '../components/Behavior'
-  '../lib/Visibility'
+  'components/Behavior'
+  'lib/Visibility'
 ], (Behavior, {Block, Wall, Point, EndPoint, Segment, Visibility}) ->
   class Test extends Behavior
     constructor: ->

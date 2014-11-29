@@ -1,13 +1,16 @@
 define [
-  '../lib/GMath'
+  'lib/GMath'
 ], (GMath) -> class Input
   @axis:
     Vertical:  0
     Horizontal: 0
     'Mouse X': 0
     'Mouse Y': 0
+  @buttons:
+    'Use': false
 
   @GetAxisRaw: (axis) -> @axis[axis]
+  @GetButtonDown: (button) -> @buttons[button]
 
   @Start: (engine, cb) ->
     canvas = engine.canvas.canvas
@@ -33,12 +36,13 @@ define [
     # keyboard
     document.addEventListener 'keydown', ((e) =>
       return unless locked
-      engine.Log 'keyCode: '+ e.keyCode
+      #engine.Log 'keyCode: '+ e.keyCode
       switch e.keyCode
-        when 87 then @axis.Vertical = 1.0 # w
+        when 87 then @axis.Vertical = -1.0 # w
         when 65 then @axis.Horizontal = -1.0 # a
-        when 83 then @axis.Vertical = -1.0 # s
+        when 83 then @axis.Vertical = 1.0 # s
         when 68 then @axis.Horizontal = 1.0 # d
+        when 69 then @buttons.Use = true
       e.preventDefault() # prevent browser fro reacting to event
     ), true
     document.addEventListener 'keyup', ((e) =>
@@ -46,6 +50,7 @@ define [
       switch e.keyCode
         when 87, 83 then @axis.Vertical = 0 # w, s
         when 65, 68 then @axis.Horizontal = 0 # a, d
+        when 69 then @buttons.Use = false
       e.preventDefault() # prevent browser fro reacting to event
     ), true
 

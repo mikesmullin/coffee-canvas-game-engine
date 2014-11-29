@@ -1,5 +1,5 @@
 define [
-  './Trig'
+  'lib/Trig'
 ], (Trig) -> class Vector3
   constructor: (@x=0, @y=0, @z=0) ->
   @FromArray: (a, i=0) ->
