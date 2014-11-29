@@ -33,13 +33,51 @@ define -> class MeshRenderer
       when 'triangles' then 3
       when 'quads' then 4
 
-    for nil, i in wv by step
-        ctx.beginPath()
-        ctx.moveTo wv[i].x,   wv[i].y
-        ctx.lineTo wv[i+1].x, wv[i+1].y
-        ctx.lineTo wv[i+2].x, wv[i+2].y
-        if @arrayType is 'quads'
-          ctx.lineTo wv[i+3].x, wv[i+3].y
-        ctx.closePath()
-        ctx.fill()
-        ctx.stroke()
+    i=0
+    ctx.beginPath()
+    ctx.moveTo wv[i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.closePath()
+    ctx.stroke()
+
+    ctx.beginPath()
+    ctx.moveTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.closePath()
+    ctx.stroke()
+
+    ctx.beginPath()
+    ctx.moveTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.lineTo wv[++i].x, wv[i].y
+    ctx.closePath()
+    ctx.stroke()
+
+    engine.Stop()

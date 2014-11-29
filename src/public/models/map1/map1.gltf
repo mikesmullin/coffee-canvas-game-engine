@@ -5,15 +5,15 @@
             "byteOffset": 24,
             "byteStride": 0,
             "componentType": 5123,
-            "count": 87,
+            "count": 84,
             "type": "SCALAR"
         },
         "accessor_18": {
             "bufferView": "bufferView_63",
-            "byteOffset": 288,
+            "byteOffset": 192,
             "byteStride": 12,
             "componentType": 5126,
-            "count": 87,
+            "count": 34,
             "max": [
                 8.24215,
                 8.4411,
@@ -28,10 +28,10 @@
         },
         "accessor_20": {
             "bufferView": "bufferView_63",
-            "byteOffset": 1332,
+            "byteOffset": 600,
             "byteStride": 12,
             "componentType": 5126,
-            "count": 87,
+            "count": 34,
             "max": [
                 0,
                 0,
@@ -57,7 +57,7 @@
             "byteOffset": 0,
             "byteStride": 12,
             "componentType": 5126,
-            "count": 6,
+            "count": 4,
             "max": [
                 0.625,
                 0.625001,
@@ -72,10 +72,10 @@
         },
         "accessor_40": {
             "bufferView": "bufferView_63",
-            "byteOffset": 72,
+            "byteOffset": 48,
             "byteStride": 12,
             "componentType": 5126,
-            "count": 6,
+            "count": 4,
             "max": [
                 0,
                 0,
@@ -98,10 +98,10 @@
         },
         "accessor_58": {
             "bufferView": "bufferView_63",
-            "byteOffset": 144,
+            "byteOffset": 96,
             "byteStride": 12,
             "componentType": 5126,
-            "count": 6,
+            "count": 4,
             "max": [
                 0.625,
                 0.625,
@@ -116,10 +116,10 @@
         },
         "accessor_60": {
             "bufferView": "bufferView_63",
-            "byteOffset": 216,
+            "byteOffset": 144,
             "byteStride": 12,
             "componentType": 5126,
-            "count": 6,
+            "count": 4,
             "max": [
                 0,
                 0,
@@ -143,20 +143,20 @@
     "bufferViews": {
         "bufferView_62": {
             "buffer": "map1",
-            "byteLength": 200,
+            "byteLength": 192,
             "byteOffset": 0,
             "target": 34963
         },
         "bufferView_63": {
             "buffer": "map1",
-            "byteLength": 2376,
-            "byteOffset": 200,
+            "byteLength": 1008,
+            "byteOffset": 192,
             "target": 34962
         }
     },
     "buffers": {
         "map1": {
-            "byteLength": 2576,
+            "byteLength": 1200,
             "type": "arraybuffer",
             "uri": "map1.bin"
         }

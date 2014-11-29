@@ -21,7 +21,7 @@ define [
         obj.name = name # TODO: reconcile with prefabs and objects
         obj.transform = new Transform object: obj
         obj.renderer = new MeshRenderer object: obj
-        obj.renderer.arrayType = 'triangles'
+        obj.renderer.arrayType = 'quads'
         obj.renderer.materials = [{
           fillStyle: fill
         }]
