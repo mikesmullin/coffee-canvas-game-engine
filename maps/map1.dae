@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.71.0 commit date:2014-06-25, commit time:18:36, hash:9337574</authoring_tool>
     </contributor>
-    <created>2014-11-27T11:22:01</created>
-    <modified>2014-11-27T11:22:01</modified>
+    <created>2014-11-28T19:42:08</created>
+    <modified>2014-11-28T19:42:08</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -106,7 +106,7 @@
     <geometry id="wall-mesh" name="wall">
       <mesh>
         <source id="wall-mesh-positions">
-          <float_array id="wall-mesh-positions-array" count="105">-7.558909 -7.257847 7.51019e-6 -7.558905 -3.257846 3.45707e-6 3.441095 -5.757857 5.96046e-6 3.441098 -2.757856 2.98023e-6 -8.058905 -2.757845 2.98023e-6 -8.05891 -7.757846 7.98702e-6 8.441095 -7.757862 7.98702e-6 8.44111 8.242142 -7.98702e-6 4.941099 -1.757857 2.02656e-6 4.941098 -3.257858 3.45707e-6 7.941098 -3.257861 3.45707e-6 7.941094 -7.257862 7.51019e-6 7.941099 -2.757861 2.98023e-6 7.94111 8.242142 -7.98702e-6 -8.058895 8.242157 -7.98702e-6 7.941109 7.742142 -7.39098e-6 -7.558895 7.742157 -7.39098e-6 -8.058905 -2.757845 2.98023e-6 -7.558905 -2.757846 2.98023e-6 5.441098 -2.757858 2.98023e-6 5.441099 -1.757858 2.02656e-6 2.941097 -3.257856 3.45707e-6 2.941094 -5.757856 5.96046e-6 -1.058895 6.24215 -5.96046e-6 -1.058904 -3.257852 3.45707e-6 -2.558904 -3.257851 3.45707e-6 -2.558895 6.242151 -5.96046e-6 -3.058896 6.242152 -5.96046e-6 -3.058904 -2.75785 2.98023e-6 -0.5588946 6.242149 -5.96046e-6 -0.5589033 -2.757853 2.98023e-6 -4.558905 -3.257849 3.45707e-6 -6.058906 -3.257847 3.45707e-6 -4.558904 -2.757849 2.98023e-6 -6.058905 -2.757847 2.98023e-6</float_array>
+          <float_array id="wall-mesh-positions-array" count="105">-7.257853 -7.558903 0 -3.257853 -7.558903 0 -5.757853 3.4411 0 -2.757853 3.4411 0 -2.757853 -8.058903 0 -7.757853 -8.058903 0 -7.757853 8.441102 0 8.24215 8.441102 0 -1.757852 4.9411 0 -3.257853 4.9411 0 -3.257853 7.941101 0 -7.257853 7.941101 0 -2.757853 7.941101 0 8.24215 7.941101 0 8.24215 -8.058903 0 7.74215 7.941101 0 7.74215 -7.558903 0 -2.757853 -8.058903 0 -2.757853 -7.558903 0 -2.757853 5.441101 0 -1.757852 5.441101 0 -3.257853 2.9411 0 -5.757853 2.9411 0 6.242149 -1.058901 0 -3.257853 -1.058901 0 -3.257853 -2.558901 0 6.242149 -2.558901 0 6.242149 -3.058901 0 -2.757853 -3.058901 0 6.242149 -0.558901 0 -2.757853 -0.558901 0 -3.257853 -4.558902 0 -3.257853 -6.058902 0 -2.757853 -4.558902 0 -2.757853 -6.058902 0</float_array>
           <technique_common>
             <accessor source="#wall-mesh-positions-array" count="35" stride="3">
               <param name="X" type="float"/>
@@ -116,7 +116,7 @@
           </technique_common>
         </source>
         <source id="wall-mesh-normals">
-          <float_array id="wall-mesh-normals-array" count="87">-1.9507e-7 9.97023e-7 1 0 9.93411e-7 1 0 9.53674e-7 1 0 1.19209e-6 1 0 9.87734e-7 1 0 9.53674e-7 1 0 9.53674e-7 1 0 1.01328e-6 1 0 9.53674e-7 1 0 1.00136e-6 1 0 1.19209e-6 1 0 9.53674e-7 1 0 9.91319e-7 1 0 1.19209e-6 1 -4.76838e-7 9.53674e-7 1 0 9.53674e-7 1 2.04359e-7 9.87734e-7 1 0 1.01328e-6 1 0 9.53674e-7 1 0 9.98378e-7 1 0 9.53674e-7 1 0 1.00136e-6 1 0 9.53674e-7 1 0 9.93411e-7 1 0 9.53674e-7 1 0 9.53674e-7 1 0 9.9341e-7 1 0 9.53674e-7 1 0 9.91319e-7 1</float_array>
+          <float_array id="wall-mesh-normals-array" count="87">0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1</float_array>
           <technique_common>
             <accessor source="#wall-mesh-normals-array" count="29" stride="3">
               <param name="X" type="float"/>
@@ -132,14 +132,14 @@
           <input semantic="VERTEX" source="#wall-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#wall-mesh-normals" offset="1"/>
           <vcount>3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
-          <p>16 0 14 0 17 0 30 1 29 1 23 1 1 2 32 2 34 2 13 3 15 3 7 3 18 4 16 4 17 4 19 5 20 5 8 5 1 6 34 6 4 6 5 7 0 7 1 7 19 8 8 8 9 8 4 9 5 9 1 9 13 10 14 10 16 10 9 11 10 11 19 11 24 12 30 12 23 12 13 13 16 13 15 13 6 14 12 14 10 14 11 15 0 15 5 15 7 16 15 16 12 16 11 17 6 17 10 17 11 18 5 18 6 18 6 19 7 19 12 19 10 20 12 20 19 20 21 21 22 21 2 21 28 22 33 22 31 22 21 23 2 23 3 23 24 24 21 24 30 24 21 25 3 25 30 25 27 26 28 26 26 26 28 27 31 27 25 27 28 28 25 28 26 28</p>
+          <p>16 0 14 0 17 0 30 1 29 1 23 1 1 2 32 2 34 2 13 3 15 3 7 3 18 4 16 4 17 4 19 5 20 5 8 5 1 6 34 6 4 6 24 7 30 7 23 7 19 8 8 8 9 8 0 9 1 9 4 9 13 10 14 10 16 10 9 11 10 11 19 11 0 12 4 12 5 12 13 13 16 13 15 13 6 14 12 14 10 14 11 15 0 15 5 15 7 16 15 16 12 16 11 17 6 17 10 17 11 18 5 18 6 18 6 19 7 19 12 19 10 20 12 20 19 20 21 21 22 21 2 21 28 22 33 22 31 22 21 23 2 23 3 23 24 24 21 24 30 24 21 25 3 25 30 25 27 26 28 26 26 26 28 27 31 27 25 27 28 28 25 28 26 28</p>
         </polylist>
       </mesh>
     </geometry>
     <geometry id="player1-mesh" name="player1">
       <mesh>
         <source id="player1-mesh-positions">
-          <float_array id="player1-mesh-positions-array" count="12">0.6250007 0.6249994 -6.23366e-7 -0.6249994 0.6250006 -6.23367e-7 0.6249995 -0.6250008 6.23367e-7 -0.6250005 -0.6249997 6.23365e-7</float_array>
+          <float_array id="player1-mesh-positions-array" count="12">0.6250001 -0.6250006 0 0.6250001 0.6250006 0 -0.6250002 -0.6250006 0 -0.6250002 0.6250006 0</float_array>
           <technique_common>
             <accessor source="#player1-mesh-positions-array" count="4" stride="3">
               <param name="X" type="float"/>
@@ -149,7 +149,7 @@
           </technique_common>
         </source>
         <source id="player1-mesh-normals">
-          <float_array id="player1-mesh-normals-array" count="6">0 9.97386e-7 1 0 9.97385e-7 1</float_array>
+          <float_array id="player1-mesh-normals-array" count="6">0 0 1 0 0 1</float_array>
           <technique_common>
             <accessor source="#player1-mesh-normals-array" count="2" stride="3">
               <param name="X" type="float"/>
@@ -172,7 +172,7 @@
     <geometry id="player2-mesh" name="player2">
       <mesh>
         <source id="player2-mesh-positions">
-          <float_array id="player2-mesh-positions-array" count="12">0.6250012 0.6249994 -6.22123e-7 -0.625 0.6250006 -6.22123e-7 0.625 -0.6250006 6.25849e-7 -0.6250012 -0.6249994 6.25849e-7</float_array>
+          <float_array id="player2-mesh-positions-array" count="12">0.625 0.625 0 0.625 -0.625 0 -0.625 0.625 0 -0.625 -0.625 0</float_array>
           <technique_common>
             <accessor source="#player2-mesh-positions-array" count="4" stride="3">
               <param name="X" type="float"/>
@@ -182,7 +182,7 @@
           </technique_common>
         </source>
         <source id="player2-mesh-normals">
-          <float_array id="player2-mesh-normals-array" count="6">0 9.98378e-7 1 0 9.98378e-7 1</float_array>
+          <float_array id="player2-mesh-normals-array" count="6">0 0 -1 0 0 -1</float_array>
           <technique_common>
             <accessor source="#player2-mesh-normals-array" count="2" stride="3">
               <param name="X" type="float"/>
@@ -207,7 +207,7 @@
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
       <node id="wall" name="wall" type="NODE">
-        <matrix sid="transform">9.65599e-7 1 -9.97386e-7 3.257853 0 -9.97386e-7 -1 1.500001 -1 9.65599e-7 -9.63075e-13 0.4410995 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 3.257853 0 1 0 1.558901 0 0 1 0 0 0 0 1</matrix>
         <instance_geometry url="#wall-mesh">
           <bind_material>
             <technique_common>
@@ -217,7 +217,7 @@
         </instance_geometry>
       </node>
       <node id="player1" name="player1" type="NODE">
-        <matrix sid="transform">3.8624e-7 0.4 -3.98954e-7 -0.7500001 0 -3.98954e-7 -0.4 2.5 -0.4 3.8624e-7 -3.8523e-13 7.250002 0 0 0 1</matrix>
+        <matrix sid="transform">0.4 0 0 -0.7500002 0 0.4 0 -5.250001 0 0 0.4 0 0 0 0 1</matrix>
         <instance_geometry url="#player1-mesh">
           <bind_material>
             <technique_common>
@@ -227,7 +227,7 @@
         </instance_geometry>
       </node>
       <node id="player2" name="player2" type="NODE">
-        <matrix sid="transform">3.8624e-7 0.4 -3.98954e-7 4.250001 0 -3.98954e-7 -0.4 1.5 -0.4 3.8624e-7 -3.8523e-13 -6.750002 0 0 0 1</matrix>
+        <matrix sid="transform">0.4 0 0 4.250001 0 0.4 0 8.750002 0 0 0.4 0 0 0 0 1</matrix>
         <instance_geometry url="#player2-mesh">
           <bind_material>
             <technique_common>

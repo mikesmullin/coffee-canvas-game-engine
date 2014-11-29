@@ -15,18 +15,19 @@ define -> class MeshRenderer
 
     pos = @object.transform.position
 
-    # apply Transform
-    # TODO: stop performing this on every draw
-    #        instead do it with Updates to Transform vectors
-    wv = [] # world vertices
-    for vec3 in @vertices
-      wv.push( vec3.Clone()
-        .RotateX @object.transform.rotation.x
-        .Scale @object.transform.localScale
-        .Add @object.transform.position
-        #.RotateY @object.transform.rotation.y
-        #.RotateZ @object.transform.rotation.z
-        )
+    ## apply Transform
+    ## TODO: stop performing this on every draw
+    ##        instead do it with Updates to Transform vectors
+    #wv = [] # world vertices
+    #for vec3 in @vertices
+    #  wv.push( vec3.Clone()
+    #    .RotateX @object.transform.rotation.x
+    #    .Scale @object.transform.localScale
+    #    .Add @object.transform.position
+    #    #.RotateY @object.transform.rotation.y
+    #    #.RotateZ @object.transform.rotation.z
+    #    )
+    wv = @vertices
 
     step = switch @arrayType
       when 'triangles' then 3

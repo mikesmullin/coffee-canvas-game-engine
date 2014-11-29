@@ -21,8 +21,12 @@ define [
         obj.name = name # TODO: reconcile with prefabs and objects
         obj.transform = new Transform object: obj
         obj.renderer = new MeshRenderer object: obj
-        obj.renderer.materials = [{ color: fill }]
+        obj.renderer.arrayType = 'triangles'
+        obj.renderer.materials = [{
+          fillStyle: fill
+        }]
 
+        a = -90
         for nil, i in vertices by 3
           obj.renderer.vertices.push(
             Vector3.FromArray(vertices, i)
@@ -30,13 +34,13 @@ define [
               # position model within game world
               # TODO: may want to store these as obj.transform.position, .rotation, etc.
               .TransformMatrix4 model_transforms[1] # local
-              .TransformMatrix4 model_transforms[0] # world
-              .TransformMatrix4 [ # flip along x-axis
+              .TransformMatrix4 [ # rotate
                   1, 0 , 0, 0
-                  0, -1, 0, 0
-                  0, 0,  1, 0
+                  0, Math.cos(a), -1 * Math.sin(a), 0
+                  0, Math.sin(a),  Math.cos(a), 0
                   0, 0,  0, 1
                 ]
+              .TransformMatrix4 model_transforms[0] # world
               .TransformMatrix4 [ # and zoom to fit canvas
                   35, 0,  0,  0
                   0,  35, 0,  0
@@ -48,7 +52,8 @@ define [
                   0,   1,   0, 0
                   0,   0,   1, 0
                   180, 320, 0, 1
-                ])
+                ]
+            )
 
         engine.Bind obj
         engine.Log obj

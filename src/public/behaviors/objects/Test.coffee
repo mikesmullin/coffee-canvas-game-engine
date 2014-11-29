@@ -1,8 +1,7 @@
 define [
   '../components/Behavior'
   '../lib/Visibility'
-  '../lib/Trig'
-], (Behavior, {Block, Wall, Point, EndPoint, Segment, Visibility}, Trig) ->
+], (Behavior, {Block, Wall, Point, EndPoint, Segment, Visibility}) ->
   class Test extends Behavior
     constructor: ->
       super
