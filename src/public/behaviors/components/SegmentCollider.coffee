@@ -9,9 +9,9 @@
 define [
   'lib/Geometry'
 ], ({ Point, Segment }) -> class SegmentCollider
-  constructor: ({ @object }) ->
+  constructor: ({ @object, @is_trigger }) ->
     @enabled = true
-    @is_trigger = false
+    @is_trigger ||= false
 
   @CollisionFlags:
     None: 0
@@ -35,7 +35,8 @@ define [
         for segB in obj.renderer.segments
           if @SegmentsCollide(segA.p1.x, segA.p1.y, segA.p2.x, segA.p2.y,
             segB.p1.x, segB.p1.y, segB.p2.x, segB.p2.y)
-              @object.OnControllerColliderHit?(obj)
+              if @is_trigger
+                engine.TriggerSync 'OnControllerColliderHit', obj
               return SegmentCollider.CollisionFlags.Sides
 
     # apply move to object.transform.position

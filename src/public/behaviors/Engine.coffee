@@ -102,15 +102,16 @@ define [
   Bind: (obj) ->
     @objects.push obj
 
-  TriggerSync: (event) ->
-    @[event]?()
+  TriggerSync: (event, args...) ->
+    args.unshift @
+    @[event]?.apply @, args
     for obj in @objects when obj.enabled
-      obj[event]?(@)
+      obj[event]?.apply obj, args
       for component in ['renderer', 'collider']
         if obj[component]?.enabled
-          obj[component][event]?(@)
+          obj[component][event]?.apply obj[component], args
       for cls, script of obj.scripts when script.enabled
-        script[event]?(@)
+        script[event]?.apply script, args
     return
 
   Trigger: (event, cb) ->

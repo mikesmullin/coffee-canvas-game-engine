@@ -1,14 +1,8 @@
 define [
   'lib/Geometry'
 ], ({Point, Segment}) ->
-  Block: class Block
-    constructor: (@x, @y, @r) ->
-
-  Wall: class Wall
-    constructor: (@p1, @p2) ->
-
   Point: Point
-
+  Segment: Segment
   EndPoint: class EndPoint extends Point
     constructor: ->
       @begin = false
@@ -16,12 +10,10 @@ define [
       @angle = 0.0
       @visualize = false
 
-  Segment: Segment
-
   ###
-  2D visibility algorithm, for demo
+  2D visibility algorithm
   Usage: new Visibility()
-  Whenever map data changes: loadMap()
+  Whenever map data changes: LoadSegments()
   Whenever light source changes: setVantagePoint()
   To calculate the area: sweep()
   ###
@@ -43,35 +35,13 @@ define [
       # For the demo, keep track of wall intersections
       @demo_intersectionsDetected = []
 
-
-    # Helper function to construct segments along the outside perimeter
-    loadEdgeOfMap: (size, margin) ->
-      @addSegment(margin, margin, margin, size-margin)
-      @addSegment(margin, size-margin, size-margin, size-margin)
-      @addSegment(size-margin, size-margin, size-margin, margin)
-      @addSegment(size-margin, margin, margin, margin)
-      # NOTE: if using the simpler distance function (a.d < b.d)
-      # then we need segments to be similarly sized, so the edge of
-      # the map needs to be broken up into smaller segments.
-
-
-    # Load a set of square blocks, plus any other line segments
-    loadMap: (size, margin, blocks, walls) ->
+    ResetSegments: ->
       @segments = []
       @endpoints = []
-      @loadEdgeOfMap(size, margin)
 
-      for block in blocks
-        x = block.x
-        y = block.y
-        r = block.r
-        @addSegment(x-r, y-r, x-r, y+r)
-        @addSegment(x-r, y+r, x+r, y+r)
-        @addSegment(x+r, y+r, x+r, y-r)
-        @addSegment(x+r, y-r, x-r, y-r)
-
-      for wall in walls
-        @addSegment(wall.p1.x, wall.p1.y, wall.p2.x, wall.p2.y)
+    AddSegments: (segments) ->
+      for seg in segments
+        @addSegment(seg.p1.x, seg.p1.y, seg.p2.x, seg.p2.y)
 
 
     # Add a segment, where the first point shows up in the
