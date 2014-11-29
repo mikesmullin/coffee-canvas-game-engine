@@ -3,14 +3,14 @@ define -> class MeshRenderer
     @enabled = true
     #@castShadows = false
     #@receiveShadows = false
-    @arrayType = 'triangles'
     @vertices = []
+    @vcount = []
     @materials = [{}]
 
   Draw: (engine) ->
     ctx = engine.canvas.ctx
-    ctx.lineWidth   = @materials[0].lineWidth or 1
-    ctx.strokeStyle = @materials[0].strokeStyle or 'rgba(255, 255, 255, .8)'
+    ctx.lineWidth   = @materials[0].lineWidth or 2
+    ctx.strokeStyle = @materials[0].strokeStyle or 'rgba(255, 255, 255, .1)'
     ctx.fillStyle   = @materials[0].fillStyle or 'rgba(255, 255, 255, .5)'
 
     pos = @object.transform.position
@@ -29,20 +29,13 @@ define -> class MeshRenderer
     #    )
     wv = @vertices
 
-    step = switch @arrayType
-      when 'triangles' then 3
-      when 'quads' then 4
-
-    console.log indicies: @indices
-    for nil, i in wv by step
+    offset = 0
+    for step in @vcount
       ctx.beginPath()
-      ctx.moveTo wv[@indices[i]].x, wv[@indices[i]].y
-      ctx.lineTo wv[@indices[i+1]].x, wv[@indices[i+1]].y
-      ctx.lineTo wv[@indices[i+2]].x, wv[@indices[i+2]].y
-      if @arrayType is 'quads'
-        ctx.lineTo wv[i+3].x, wv[i+3].y
+      ctx.moveTo wv[@indices[offset]].x, wv[@indices[offset]].y
+      for i in [offset+2..offset+((step-1)*2)] by 2
+        ctx.lineTo wv[@indices[i]].x, wv[@indices[i]].y
+      offset = i
       ctx.closePath()
       ctx.fill()
-      ctx.stroke()
-
-    engine.Stop()
+      #ctx.stroke()

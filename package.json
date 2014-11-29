@@ -27,7 +27,8 @@
     "jade": "^1.7.0",
     "nib": "^1.0.4",
     "requirejs": "^2.1.15",
-    "stylus": "^0.49.2"
+    "stylus": "^0.49.2",
+    "xml2js": "^0.4.4"
   },
   "devDependencies": {
     "chai": "^1.9.2",

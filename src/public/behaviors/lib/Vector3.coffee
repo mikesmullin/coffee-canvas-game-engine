@@ -8,11 +8,17 @@ define [
   @ZERO: x: 0, y: 0, z: 0
   @ONE: x: 1, y: 1, z: 1
 
-  TransformMatrix4: (b) -> # 4x4 row-major
-    @x = (@x*b[0]) + (@y*b[4]) + (@z*b[8])  + (1*b[12])
-    @y = (@x*b[1]) + (@y*b[5]) + (@z*b[9])  + (1*b[13])
-    @z = (@x*b[2]) + (@y*b[6]) + (@z*b[10]) + (1*b[14])
+  TransformMatrix4: (b) -> # 4x4 column-major
+    @x = (@x*b[0]) + (@y*b[1]) + (@z*b[2])  + (1*b[3])
+    @y = (@x*b[4]) + (@y*b[5]) + (@z*b[6])  + (1*b[7])
+    @z = (@x*b[8]) + (@y*b[9]) + (@z*b[10]) + (1*b[11])
     @
+
+  #TransformMatrix4: (b) -> # 4x4 row-major
+  #  @x = (@x*b[0]) + (@y*b[4]) + (@z*b[8])  + (1*b[12])
+  #  @y = (@x*b[1]) + (@y*b[5]) + (@z*b[9])  + (1*b[13])
+  #  @z = (@x*b[2]) + (@y*b[6]) + (@z*b[10]) + (1*b[14])
+  #  @
 
   # TODO: make Rotate by X, Y, Z in the Transform and apply during draw?
   RotateX: (angle) ->
