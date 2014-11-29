@@ -14,8 +14,8 @@ define [
   2D visibility algorithm
   Usage: new Visibility()
   Whenever map data changes: LoadSegments()
-  Whenever light source changes: setVantagePoint()
-  To calculate the area: sweep()
+  Whenever light source changes: SetVantagePoint()
+  To calculate the area: Sweep()
   ###
 
   Visibility: class Visibility
@@ -40,6 +40,8 @@ define [
       @endpoints = []
 
     AddSegments: (segments) ->
+      debugger
+      console.log segments: segments
       for seg in segments
         @addSegment(seg.p1.x, seg.p1.y, seg.p2.x, seg.p2.y)
 
@@ -71,7 +73,7 @@ define [
 
     # Set the light location. Segment and EndPoint data can't be
     # processed until the light location is known.
-    setVantagePoint: (x, y) ->
+    SetVantagePoint: (x, y) ->
       @center.x = x
       @center.y = y
 
@@ -186,7 +188,7 @@ define [
 
     # Run the algorithm, sweeping over all or part of the circle to find
     # the visible area, represented as a set of triangles
-    sweep: (maxAngle=Math.PI) ->
+    Sweep: (maxAngle=Math.PI) ->
       @output = [] # output set of triangles
       @demo_intersectionsDetected = []
       @endpoints.sort(@_endpoint_compare, true)

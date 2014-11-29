@@ -10,13 +10,11 @@ define [
     @materials = [{}]
     @segments = []
 
-  Draw: (engine) ->
+  DisabledDraw: (engine) ->
     ctx = engine.canvas.ctx
     ctx.lineWidth   = @materials[0].lineWidth or 2
     ctx.strokeStyle = @materials[0].strokeStyle or 'rgba(255, 255, 255, .1)'
     ctx.fillStyle   = @materials[0].fillStyle or 'rgba(255, 255, 255, .5)'
-
-    pos = @object.transform.position
 
     # apply Transform
     # TODO: stop performing this on every draw
