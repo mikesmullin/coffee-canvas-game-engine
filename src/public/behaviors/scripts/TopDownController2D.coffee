@@ -48,9 +48,11 @@ define [
 
     Update: (engine) ->
       #console.log 'update ', Input.axis
-      speed = 420.0 # pixels per second
-      @object.transform.position.x += (speed * engine.deltaTime * Input.GetAxisRaw 'Horizontal')
-      @object.transform.position.y += (speed * engine.deltaTime * Input.GetAxisRaw 'Vertical')
+      speed = 220.0 # pixels per second
+      x = (speed * engine.deltaTime * Input.GetAxisRaw 'Horizontal')
+      y = (speed * engine.deltaTime * Input.GetAxisRaw 'Vertical')
+      if x isnt 0 or y isnt 0
+        @object.collider.Move engine, new Vector3 x, y, 0
       return
 
       #@UpdateSmoothedMovementDirection()
@@ -62,6 +64,13 @@ define [
       ## Move the controller
       #controller = GetComponent(CharacterController)
       #collisionFlags = controller.Move(movement)
+
+      if collisionFlags is 0 # successful move
+        1
+        # transmit new position to network
+        # TODO: try to do this via a callback like @object.SuccessfulMove
+        #socket.send JSON.stringify pm: [myid, obj.x, obj.y]
+
 
     UpdateSmoothedMovementDirection: ->
       cameraTransform = Camera.main.transform # TODO: need Camera object?
@@ -127,3 +136,4 @@ define [
       # Reset walk time start when we slow down
       if moveSpeed < walkSpeed * 0.3
         walkTimeStart = Time.time
+

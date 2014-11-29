@@ -1,12 +1,12 @@
 define [
   'components/Behavior'
   'components/Transform'
-  'components/BoxCollider'
-], (Behavior, Transform, BoxCollider) ->
+  'components/SegmentCollider'
+], (Behavior, Transform, SegmentCollider) ->
   class Monster extends Behavior
     constructor: ->
       super
       @transform = new Transform object: @
-      @collider = new BoxCollider object: @
+      @collider = new SegmentCollider object: @
 
     OnTriggerEnter: (collidingObject) ->

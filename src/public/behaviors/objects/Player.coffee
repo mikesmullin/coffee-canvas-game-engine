@@ -1,15 +1,15 @@
 define [
   'components/Behavior'
   'components/Transform'
-  'components/BoxCollider'
+  'components/SegmentCollider'
   'scripts/TopDownController2D'
   'lib/Input'
-], (Behavior, Transform, BoxCollider, TopDownController2D, Input) ->
+], (Behavior, Transform, SegmentCollider, TopDownController2D, Input) ->
   class Player extends Behavior
     constructor: ->
       super
       @transform = new Transform object: @
-      @collider = new BoxCollider object: @
+      @collider = new SegmentCollider object: @
       @BindScript TopDownController2D
 
     Update: ->
@@ -35,7 +35,9 @@ define [
 
       #obj.lastX = obj.targetX = obj.lastY = obj.targetY = null
 
-    OnTriggerEnter: (collidingObject) ->
+    OnControllerColliderHit: (collidingObject) ->
+      console.log "#{@constructor.name} would collide with #{collidingObject.constructor.name}"
 
-
-
+      #if collidingObject.name is 'Monster'
+        #alert 'game over!'
+        #location.reload()

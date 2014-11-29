@@ -1,8 +1,8 @@
 define [
   'components/MeshRenderer'
   'lib/Vector3'
-  'lib/Trig'
-], (MeshRenderer, Vector3, Trig) ->
+  'lib/Trigonometry'
+], (MeshRenderer, Vector3, Trigonometry) ->
   class Collada
     @GetFile: (type, url, cb) ->
       xhr = new XMLHttpRequest()
@@ -28,7 +28,7 @@ define [
           obj.renderer.vcount = vcount
           obj.renderer.indices = indices
 
-          a = Trig.Degrees2Radians 180
+          a = Trigonometry.Degrees2Radians 180
           for nil, i in vertices by 3
             obj.renderer.vertices.push(
               Vector3.FromArray(vertices, i)

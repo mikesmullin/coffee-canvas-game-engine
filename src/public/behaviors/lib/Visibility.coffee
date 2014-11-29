@@ -1,12 +1,13 @@
-define
+define [
+  'lib/Geometry'
+], ({Point, Segment}) ->
   Block: class Block
     constructor: (@x, @y, @r) ->
 
   Wall: class Wall
     constructor: (@p1, @p2) ->
 
-  Point: class Point
-    constructor: (@x, @y) ->
+  Point: Point
 
   EndPoint: class EndPoint extends Point
     constructor: ->
@@ -15,8 +16,7 @@ define
       @angle = 0.0
       @visualize = false
 
-  Segment: class Segment
-    constructor: (@p1, @p2, @d) ->
+  Segment: Segment
 
   ###
   2D visibility algorithm, for demo
