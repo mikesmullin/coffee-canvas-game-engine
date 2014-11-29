@@ -21,5 +21,5 @@ define [
         # instantiate game object
         inst = new obj
         obj::renderer.object = inst
-        engine.Log inst
+        #engine.Log inst
         engine.Bind inst

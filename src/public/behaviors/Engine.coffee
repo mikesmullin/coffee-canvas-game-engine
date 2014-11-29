@@ -106,8 +106,9 @@ define [
     @[event]?()
     for obj in @objects when obj.enabled
       obj[event]?(@)
-      for component in ['renderer'] when obj[component]?.enabled
-        obj[component][event]?(@)
+      for component in ['renderer', 'collider']
+        if obj[component]?.enabled
+          obj[component][event]?(@)
 
   Trigger: (event, cb) ->
     flow = new async
