@@ -27,10 +27,11 @@ define [
 
     b = ->
       viewSlice = buffer.data.slice bufferView.byteOffset, bufferView.byteOffset + bufferView.byteLength
-      attrSlice = viewSlice.slice accessor.byteOffset, accessor.byteOffset + (accessor.byteStride * accessor.count)
-      switch accessor.type
-        when 'VEC3'
-          cb new Float32Array attrSlice
+      attrSlice = viewSlice.slice accessor.byteOffset, accessor.byteOffset + ((accessor.byteStride or 1) * accessor.count)
+      if accessor.type is 'VEC3'
+        cb new Float32Array attrSlice
+      else if accessor.type is 'SCALAR' and accessor.componentType is 5123
+        cb new Uint16Array attrSlice
 
     a b
 
@@ -49,9 +50,10 @@ define [
             color = "rgba(#{Math.ceil 60+(255*rgba[0])}, #{Math.ceil 30+(255*rgba[1])}, #{Math.ceil 0+(255*rgba[2])}, #{Math.round rgba[3], 1})"
             ((id, h, color) =>
               flow.serial (next) =>
-                @GetAttrVal mapRoot, data, data.meshes[id].primitives[0].attributes.POSITION, (vertices) ->
-                  cb data.meshes[id].name, h, color, vertices
-                  next()
+                @GetAttrVal mapRoot, data, data.meshes[id].primitives[0].indices, (indices) =>
+                  @GetAttrVal mapRoot, data, data.meshes[id].primitives[0].attributes.POSITION, (vertices) ->
+                    cb data.meshes[id].name, h, color, vertices, indices, data.meshes[id].primitives[0].primitive
+                    next()
             )(id, matrixHierarchy.slice(0), color)
           matrixHierarchy.pop()
       flow.go (err) ->

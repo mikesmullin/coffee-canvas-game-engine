@@ -13,8 +13,9 @@ define [
       super
 
     Start: (engine, cb) ->
-      GlTF.LoadMap @mapRoot, @map, cb, (name, model_transforms, fill, vertices) =>
-        engine.Log name: name, vertices: vertices
+      GlTF.LoadMap @mapRoot, @map, cb, (name, model_transforms, fill, vertices, indices, step) =>
+        return if name isnt 'wall'
+        engine.Log name: name, vertices: vertices, indices: indices
 
         # push all vertices into a new game object
         obj = new Behavior
@@ -26,6 +27,8 @@ define [
           fillStyle: fill
         }]
 
+        obj.renderer.indices = indices
+        obj.renderer.step = step
         a = -90
         for nil, i in vertices by 3
           obj.renderer.vertices.push(
