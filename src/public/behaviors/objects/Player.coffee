@@ -4,12 +4,12 @@ define [
 ], (Behavior, BoxCollider) ->
   class Player extends Behavior
     constructor: ->
+      super
       @user_id = null
       @name = null
-
       @collider = new BoxCollider
 
-    @update: ->
+    xUpdate: ->
       # check player collision
       for name in ['player1', 'player2']
         obj = objects[name]
