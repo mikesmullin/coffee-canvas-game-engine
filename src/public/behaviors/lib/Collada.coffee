@@ -1,9 +1,8 @@
 define [
-  '../components/Transform'
   '../components/MeshRenderer'
   '../lib/Vector3'
   '../lib/Trig'
-], (Transform, MeshRenderer, Vector3, Trig) ->
+], (MeshRenderer, Vector3, Trig) ->
   class Collada
     @GetFile: (type, url, cb) ->
       xhr = new XMLHttpRequest()
@@ -21,9 +20,8 @@ define [
 
           # push all vertices into a new game object
           obj = {}
-          obj.name = name
-          obj.transform = new Transform object: obj
           obj.renderer = new MeshRenderer object: obj
+          obj.renderer.mesh_name = name
           obj.renderer.materials = [{
             fillStyle: fillStyle
           }]

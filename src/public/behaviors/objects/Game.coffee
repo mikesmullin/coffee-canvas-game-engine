@@ -8,20 +8,18 @@ define [
   class Game extends Behavior
     Start: (engine, cb) ->
       Collada.LoadModel 'models/map1/map1.json', cb, (mesh) ->
-        switch mesh.name
-          when 'player1'
-            obj = new Player
-          when 'player2'
-            obj = new Monster
-          when 'wall'
-            obj = new Wall
+        # bind mesh to game object
+        switch mesh.renderer.mesh_name
+          when 'player1' then obj = Player
+          when 'player2' then obj = Monster
+          when 'wall'    then obj = Wall
           else
-            engine.Log "unexpected mesh #{mesh.name} loaded. skipping..."
+            engine.Log "cannot load mesh #{mesh.renderer.mesh_name}: corresponding game object not implemented."
             return
+        obj::renderer = mesh.renderer
 
-        obj.name = mesh.name
-        obj.transform = mesh.transform
-        obj.renderer = mesh.renderer
-
-        engine.Log obj
-        engine.Bind obj
+        # instantiate game object
+        inst = new obj
+        obj::renderer.object = inst
+        engine.Log inst
+        engine.Bind inst

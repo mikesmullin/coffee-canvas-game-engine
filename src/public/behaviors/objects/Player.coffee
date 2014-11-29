@@ -1,12 +1,12 @@
 define [
   '../components/Behavior'
+  '../components/Transform'
   '../components/BoxCollider'
-], (Behavior, BoxCollider) ->
+], (Behavior, Transform, BoxCollider) ->
   class Player extends Behavior
     constructor: ->
       super
-      @user_id = null
-      @name = null
+      @transform = new Transform object: @
       @collider = new BoxCollider
 
     xUpdate: ->
