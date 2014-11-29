@@ -1,0 +1,529 @@
+{
+    "accessors": {
+        "accessor_16": {
+            "bufferView": "bufferView_62",
+            "byteOffset": 24,
+            "byteStride": 0,
+            "componentType": 5123,
+            "count": 87,
+            "type": "SCALAR"
+        },
+        "accessor_18": {
+            "bufferView": "bufferView_63",
+            "byteOffset": 288,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 87,
+            "max": [
+                8.44111,
+                8.24216,
+                7.98702e-06
+            ],
+            "min": [
+                -8.05891,
+                -7.75786,
+                -7.98702e-06
+            ],
+            "type": "VEC3"
+        },
+        "accessor_20": {
+            "bufferView": "bufferView_63",
+            "byteOffset": 1332,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 87,
+            "max": [
+                2.04359e-07,
+                1.19209e-06,
+                1
+            ],
+            "min": [
+                -4.76838e-07,
+                9.53674e-07,
+                1
+            ],
+            "type": "VEC3"
+        },
+        "accessor_36": {
+            "bufferView": "bufferView_62",
+            "byteOffset": 0,
+            "byteStride": 0,
+            "componentType": 5123,
+            "count": 6,
+            "type": "SCALAR"
+        },
+        "accessor_38": {
+            "bufferView": "bufferView_63",
+            "byteOffset": 0,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 6,
+            "max": [
+                0.625001,
+                0.625001,
+                6.23367e-07
+            ],
+            "min": [
+                -0.625,
+                -0.625001,
+                -6.23367e-07
+            ],
+            "type": "VEC3"
+        },
+        "accessor_40": {
+            "bufferView": "bufferView_63",
+            "byteOffset": 72,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 6,
+            "max": [
+                0,
+                9.97386e-07,
+                1
+            ],
+            "min": [
+                0,
+                9.97385e-07,
+                1
+            ],
+            "type": "VEC3"
+        },
+        "accessor_56": {
+            "bufferView": "bufferView_62",
+            "byteOffset": 12,
+            "byteStride": 0,
+            "componentType": 5123,
+            "count": 6,
+            "type": "SCALAR"
+        },
+        "accessor_58": {
+            "bufferView": "bufferView_63",
+            "byteOffset": 144,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 6,
+            "max": [
+                0.625001,
+                0.625001,
+                6.25849e-07
+            ],
+            "min": [
+                -0.625001,
+                -0.625001,
+                -6.22123e-07
+            ],
+            "type": "VEC3"
+        },
+        "accessor_60": {
+            "bufferView": "bufferView_63",
+            "byteOffset": 216,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 6,
+            "max": [
+                0,
+                9.98378e-07,
+                1
+            ],
+            "min": [
+                0,
+                9.98378e-07,
+                1
+            ],
+            "type": "VEC3"
+        }
+    },
+    "animations": {},
+    "asset": {
+        "generator": "collada2gltf@ea769c244845fbdc786532cea210259da4102d96",
+        "premultipliedAlpha": true,
+        "profile": "WebGL 1.0.2",
+        "version": 0.8
+    },
+    "bufferViews": {
+        "bufferView_62": {
+            "buffer": "map1",
+            "byteLength": 200,
+            "byteOffset": 0,
+            "target": 34963
+        },
+        "bufferView_63": {
+            "buffer": "map1",
+            "byteLength": 2376,
+            "byteOffset": 200,
+            "target": 34962
+        }
+    },
+    "buffers": {
+        "map1": {
+            "byteLength": 2576,
+            "type": "arraybuffer",
+            "uri": "map1.bin"
+        }
+    },
+    "materials": {
+        "player1-effect": {
+            "instanceTechnique": {
+                "technique": "technique0",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.113011,
+                        0.639282,
+                        0.0915483,
+                        1
+                    ],
+                    "emission": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "shininess": 50,
+                    "specular": [
+                        0.5,
+                        0.5,
+                        0.5,
+                        1
+                    ]
+                }
+            },
+            "name": "player1"
+        },
+        "player2-effect": {
+            "instanceTechnique": {
+                "technique": "technique0",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.64,
+                        0.00383921,
+                        0.00868253,
+                        1
+                    ],
+                    "emission": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "shininess": 50,
+                    "specular": [
+                        0.5,
+                        0.5,
+                        0.5,
+                        1
+                    ]
+                }
+            },
+            "name": "player2"
+        },
+        "wall-effect": {
+            "instanceTechnique": {
+                "technique": "technique0",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.0163031,
+                        0.00584628,
+                        0,
+                        1
+                    ],
+                    "emission": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "shininess": 50,
+                    "specular": [
+                        0.5,
+                        0.5,
+                        0.5,
+                        1
+                    ]
+                }
+            },
+            "name": "wall"
+        }
+    },
+    "meshes": {
+        "player1-mesh": {
+            "name": "player1",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": "accessor_40",
+                        "POSITION": "accessor_38"
+                    },
+                    "indices": "accessor_36",
+                    "material": "player1-effect",
+                    "primitive": 4
+                }
+            ]
+        },
+        "player2-mesh": {
+            "name": "player2",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": "accessor_60",
+                        "POSITION": "accessor_58"
+                    },
+                    "indices": "accessor_56",
+                    "material": "player2-effect",
+                    "primitive": 4
+                }
+            ]
+        },
+        "wall-mesh": {
+            "name": "wall",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": "accessor_20",
+                        "POSITION": "accessor_18"
+                    },
+                    "indices": "accessor_16",
+                    "material": "wall-effect",
+                    "primitive": 4
+                }
+            ]
+        }
+    },
+    "nodes": {
+        "node_3": {
+            "children": [
+                "wall",
+                "player1",
+                "player2"
+            ],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                -1,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Y_UP_Transform"
+        },
+        "player1": {
+            "children": [],
+            "matrix": [
+                3.8624e-07,
+                0,
+                -0.4,
+                0,
+                0.4,
+                -3.98954e-07,
+                3.8624e-07,
+                0,
+                -3.98954e-07,
+                -0.4,
+                -3.8523e-13,
+                0,
+                -0.75,
+                2.5,
+                7.25,
+                1
+            ],
+            "meshes": [
+                "player1-mesh"
+            ],
+            "name": "player1"
+        },
+        "player2": {
+            "children": [],
+            "matrix": [
+                3.8624e-07,
+                0,
+                -0.4,
+                0,
+                0.4,
+                -3.98954e-07,
+                3.8624e-07,
+                0,
+                -3.98954e-07,
+                -0.4,
+                -3.8523e-13,
+                0,
+                4.25,
+                1.5,
+                -6.75,
+                1
+            ],
+            "meshes": [
+                "player2-mesh"
+            ],
+            "name": "player2"
+        },
+        "wall": {
+            "children": [],
+            "matrix": [
+                9.65599e-07,
+                0,
+                -1,
+                0,
+                1,
+                -9.97386e-07,
+                9.65599e-07,
+                0,
+                -9.97386e-07,
+                -1,
+                -9.63075e-13,
+                0,
+                3.25785,
+                1.5,
+                0.441099,
+                1
+            ],
+            "meshes": [
+                "wall-mesh"
+            ],
+            "name": "wall"
+        }
+    },
+    "programs": {
+        "program_0": {
+            "attributes": [
+                "a_normal",
+                "a_position"
+            ],
+            "fragmentShader": "map10FS",
+            "vertexShader": "map10VS"
+        }
+    },
+    "scene": "defaultScene",
+    "scenes": {
+        "defaultScene": {
+            "nodes": [
+                "node_3"
+            ]
+        }
+    },
+    "shaders": {
+        "map10FS": {
+            "type": 35632,
+            "uri": "map10FS.glsl"
+        },
+        "map10VS": {
+            "type": 35633,
+            "uri": "map10VS.glsl"
+        }
+    },
+    "skins": {},
+    "techniques": {
+        "technique0": {
+            "parameters": {
+                "ambient": {
+                    "type": 35666
+                },
+                "diffuse": {
+                    "type": 35666
+                },
+                "emission": {
+                    "type": 35666
+                },
+                "modelViewMatrix": {
+                    "semantic": "MODELVIEW",
+                    "type": 35676
+                },
+                "normal": {
+                    "semantic": "NORMAL",
+                    "type": 35665
+                },
+                "normalMatrix": {
+                    "semantic": "MODELVIEWINVERSETRANSPOSE",
+                    "type": 35675
+                },
+                "position": {
+                    "semantic": "POSITION",
+                    "type": 35665
+                },
+                "projectionMatrix": {
+                    "semantic": "PROJECTION",
+                    "type": 35676
+                },
+                "shininess": {
+                    "type": 5126
+                },
+                "specular": {
+                    "type": 35666
+                }
+            },
+            "pass": "defaultPass",
+            "passes": {
+                "defaultPass": {
+                    "details": {
+                        "commonProfile": {
+                            "extras": {
+                                "doubleSided": false
+                            },
+                            "lightingModel": "Phong",
+                            "parameters": [
+                                "ambient",
+                                "diffuse",
+                                "emission",
+                                "modelViewMatrix",
+                                "normalMatrix",
+                                "projectionMatrix",
+                                "shininess",
+                                "specular"
+                            ]
+                        },
+                        "type": "COLLADA-1.4.1/commonProfile"
+                    },
+                    "instanceProgram": {
+                        "attributes": {
+                            "a_normal": "normal",
+                            "a_position": "position"
+                        },
+                        "program": "program_0",
+                        "uniforms": {
+                            "u_ambient": "ambient",
+                            "u_diffuse": "diffuse",
+                            "u_emission": "emission",
+                            "u_modelViewMatrix": "modelViewMatrix",
+                            "u_normalMatrix": "normalMatrix",
+                            "u_projectionMatrix": "projectionMatrix",
+                            "u_shininess": "shininess",
+                            "u_specular": "specular"
+                        }
+                    },
+                    "states": {
+                        "enable": [
+                            2884,
+                            2929
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}
