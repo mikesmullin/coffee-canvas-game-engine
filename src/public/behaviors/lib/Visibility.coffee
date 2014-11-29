@@ -22,39 +22,29 @@ define
   2D visibility algorithm, for demo
   Usage: new Visibility()
   Whenever map data changes: loadMap()
-  Whenever light source changes: setLightLocation()
+  Whenever light source changes: setVantagePoint()
   To calculate the area: sweep()
   ###
 
   Visibility: class Visibility
     constructor: ->
-      @segments = null
-      @endpoints = null
-      @center = null
+      @segments = []
+      @endpoints = []
+      @center = new Point(0.0, 0.0)
 
       # These are currently 'open' line segments, sorted so that the nearest
       # segment is first. It's used only during the sweep algorithm, and exposed
       # as a public field here so that the demo can display it.
-      @open = null
+      @open = []
 
       # The output is a series of points that forms a visible area polygon
-      @output = null
+      @output = []
 
       # For the demo, keep track of wall intersections
-      @demo_intersectionsDetected = null
-
-
-    # Construct an empty visibility set
-    new: ->
-      @segments = []
-      @endpoints = []
-      @open = []
-      @center = new Point(0.0, 0.0)
-      @output = []
       @demo_intersectionsDetected = []
 
 
-      # Helper function to construct segments along the outside perimeter
+    # Helper function to construct segments along the outside perimeter
     loadEdgeOfMap: (size, margin) ->
       @addSegment(margin, margin, margin, size-margin)
       @addSegment(margin, size-margin, size-margin, size-margin)
@@ -111,7 +101,7 @@ define
 
     # Set the light location. Segment and EndPoint data can't be
     # processed until the light location is known.
-    setLightLocation: (x, y) ->
+    setVantagePoint: (x, y) ->
       @center.x = x
       @center.y = y
 
