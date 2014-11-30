@@ -46,3 +46,4 @@ define [
           @object.ToggleVisibility GMath.Oscillate(1, @seed.i2, 1, engine.time) > 1
         when 'Player'
           @object.ToggleFlashlight GMath.Oscillate(1, @seed.i2, 1, engine.time) > 1
+          @object.SetFacing Math.abs GMath.Oscillate(360, 30, 0, engine.time)

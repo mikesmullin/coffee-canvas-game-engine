@@ -10,14 +10,14 @@ define [
   class Player extends Behavior
     constructor: ->
       super
-      @facing = 180
+      @facing = 0
       @flashlightLit = true
       @flashlightConeAngle = 30
       @flashlightRange = 300
       @transform = new Transform object: @
       @collider = new SegmentCollider object: @, is_trigger: true
-      @BindScript CurrentPlayer; @BindScript CurrentPlayerPlayer
-      #@BindScript AutoPilot
+      #@BindScript CurrentPlayer; @BindScript CurrentPlayerPlayer
+      @BindScript AutoPilot
       @renderer.enabled = false
 
     ToggleFlashlight: (force) ->

@@ -12,8 +12,8 @@ define [
       @visible = true
       @transform = new Transform object: @
       @collider = new SegmentCollider object: @, is_trigger: true
-      #@BindScript CurrentPlayer; @BindScript CurrentMonsterPlayer
-      @BindScript AutoPilot
+      @BindScript CurrentPlayer; @BindScript CurrentMonsterPlayer
+      #@BindScript AutoPilot
       @renderer.enabled = false
 
     ToggleVisibility: (force) ->
