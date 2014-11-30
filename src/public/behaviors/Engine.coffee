@@ -12,8 +12,11 @@ define [
   Log: (msg) ->
     console.log msg
 
-  Info: (msg, line=1, color='white', size=9) ->
+  Info: (msg, {line, color, size }) ->
     msg = ''+msg
+    line ||= 1
+    color ||= 'white'
+    size ||= 9
     @canvas.ctx.font = "normal #{size}px silkscreennormal"
     @canvas.ctx.fillStyle = color
     @canvas.ctx.fillText msg, @canvas.canvas.width - (size*msg.length) - 10, 10+(line*size)
@@ -93,7 +96,7 @@ define [
     @canvas.Clear()
 
   DrawGUI: (engine) ->
-    @Info @fps, 1, 'lime', 45
+    @Info @fps, line: 1, color: 'lime', size: 45
 
   Stop: (engine) ->
     @running = false

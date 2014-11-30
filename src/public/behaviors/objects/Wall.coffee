@@ -8,6 +8,7 @@ define [
       super
       @transform = new Transform object: @
       #@collider = new SegmentCollider
+      @renderer.enabled = false
 
     Start: ->
 

@@ -1,8 +1,8 @@
 requirejs.config baseUrl: 'behaviors'
 require [
   './Engine'
-  'objects/Game'
-], (Engine, Game) ->
+  'tests/Facing'
+], (Engine, Facing) ->
   engine = new Engine canvas_id: 'main'
-  engine.Bind new Game
+  engine.Bind new Facing
   engine.Run()

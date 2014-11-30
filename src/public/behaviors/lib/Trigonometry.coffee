@@ -1,4 +1,4 @@
-define -> class Trig
+define -> class Trigonometry
   @degrees: 180 / Math.PI
   @Radians2Degrees: (rad) -> return rad * @degrees
   @Degrees2Radians: (deg) -> return deg / @degrees

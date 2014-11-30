@@ -14,6 +14,7 @@ define [
       @collider = new SegmentCollider object: @, is_trigger: true
       @BindScript CurrentPlayer; @BindScript CurrentPlayerPlayer
       #@BindScript AutoPilot
+      @renderer.enabled = false
 
     ToggleFlashlight: (force) ->
       return if force? and force is @flashlightLit
