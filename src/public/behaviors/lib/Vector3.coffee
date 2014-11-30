@@ -1,6 +1,4 @@
-define [
-  'lib/Trigonometry'
-], (Trigonometry) -> class Vector3
+define -> class Vector3
   constructor: (@x=0, @y=0, @z=0) ->
   @FromArray: (a, i=0) ->
     new Vector3 a[i], a[i+1], a[i+2]

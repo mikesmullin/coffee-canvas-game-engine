@@ -1,7 +1,7 @@
-define -> class Trigonometry
+define -> class Trig
   @degrees: 180 / Math.PI
-  @Radians2Degrees: (rad) -> return rad * @degrees
-  @Degrees2Radians: (deg) -> return deg / @degrees
+  @Rad2Deg: (rad) -> return rad * @degrees
+  @Deg2Rad: (deg) -> return deg / @degrees
 
   @GetRectAngle: (x1, y1, x2, y2) ->
     distY = Math.abs(y2-y1) # opposite

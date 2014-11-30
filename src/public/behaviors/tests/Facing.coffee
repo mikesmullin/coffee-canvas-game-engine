@@ -4,8 +4,9 @@ define [
   'components/MeshRenderer'
   'lib/Vector3'
   'lib/GMath'
-  'lib/Trigonometry'
-], (Behavior, Transform, MeshRenderer, Vector3, GMath, Trigonometry) ->
+  'lib/Trig'
+  'lib/Input'
+], (Behavior, Transform, MeshRenderer, Vector3, GMath, Trig, Input) ->
   class Facing extends Behavior
     constructor: ->
       super
@@ -59,8 +60,12 @@ define [
       drawPlayerLight ctx, @
       ctx.restore()
 
+    DrawGUI: (engine) ->
+      ctx = engine.canvas.ctx
+      drawCursor ctx
       engine.Info "θ="+Math.round(@facing), line: 10, size: 14
       engine.Info "cone="+Math.round(@flashlightConeAngle), line: 11, size: 14
+      engine.Info "x: #{Math.round Input.mousePosition.x}, y: #{Math.round Input.mousePosition.y}, dX: #{Math.round Input.GetAxisRaw('Mouse X')}, dY: #{Math.round Input.GetAxisRaw('Mouse Y')}", line: 30
 
   size = 640
 
@@ -79,7 +84,7 @@ define [
 
 
   angleHypToXY = (A, len) ->
-    A = Trigonometry.Degrees2Radians A
+    A = Trig.Deg2Rad A
     o = Math.sin(A) * len
     a = Math.cos(A) * len
     return [o,a]
@@ -105,7 +110,7 @@ define [
     B = A - (D/2)
 
     # draw isosceles triangle representing 2d top-down cone shape of flashlight
-    edist = Math.abs object.flashlightRange / Math.cos((D/2) / (180/Math.PI)) # outside equilateral distance
+    edist = Math.abs object.flashlightRange / Math.cos(Trig.Deg2Rad(D/2)) # outside equilateral distance
     [x2, y2] = angleHypToXY C, edist
     [x3, y3] = angleHypToXY B, edist
 
@@ -115,5 +120,22 @@ define [
     ctx.lineTo x+x3, y+y3
     ctx.closePath()
     #ctx.stroke()
+
+  drawCursor = (ctx) ->
+    ctx.lineWidth   = 1
+    ctx.strokeStyle = 'yellow'
+    {x,y} = Input.mousePosition
+    s = 10
+
+    ctx.beginPath()
+    ctx.moveTo x, y
+    ctx.lineTo x-s, y
+    ctx.moveTo x, y
+    ctx.lineTo x+s, y
+    ctx.moveTo x, y
+    ctx.lineTo x, y-s
+    ctx.moveTo x, y
+    ctx.lineTo x, y+s
+    ctx.stroke()
 
   return Facing

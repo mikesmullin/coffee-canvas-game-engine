@@ -1,6 +1,7 @@
 define [
   'lib/GMath'
-], (GMath) ->
+  'lib/Vector3'
+], (GMath, Vector3) ->
   class Button
     held: false
     isDownFrame: false
@@ -19,6 +20,7 @@ define [
       'Use': new Button
       'Fire': new Button
       'Alt Fire': new Button
+    @mousePosition: new Vector3
 
     @GetAxisRaw: (axis) -> @axis[axis]
     @GetButton: (button) -> @buttons[button].held
@@ -39,8 +41,11 @@ define [
       prefix = (s) -> return if pre is '' then s else pre + s[0].toUpperCase() + s.substr 1
       canvas.onclick = -> canvas[prefix 'requestPointerLock']()
       capturedMouseMove = (e) =>
-        @axis['Mouse X'] = GMath.Clamp e[prefix 'movementX'], - size/2, size/2
-        @axis['Mouse Y'] = GMath.Clamp e[prefix 'movementY'], - size/2, size/2
+        @axis['Mouse X'] = dX = e[prefix 'movementX']
+        @axis['Mouse Y'] = dY = e[prefix 'movementY']
+        SENSITIVITY = .5
+        @mousePosition.x = GMath.Clamp @mousePosition.x + (SENSITIVITY * dX), 0, engine.canvas.canvas.width
+        @mousePosition.y = GMath.Clamp @mousePosition.y + (SENSITIVITY * dY), 0, engine.canvas.canvas.height
         e.preventDefault() # prevent browser fro reacting to event
       capturedMouseDown = (e) =>
         switch e.button
