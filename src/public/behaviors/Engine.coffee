@@ -45,7 +45,7 @@ define [
         #return if ticks++ > 7
         next = => requestAnimationFrame tick if @running # loop no more than 60fps
         now = Time.Now()
-        @deltaTime = (now - lastFrameStarted) / 1000
+        @deltaTime = (now - lastFrameStarted) / 1000 if lastFrameStarted
         lastFrameStarted = now
 
         # if the time to update + draw has left the nextUpdate scheduled
