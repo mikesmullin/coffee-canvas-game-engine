@@ -15,10 +15,3 @@ define [
   Translate: (vec3) ->
 
   Rotate: (vec3) ->
-
-#transform = (h, p) ->
-#  for matrix in h
-#    [p.x, p.y, p.z] = dotProductVec4 [p.x, p.y, p.z, 1], matrix
-#  return p
-
-
