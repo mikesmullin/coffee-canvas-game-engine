@@ -67,6 +67,10 @@ define [
       # draw my light
       drawPlayerLight ctx, @object
 
+      # draw myself
+      #draw_segments ctx, @object
+      draw_vertices ctx, @object
+
       # draw other players
       for object in getOtherPlayers engine, @object
         # apply other player's clipping mask
@@ -81,15 +85,13 @@ define [
         # TODO: actually draw imported player model. but i need to make it black. also walls need to be made black
         {x,y} = getObjectCoords object
         ctx.arc(x, y, 10, 0, Math.PI*2, true)
+        #draw_vertices ctx, object
         ctx.fill()
 
         # lift other player's clipping mask
         ctx.restore()
 
       # TODO: draw props
-
-      # draw myself
-      draw_segments ctx, @object
 
       # lift my clipping mask
       ctx.restore()
@@ -161,12 +163,31 @@ parse_segments = (object) ->
     object.renderer.segments.push new Segment p1, p2
 
 draw_segments = (ctx, object) ->
-  return unless object.renderer?.segments
   for seg in object.renderer.segments
     ctx.beginPath()
     ctx.moveTo seg.p1.x, seg.p1.y
     ctx.lineTo seg.p2.x, seg.p2.y
     ctx.stroke()
+
+draw_vertices = (ctx, object) ->
+  ctx.lineWidth   = object.renderer.materials[0].lineWidth
+  ctx.strokeStyle = object.renderer.materials[0].strokeStyle
+  ctx.fillStyle   = object.renderer.materials[0].fillStyle
+  wv = transformed_vertices object
+  offset = 0
+  indices = object.renderer.indices
+  for step in object.renderer.vcount
+    ctx.beginPath()
+    x0 = x = wv[indices[offset]].x
+    y0 = y = wv[indices[offset]].y
+    ctx.moveTo x, y
+    for i in [offset+2..offset+((step-1)*2)] by 2
+      x = wv[indices[i]].x
+      y = wv[indices[i]].y
+      ctx.lineTo x, y
+    offset = i
+    ctx.closePath()
+    ctx.fill()
 
 getObjectCoords = (object) ->
   x: object.renderer.vertices[0].x + object.transform.position.x
