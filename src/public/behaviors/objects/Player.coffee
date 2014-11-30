@@ -12,8 +12,8 @@ define [
       @flashlightLit = true
       @transform = new Transform object: @
       @collider = new SegmentCollider object: @, is_trigger: true
-      @BindScript CurrentPlayer; @BindScript CurrentPlayerPlayer
-      #@BindScript AutoPilot
+      #@BindScript CurrentPlayer; @BindScript CurrentPlayerPlayer
+      @BindScript AutoPilot
 
     ToggleFlashlight: (force) ->
       return if force? and force is @flashlightLit

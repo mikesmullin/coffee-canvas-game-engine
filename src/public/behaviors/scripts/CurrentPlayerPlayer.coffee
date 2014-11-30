@@ -14,8 +14,8 @@ define [
           console.log 'eerie breathing is heard'
 
     Update: (engine) ->
-      if Input.GetButtonDown 'Use'
-        console.log 'using'
+      #if Input.GetButtonDown 'Use'
+      #  console.log 'using'
 
       if Input.GetButtonDown 'Fire'
         # TODO: interact with doors/drawers
@@ -24,3 +24,7 @@ define [
       if Input.GetButtonDown 'Alt Fire'
         console.log 'toggle flashlight'
         @object.ToggleFlashlight()
+
+    DrawGUI: (engine) ->
+      engine.Info 'Controls: LClick - Interact, RClick - toggle light', 50, 'red', 12
+      engine.Info 'Objective: Sneak and hide from the seeker', 51, 'gray', 12

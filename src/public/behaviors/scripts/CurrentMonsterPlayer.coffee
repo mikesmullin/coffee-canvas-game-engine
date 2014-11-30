@@ -21,3 +21,7 @@ define [
 
       if Input.GetButtonDown 'Alt Fire'
         console.log 'alt attack'
+
+    DrawGUI: (engine) ->
+      engine.Info 'Controls: E - toggle visibility, LClick - capture', 50, 'red', 12
+      engine.Info 'Objective: Scare or capture the hider', 51, 'gray', 12
