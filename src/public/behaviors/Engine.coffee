@@ -107,9 +107,8 @@ define [
     @[event]?.apply @, args
     for obj in @objects when obj.enabled
       obj[event]?.apply obj, args
-      for component in ['renderer', 'collider']
-        if obj[component]?.enabled
-          obj[component][event]?.apply obj[component], args
+      for component in ['renderer', 'collider'] when obj[component]?.enabled
+        obj[component][event]?.apply obj[component], args
       for cls, script of obj.scripts when script.enabled
         script[event]?.apply script, args
     return

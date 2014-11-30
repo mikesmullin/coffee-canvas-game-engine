@@ -192,5 +192,3 @@ drawPlayerLight = (ctx, object) ->
     grd.addColorStop(1,'rgba(0,0,0,0)')
     ctx.fillStyle=grd
     ctx.fillRect 0, 0, size, size
-
-#t = (amplitude, period, x0, time) -> amplitude * Math.sin(time * 2 * Math.PI / period) + x0

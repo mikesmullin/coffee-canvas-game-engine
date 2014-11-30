@@ -36,7 +36,12 @@ define [
           if @SegmentsCollide(segA.p1.x, segA.p1.y, segA.p2.x, segA.p2.y,
             segB.p1.x, segB.p1.y, segB.p2.x, segB.p2.y)
               if @is_trigger
-                engine.TriggerSync 'OnControllerColliderHit', obj
+                event = 'OnControllerColliderHit'
+                @object[event]?(engine, obj)
+                for component in ['renderer', 'collider'] when @object[component]?.enabled
+                  @object[component][event]?(engine, obj)
+                for cls, script of @object.scripts when script.enabled
+                  script[event]?(engine, obj)
               return SegmentCollider.CollisionFlags.Sides
 
     # apply move to object.transform.position
