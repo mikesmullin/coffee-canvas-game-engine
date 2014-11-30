@@ -56,18 +56,20 @@ define [
 
     # touch
     startX = startY = 0
-    pixelUnit = 200 # max pretend-touch-joystick stretch area
-    canvas.addEventListener 'touchstart', (e) ->
-      startX = e.touches[0].pageX
-      startY = e.touches[0].pageY
+    pixelUnit = 100 # max pretend-touch-joystick stretch area
+    canvas.addEventListener 'touchstart', (e) =>
+      startX = e.touches[0].clientX
+      startY = e.touches[0].clientY
       e.preventDefault() # prevent browser fro reacting to event
-    canvas.addEventListener 'touchend', (e) ->
-      endX = e.changedTouches[0].pageX
-      endY = e.changedTouches[0].pageY
-      # TODO: this distance equation might be useful to expose later
-      #distance = Math.sqrt(Math.pow(startX - endX, 2) + Math.pow(startY - endY, 2))
-      @axis['Mouse X'] = GMath.clamp(endX - startX, 0, pixelUnit) / pixelUnit
-      @axis['Mouse Y'] = GMath.clamp(endY - startY, 0, pixelUnit) / pixelUnit
+    canvas.addEventListener 'touchmove', (e) =>
+      endX = e.changedTouches[0].clientX
+      endY = e.changedTouches[0].clientY
+      @axis.Horizontal = GMath.clamp(endX - startX, - pixelUnit, pixelUnit) / pixelUnit
+      @axis.Vertical = GMath.clamp(endY - startY, - pixelUnit, pixelUnit) / pixelUnit
+      e.preventDefault() # prevent browser fro reacting to event
+    canvas.addEventListener 'touchend', (e) =>
+      @axis.Vertical = 0
+      @axis.Horizontal = 0
       e.preventDefault() # prevent browser fro reacting to event
 
     #setInterval (=> console.log @axis), 500
