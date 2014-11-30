@@ -99,20 +99,31 @@
           };
         })(this)), true);
         startX = startY = 0;
-        pixelUnit = 200;
-        canvas.addEventListener('touchstart', function(e) {
-          startX = e.touches[0].pageX;
-          startY = e.touches[0].pageY;
-          return e.preventDefault();
-        });
-        canvas.addEventListener('touchend', function(e) {
-          var endX, endY;
-          endX = e.changedTouches[0].pageX;
-          endY = e.changedTouches[0].pageY;
-          this.axis['Mouse X'] = GMath.clamp(endX - startX, 0, pixelUnit) / pixelUnit;
-          this.axis['Mouse Y'] = GMath.clamp(endY - startY, 0, pixelUnit) / pixelUnit;
-          return e.preventDefault();
-        });
+        pixelUnit = 100;
+        canvas.addEventListener('touchstart', (function(_this) {
+          return function(e) {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            return e.preventDefault();
+          };
+        })(this));
+        canvas.addEventListener('touchmove', (function(_this) {
+          return function(e) {
+            var endX, endY;
+            endX = e.changedTouches[0].clientX;
+            endY = e.changedTouches[0].clientY;
+            _this.axis.Horizontal = GMath.clamp(endX - startX, -pixelUnit, pixelUnit) / pixelUnit;
+            _this.axis.Vertical = GMath.clamp(endY - startY, -pixelUnit, pixelUnit) / pixelUnit;
+            return e.preventDefault();
+          };
+        })(this));
+        canvas.addEventListener('touchend', (function(_this) {
+          return function(e) {
+            _this.axis.Vertical = 0;
+            _this.axis.Horizontal = 0;
+            return e.preventDefault();
+          };
+        })(this));
         return cb();
       };
 
