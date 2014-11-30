@@ -53,7 +53,7 @@ define [
       # apply visible clipping mask
       traceSvgClippingArea ctx, @object.visibleArea
 
-      ## apply slight glow to  hallway floors
+      ## apply slight glow to hallway floors
       #ctx.fillStyle = 'rgba(255,255,255,0.1)'
       #ctx.fillRect 0, 0, size, size
 
@@ -70,7 +70,7 @@ define [
       # draw other players
       for object in getOtherPlayers engine, @object
         # apply other player's clipping mask
-        #traceSvgClippingArea ctx, object.visibleArea
+        traceSvgClippingArea ctx, object.visibleArea
 
         # draw other player's light
         drawPlayerLight ctx, object
@@ -83,8 +83,8 @@ define [
         ctx.arc(x, y, 10, 0, Math.PI*2, true)
         ctx.fill()
 
-      #  # lift other player's clipping mask
-      #  ctx.restore()
+        # lift other player's clipping mask
+        ctx.restore()
 
       # TODO: draw props
 
@@ -93,6 +93,9 @@ define [
 
       # lift my clipping mask
       ctx.restore()
+
+
+
 
 
 getWall = (engine) ->
@@ -108,8 +111,6 @@ getOtherPlayers = (engine, me) ->
       object isnt me)
         players.push object
   return players
-
-
 
 traceSvgClippingArea = (ctx, path) ->
   ctx.save()
