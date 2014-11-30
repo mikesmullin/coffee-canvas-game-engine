@@ -98,118 +98,118 @@ define [
 
 
 
+  getWall = (engine) ->
+    for object in engine.objects when object.constructor.name is 'Wall'
+      return object
 
+  getOtherPlayers = (engine, me) ->
+    players = []
+    for object in engine.objects
+      if ((object.constructor.name is 'Player' or
+        object.constructor.name is 'Monster') and
+        object.enabled and
+        object isnt me)
+          players.push object
+    return players
 
-getWall = (engine) ->
-  for object in engine.objects when object.constructor.name is 'Wall'
-    return object
+  traceSvgClippingArea = (ctx, path) ->
+    ctx.save()
+    ctx.beginPath()
+    i = 0
+    while i < path.length
+      if path[i] is "M"
+        ctx.moveTo path[i + 1], path[i + 2]
+        i += 2
+      if path[i] is "L"
+        ctx.lineTo path[i + 1], path[i + 2]
+        i += 2
+      i++
+    ctx.clip()
 
-getOtherPlayers = (engine, me) ->
-  players = []
-  for object in engine.objects
-    if ((object.constructor.name is 'Player' or
-      object.constructor.name is 'Monster') and
-      object.enabled and
-      object isnt me)
-        players.push object
-  return players
+  transformed_vertices = (object) ->
+    # apply Transform
+    # TODO: stop performing this on every draw
+    #        instead do it with Updates to Transform vectors
+    wv = [] # world vertices
+    for vec3 in object.renderer.vertices
+      wv.push( vec3.Clone()
+        #.RotateX @object.transform.rotation.x
+        #.Scale @object.transform.localScale
+        .Add object.transform.position
+        #.RotateY @object.transform.rotation.y
+        #.RotateZ @object.transform.rotation.z
+        )
+    return wv
 
-traceSvgClippingArea = (ctx, path) ->
-  ctx.save()
-  ctx.beginPath()
-  i = 0
-  while i < path.length
-    if path[i] is "M"
-      ctx.moveTo path[i + 1], path[i + 2]
-      i += 2
-    if path[i] is "L"
-      ctx.lineTo path[i + 1], path[i + 2]
-      i += 2
-    i++
-  ctx.clip()
-
-transformed_vertices = (object) ->
-  # apply Transform
-  # TODO: stop performing this on every draw
-  #        instead do it with Updates to Transform vectors
-  wv = [] # world vertices
-  for vec3 in object.renderer.vertices
-    wv.push( vec3.Clone()
-      #.RotateX @object.transform.rotation.x
-      #.Scale @object.transform.localScale
-      .Add object.transform.position
-      #.RotateY @object.transform.rotation.y
-      #.RotateZ @object.transform.rotation.z
-      )
-  return wv
-
-parse_segments = (object) ->
-  wv = transformed_vertices object
-  object.renderer.segments = []
-  offset = 0
-  indices = object.renderer.indices
-  for step in object.renderer.vcount
-    x0 = x = wv[indices[offset]].x
-    y0 = y = wv[indices[offset]].y
-    p1 = new Point x, y
-    for i in [offset+2..offset+((step-1)*2)] by 2
-      x = wv[indices[i]].x
-      y = wv[indices[i]].y
-      p2 = new Point x, y
-      object.renderer.segments.push new Segment p1, p2
+  parse_segments = (object) ->
+    wv = transformed_vertices object
+    object.renderer.segments = []
+    offset = 0
+    indices = object.renderer.indices
+    for step in object.renderer.vcount
+      x0 = x = wv[indices[offset]].x
+      y0 = y = wv[indices[offset]].y
       p1 = new Point x, y
-    offset = i
-    p2 = new Point x0, y0
-    object.renderer.segments.push new Segment p1, p2
+      for i in [offset+2..offset+((step-1)*2)] by 2
+        x = wv[indices[i]].x
+        y = wv[indices[i]].y
+        p2 = new Point x, y
+        object.renderer.segments.push new Segment p1, p2
+        p1 = new Point x, y
+      offset = i
+      p2 = new Point x0, y0
+      object.renderer.segments.push new Segment p1, p2
 
-draw_segments = (ctx, object) ->
-  for seg in object.renderer.segments
-    ctx.beginPath()
-    ctx.moveTo seg.p1.x, seg.p1.y
-    ctx.lineTo seg.p2.x, seg.p2.y
-    ctx.stroke()
+  draw_segments = (ctx, object) ->
+    for seg in object.renderer.segments
+      ctx.beginPath()
+      ctx.moveTo seg.p1.x, seg.p1.y
+      ctx.lineTo seg.p2.x, seg.p2.y
+      ctx.stroke()
 
-draw_vertices = (ctx, object) ->
-  ctx.lineWidth   = object.renderer.materials[0].lineWidth
-  ctx.strokeStyle = object.renderer.materials[0].strokeStyle
-  ctx.fillStyle   = object.renderer.materials[0].fillStyle
-  wv = transformed_vertices object
-  offset = 0
-  indices = object.renderer.indices
-  for step in object.renderer.vcount
-    ctx.beginPath()
-    x0 = x = wv[indices[offset]].x
-    y0 = y = wv[indices[offset]].y
-    ctx.moveTo x, y
-    for i in [offset+2..offset+((step-1)*2)] by 2
-      x = wv[indices[i]].x
-      y = wv[indices[i]].y
-      ctx.lineTo x, y
-    offset = i
-    ctx.closePath()
-    ctx.fill()
+  draw_vertices = (ctx, object) ->
+    ctx.lineWidth   = object.renderer.materials[0].lineWidth
+    ctx.strokeStyle = object.renderer.materials[0].strokeStyle
+    ctx.fillStyle   = object.renderer.materials[0].fillStyle
+    wv = transformed_vertices object
+    offset = 0
+    indices = object.renderer.indices
+    for step in object.renderer.vcount
+      ctx.beginPath()
+      x0 = x = wv[indices[offset]].x
+      y0 = y = wv[indices[offset]].y
+      ctx.moveTo x, y
+      for i in [offset+2..offset+((step-1)*2)] by 2
+        x = wv[indices[i]].x
+        y = wv[indices[i]].y
+        ctx.lineTo x, y
+      offset = i
+      ctx.closePath()
+      ctx.fill()
 
-getObjectCoords = (object) ->
-  x: object.renderer.vertices[0].x + object.transform.position.x
-  y: object.renderer.vertices[0].y + object.transform.position.y
+  getObjectCoords = (object) ->
+    x: object.renderer.vertices[0].x + object.transform.position.x
+    y: object.renderer.vertices[0].y + object.transform.position.y
 
-size = 640
+  size = 640
 
-drawPlayerLight = (ctx, object) ->
-  {x, y} = getObjectCoords object
-  if object.constructor.name is 'Monster'
-    # TODO: make monster's vision only visible to monster?
-    # monster's 360-degree limited vision
-    grd=ctx.createRadialGradient(x, y, 10, x, y, 200)
-    grd.addColorStop(0, 'rgba(255,255,255,.1)')
-    grd.addColorStop(1,'rgba(0,0,0,0)')
-    ctx.fillStyle=grd
-    ctx.fillRect 0, 0, size, size
+  drawPlayerLight = (ctx, object) ->
+    {x, y} = getObjectCoords object
+    if object.constructor.name is 'Monster'
+      # TODO: make monster's vision only visible to monster?
+      # monster's 360-degree limited vision
+      grd=ctx.createRadialGradient(x, y, 10, x, y, 200)
+      grd.addColorStop(0, 'rgba(255,255,255,.1)')
+      grd.addColorStop(1,'rgba(0,0,0,0)')
+      ctx.fillStyle=grd
+      ctx.fillRect 0, 0, size, size
 
-  else if object.constructor.name is 'Player'
-    # draw player's 360-degree lantern light
-    grd=ctx.createRadialGradient(x, y, 10, x, y, 300)
-    grd.addColorStop(0, 'rgba(255,255,100,.3)')
-    grd.addColorStop(1,'rgba(0,0,0,0)')
-    ctx.fillStyle=grd
-    ctx.fillRect 0, 0, size, size
+    else if object.constructor.name is 'Player'
+      # draw player's 360-degree lantern light
+      grd=ctx.createRadialGradient(x, y, 10, x, y, 300)
+      grd.addColorStop(0, 'rgba(255,255,100,.3)')
+      grd.addColorStop(1,'rgba(0,0,0,0)')
+      ctx.fillStyle=grd
+      ctx.fillRect 0, 0, size, size
+
+  return CurrentPlayer
