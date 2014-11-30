@@ -4,7 +4,8 @@ define [
   'lib/Input'
   'lib/Visibility'
   'lib/Geometry'
-], (Script, TopDownController2D, Input, {Visibility}, {Point, Segment}) ->
+  'lib/Trig'
+], (Script, TopDownController2D, Input, {Visibility}, {Point, Segment}, Trig) ->
   class CurrentPlayer extends Script
     constructor: ->
       super
@@ -36,6 +37,7 @@ define [
       @v.SetVantagePoint x, y
       @v.Sweep()
       @object.visibleArea = @v.computeVisibleAreaPaths(@v.center, @v.output).floor
+
 
     Draw: (engine) ->
       ctx = engine.canvas.ctx
@@ -198,12 +200,17 @@ define [
 
     else if object.constructor.name is 'Player'
       if object.flashlightLit
-        # draw player's 360-degree lantern light
+        # draw player's flashlight
+        ctx.save()
+        drawFlashlightCone ctx, object
+        ctx.clip()
         grd=ctx.createRadialGradient(x, y, 10, x, y, 300)
         grd.addColorStop(0, 'rgba(255,255,100,.3)')
         grd.addColorStop(1,'rgba(0,0,0,0)')
         ctx.fillStyle=grd
         ctx.fillRect 0, 0, size, size
+        ctx.restore()
+
       else if object is me
         # 360-degree limited vision
         grd=ctx.createRadialGradient(x, y, 10, x, y, 75)
@@ -214,5 +221,31 @@ define [
       else
         # monster will see no light from player with flashlight off
         # only their black dot moving against dark gray floor
+
+  angleHypToXY = (A, len) ->
+    A = Trig.Deg2Rad A
+    o = Math.sin(A) * len
+    a = Math.cos(A) * len
+    return [o,a]
+
+  drawFlashlightCone = (ctx, object) ->
+    {x, y} = getObjectCoords object
+
+    A = object.facing
+    D = object.flashlightConeAngle
+    C = A + (D/2)
+    B = A - (D/2)
+
+    # draw isosceles triangle representing 2d top-down cone shape of flashlight
+    edist = Math.abs object.flashlightRange / Math.cos(Trig.Deg2Rad(D/2)) # outside equilateral distance
+    [x2, y2] = angleHypToXY C, edist
+    [x3, y3] = angleHypToXY B, edist
+    ctx.lineWidth = 1
+    ctx.strokeStyle = 'white'
+    ctx.beginPath()
+    ctx.moveTo x, y
+    ctx.lineTo x+x2, y+y2
+    ctx.lineTo x+x3, y+y3
+    ctx.closePath()
 
   return CurrentPlayer

@@ -14,6 +14,10 @@ define [
           console.log 'eerie breathing is heard'
 
     Update: (engine) ->
+      # set facing direction based on mouse input; mimic 3D mouse look
+      SENSITIVITY = 0.2
+      @object.SetFacing @object.facing - (SENSITIVITY * Input.GetAxisRaw('Mouse X'))
+
       #if Input.GetButtonDown 'Use'
       #  console.log 'using'
 
