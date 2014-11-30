@@ -41,12 +41,6 @@ define [
       @v.Sweep()
       @object.visibleArea = @v.computeVisibleAreaPaths(@v.center, @v.output).floor
 
-      #if Input.GetButtonDown 'Use'
-        # TODO: toggle flashlight
-        # TODO: open doors/drawers
-        # TODO: grab keys
-        #console.log 'using'
-
     Draw: (engine) ->
       ctx = engine.canvas.ctx
 
@@ -73,23 +67,24 @@ define [
 
       # draw other players
       for object in getOtherPlayers engine, @object
-        # apply other player's clipping mask
-        traceSvgClippingArea ctx, object.visibleArea
+        if object.visible isnt false
+          # apply other player's clipping mask
+          traceSvgClippingArea ctx, object.visibleArea
 
-        # draw other player's light
-        drawPlayerLight ctx, object
+          # draw other player's light
+          drawPlayerLight ctx, object
 
-        # draw other player
-        ctx.beginPath()
-        ctx.fillStyle = 'black'
-        # TODO: actually draw imported player model. but i need to make it black. also walls need to be made black
-        {x,y} = getObjectCoords object
-        ctx.arc(x, y, 10, 0, Math.PI*2, true)
-        #draw_vertices ctx, object
-        ctx.fill()
+          # draw other player
+          # TODO: actually draw imported player model. but i need to make it black. also walls need to be made black
+          ctx.beginPath()
+          ctx.fillStyle = 'black'
+          {x,y} = getObjectCoords object
+          ctx.arc(x, y, 10, 0, Math.PI*2, true)
+          #draw_vertices ctx, object
+          ctx.fill()
 
-        # lift other player's clipping mask
-        ctx.restore()
+          # lift other player's clipping mask
+          ctx.restore()
 
       # TODO: draw props
 
@@ -205,11 +200,19 @@ define [
       ctx.fillRect 0, 0, size, size
 
     else if object.constructor.name is 'Player'
-      # draw player's 360-degree lantern light
-      grd=ctx.createRadialGradient(x, y, 10, x, y, 300)
-      grd.addColorStop(0, 'rgba(255,255,100,.3)')
-      grd.addColorStop(1,'rgba(0,0,0,0)')
-      ctx.fillStyle=grd
-      ctx.fillRect 0, 0, size, size
+      if object.flashlightLit
+        # draw player's 360-degree lantern light
+        grd=ctx.createRadialGradient(x, y, 10, x, y, 300)
+        grd.addColorStop(0, 'rgba(255,255,100,.3)')
+        grd.addColorStop(1,'rgba(0,0,0,0)')
+        ctx.fillStyle=grd
+        ctx.fillRect 0, 0, size, size
+      else
+        # 360-degree limited vision
+        grd=ctx.createRadialGradient(x, y, 10, x, y, 200)
+        grd.addColorStop(0, 'rgba(255,255,255,.1)')
+        grd.addColorStop(1,'rgba(0,0,0,0)')
+        ctx.fillStyle=grd
+        ctx.fillRect 0, 0, size, size
 
   return CurrentPlayer

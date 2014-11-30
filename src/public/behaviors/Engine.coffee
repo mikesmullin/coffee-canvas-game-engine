@@ -59,7 +59,7 @@ define [
 
         if now >= nextUpdate # past-due for an update
           nextUpdate += updateInterval # schedule next update an interval apart
-          @TriggerSync 'Update'
+          @TriggerSync 'Update'; @TriggerSync 'FinalUpdate'
 
           # notice that without an update, we won't have anything new to draw.
 
@@ -81,7 +81,10 @@ define [
         next()
       tick()
 
-  #Update: (engine) ->
+  Update: (engine) ->
+
+  FinalUpdate: (engine) ->
+    Input.FinalUpdate engine
 
   Draw: (engine) ->
     # engine.time is seconds since start of game; used for interpolation
