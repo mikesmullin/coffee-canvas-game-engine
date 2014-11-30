@@ -39,8 +39,8 @@ define [
       prefix = (s) -> return if pre is '' then s else pre + s[0].toUpperCase() + s.substr 1
       canvas.onclick = -> canvas[prefix 'requestPointerLock']()
       capturedMouseMove = (e) =>
-        @axis['Mouse X'] = GMath.clamp e[prefix 'movementX'], - size/2, size/2
-        @axis['Mouse Y'] = GMath.clamp e[prefix 'movementY'], - size/2, size/2
+        @axis['Mouse X'] = GMath.Clamp e[prefix 'movementX'], - size/2, size/2
+        @axis['Mouse Y'] = GMath.Clamp e[prefix 'movementY'], - size/2, size/2
         e.preventDefault() # prevent browser fro reacting to event
       capturedMouseDown = (e) =>
         switch e.button
@@ -94,8 +94,8 @@ define [
       canvas.addEventListener 'touchmove', (e) =>
         endX = e.changedTouches[0].clientX
         endY = e.changedTouches[0].clientY
-        @axis.Horizontal = GMath.clamp(endX - startX, - pixelUnit, pixelUnit) / pixelUnit
-        @axis.Vertical = GMath.clamp(endY - startY, - pixelUnit, pixelUnit) / pixelUnit
+        @axis.Horizontal = GMath.Clamp(endX - startX, - pixelUnit, pixelUnit) / pixelUnit
+        @axis.Vertical = GMath.Clamp(endY - startY, - pixelUnit, pixelUnit) / pixelUnit
         e.preventDefault() # prevent browser fro reacting to event
       canvas.addEventListener 'touchend', (e) =>
         @axis.Vertical = 0

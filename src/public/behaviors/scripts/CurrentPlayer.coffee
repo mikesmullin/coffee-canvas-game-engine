@@ -206,7 +206,7 @@ define [
         ctx.fillRect 0, 0, size, size
       else if object is me
         # 360-degree limited vision
-        grd=ctx.createRadialGradient(x, y, 10, x, y, 200)
+        grd=ctx.createRadialGradient(x, y, 10, x, y, 75)
         grd.addColorStop(0, 'rgba(255,255,255,.1)')
         grd.addColorStop(1,'rgba(0,0,0,0)')
         ctx.fillStyle=grd
