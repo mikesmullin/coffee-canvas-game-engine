@@ -1,6 +1,6 @@
 define -> class Canvas2D
   constructor: ({ @id }) ->
-    @fps = 1 # TODO: find out why the closer this gets to 60 fps, frames can stack up and fall behind to 10fps
+    @fps = 20 # TODO: find out why the closer this gets to 60 fps, frames can stack up and fall behind to 10fps
     @canvas = document.getElementById @id
     @ctx = @canvas.getContext '2d'
     @pixelBuf = undefined

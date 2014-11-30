@@ -25,8 +25,8 @@ define [
     projected_segments =  []
     for seg in @object.renderer.segments
       projected_segments.push new Segment(
-        new Point(seg.p1.x + @object.transform.position.x + dest.x, seg.p1.y + @object.transform.position.y + dest.y),
-        new Point(seg.p2.x + @object.transform.position.x + dest.x, seg.p2.y + @object.transform.position.y + dest.y)
+        new Point(seg.p1.x + dest.x, seg.p1.y + dest.y),
+        new Point(seg.p2.x + dest.x, seg.p2.y + dest.y)
       )
 
     # check this object's segments against every other object's segments for an intersection

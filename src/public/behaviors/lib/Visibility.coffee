@@ -40,8 +40,6 @@ define [
       @endpoints = []
 
     AddSegments: (segments) ->
-      debugger
-      console.log segments: segments
       for seg in segments
         @addSegment(seg.p1.x, seg.p1.y, seg.p2.x, seg.p2.y)
 

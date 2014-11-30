@@ -11,7 +11,7 @@ define [
       @object.BindScript TopDownController2D
       @v = new Visibility
 
-    OnControllerColliderHit: (collidingObject) ->
+    OnControllerColliderHit: (engine, collidingObject) ->
       console.log "#{@object.constructor.name} would collide with #{collidingObject.constructor.name}"
 
       #if collidingObject.name is 'Monster'
@@ -20,17 +20,24 @@ define [
 
     Update: (engine) ->
       @v.ResetSegments()
+      object = getWall engine
+      parse_segments object
+      @v.AddSegments object.renderer.segments
 
-      # calculate visibility for other players
-      for object in getOtherPlayers engine
-        @v.AddSegments object.renderer.segments
-        @v.SetVantagePoint object.transform.position.x, object.transform.position.y
-        @v.Sweep()
-        object.visibleArea = @v.computeVisibleAreaPaths(@v.center, @v.output).floor
+      ## calculate visibility for other players
+      #for object in getOtherPlayers engine
+      #  parse_segments object
+      #  #@v.AddSegments object.renderer.segments
+      #  {x,y} = getObjectCoords object
+      #  @v.SetVantagePoint x, y
+      #  @v.Sweep()
+      #  object.visibleArea = @v.computeVisibleAreaPaths(@v.center, @v.output).floor
 
       # calculate visibility for current player
-      @v.AddSegments @object.renderer.segments
-      @v.SetVantagePoint @object.transform.position.x, @object.transform.position.y
+      parse_segments @object
+      #@v.AddSegments @object.renderer.segments
+      {x,y} = getObjectCoords @object
+      @v.SetVantagePoint x, y
       @v.Sweep()
       @object.visibleArea = @v.computeVisibleAreaPaths(@v.center, @v.output).floor
 
@@ -45,47 +52,46 @@ define [
 
       # apply visible clipping mask
       traceSvgClippingArea ctx, @object.visibleArea
-      console.log @object.visibleArea
 
       ## apply slight glow to  hallway floors
-      #ctx.fillRect 10, 10, @size-20, @size-20
+      ctx.fillStyle = 'rgba(255,255,255,0.1)'
+      ctx.fillRect 0, 0, size, size
 
-      # trace/draw walls
+      # draw walls
       object = getWall engine
       ctx.lineWidth   = 1
       ctx.strokeStyle = 'rgba(255, 255, 255, .8)'
       ctx.fillStyle   = 'rgba(255, 255, 255, .1)'
-      parse_and_draw_segments ctx, object
+      draw_segments ctx, object
 
       # draw my light
       drawPlayerLight ctx, @object
 
-      # draw other players
-      for object in getOtherPlayers engine
-        # apply other player's clipping mask
-        traceSvgClippingArea ctx, object.visibleArea
+      ## draw other players
+      #for object in getOtherPlayers engine
+      #  # apply other player's clipping mask
+      #  traceSvgClippingArea ctx, object.visibleArea
 
-        # draw other player's light
-        drawPlayerLight ctx, object
+      #  # draw other player's light
+      #  drawPlayerLight ctx, object
 
-        # draw other player
-        ctx.beginPath()
-        ctx.fillStyle = 'black'
-        # TODO: actually draw imported player model. but i need to make it black. also walls need to be made black
-        ctx.arc(object.transform.position.x, object.transform.position.y, 10, 0, Math.PI*2, true)
-        ctx.fill()
+      #  # draw other player
+      #  ctx.beginPath()
+      #  ctx.fillStyle = 'black'
+      #  # TODO: actually draw imported player model. but i need to make it black. also walls need to be made black
+      #  ctx.arc(object.transform.position.x, object.transform.position.y, 10, 0, Math.PI*2, true)
+      #  ctx.fill()
 
-        # lift other player's clipping mask
-        ctx.restore()
+      #  # lift other player's clipping mask
+      #  ctx.restore()
 
       # TODO: draw props
-
-      # draw myself
-      ctx.fillStyle = 'green'
-      ctx.fillRect @object.transform.position.x, @object.transform.position.y, 20, 20
-
       # lift my clipping mask
       ctx.restore()
+
+      # draw myself
+      draw_segments ctx, @object
+
 
 
 getWall = (engine) ->
@@ -133,48 +139,45 @@ transformed_vertices = (object) ->
       )
   return wv
 
-parse_and_draw_segments = (ctx, object) ->
+parse_segments = (object) ->
   wv = transformed_vertices object
-
-  # TODO: move this out into Update and only when the transform changes
-  parseSegments = !object.renderer.segments.length
-  return if not parseSegments # we don't care to outline or fill walls anymore
-
+  object.renderer.segments = []
   offset = 0
   indices = object.renderer.indices
   for step in object.renderer.vcount
-    ctx.beginPath()
     x0 = x = wv[indices[offset]].x
     y0 = y = wv[indices[offset]].y
-    ctx.moveTo x, y
-    p1 = new Point x, y if parseSegments
+    p1 = new Point x, y
     for i in [offset+2..offset+((step-1)*2)] by 2
       x = wv[indices[i]].x
       y = wv[indices[i]].y
-      ctx.lineTo x, y
-      p2 = new Point x, y if parseSegments
-      object.renderer.segments.push new Segment p1, p2 if parseSegments
-      p1 = new Point x, y if parseSegments
+      p2 = new Point x, y
+      object.renderer.segments.push new Segment p1, p2
+      p1 = new Point x, y
     offset = i
-    ctx.closePath()
-    p2 = new Point x0, y0 if parseSegments
-    object.renderer.segments.push new Segment p1, p2 if parseSegments
-    #ctx.fill() # we don't care to outline or fill walls anymore
-    #ctx.stroke()
+    p2 = new Point x0, y0
+    object.renderer.segments.push new Segment p1, p2
+
+draw_segments = (ctx, object) ->
+  return unless object.renderer?.segments
+  for seg in object.renderer.segments
+    ctx.beginPath()
+    ctx.moveTo seg.p1.x, seg.p1.y
+    ctx.lineTo seg.p2.x, seg.p2.y
+    ctx.stroke()
+
+getObjectCoords = (object) ->
+  x: object.renderer.vertices[0].x + object.transform.position.x
+  y: object.renderer.vertices[0].y + object.transform.position.y
 
 size = 640
 
 drawPlayerLight = (ctx, object) ->
+  {x, y} = getObjectCoords object
   if object.constructor.name is 'Monster'
     # TODO: make monster's vision only visible to monster?
     # monster's 360-degree limited vision
-    grd=ctx.createRadialGradient(
-      object.transform.position.x,
-      object.transform.position.y,
-      10,
-      object.transform.position.x,
-      object.transform.position.y,
-      200)
+    grd=ctx.createRadialGradient(x, y, 10, x, y, 200)
     grd.addColorStop(0, 'rgba(255,255,255,.1)')
     grd.addColorStop(1,'rgba(0,0,0,0)')
     ctx.fillStyle=grd
@@ -182,13 +185,7 @@ drawPlayerLight = (ctx, object) ->
 
   else if object.constructor.name is 'Player'
     # draw player's 360-degree lantern light
-    grd=ctx.createRadialGradient(
-      object.transform.position.x,
-      object.transform.position.y,
-      10,
-      object.transform.position.x,
-      object.transform.position.y,
-      300)
+    grd=ctx.createRadialGradient(x, y, 10, x, y, 300)
     grd.addColorStop(0, 'rgba(255,255,100,.3)')
     grd.addColorStop(1,'rgba(0,0,0,0)')
     ctx.fillStyle=grd
