@@ -24,14 +24,14 @@ define [
       parse_segments object
       @v.AddSegments object.renderer.segments
 
-      ## calculate visibility for other players
-      #for object in getOtherPlayers engine
-      #  parse_segments object
-      #  #@v.AddSegments object.renderer.segments
-      #  {x,y} = getObjectCoords object
-      #  @v.SetVantagePoint x, y
-      #  @v.Sweep()
-      #  object.visibleArea = @v.computeVisibleAreaPaths(@v.center, @v.output).floor
+      # calculate visibility for other players
+      for object in getOtherPlayers engine, @object
+        parse_segments object
+        #@v.AddSegments object.renderer.segments
+        {x,y} = getObjectCoords object
+        @v.SetVantagePoint x, y
+        @v.Sweep()
+        object.visibleArea = @v.computeVisibleAreaPaths(@v.center, @v.output).floor
 
       # calculate visibility for current player
       parse_segments @object
@@ -54,57 +54,58 @@ define [
       traceSvgClippingArea ctx, @object.visibleArea
 
       ## apply slight glow to  hallway floors
-      ctx.fillStyle = 'rgba(255,255,255,0.1)'
-      ctx.fillRect 0, 0, size, size
+      #ctx.fillStyle = 'rgba(255,255,255,0.1)'
+      #ctx.fillRect 0, 0, size, size
 
       # draw walls
-      object = getWall engine
-      ctx.lineWidth   = 1
-      ctx.strokeStyle = 'rgba(255, 255, 255, .8)'
-      ctx.fillStyle   = 'rgba(255, 255, 255, .1)'
-      draw_segments ctx, object
+      #object = getWall engine
+      #ctx.lineWidth   = 1
+      #ctx.strokeStyle = 'rgba(255, 255, 255, .8)'
+      #ctx.fillStyle   = 'rgba(255, 255, 255, .1)'
+      #draw_segments ctx, object
 
       # draw my light
       drawPlayerLight ctx, @object
 
-      ## draw other players
-      #for object in getOtherPlayers engine
-      #  # apply other player's clipping mask
-      #  traceSvgClippingArea ctx, object.visibleArea
+      # draw other players
+      for object in getOtherPlayers engine, @object
+        # apply other player's clipping mask
+        #traceSvgClippingArea ctx, object.visibleArea
 
-      #  # draw other player's light
-      #  drawPlayerLight ctx, object
+        # draw other player's light
+        drawPlayerLight ctx, object
 
-      #  # draw other player
-      #  ctx.beginPath()
-      #  ctx.fillStyle = 'black'
-      #  # TODO: actually draw imported player model. but i need to make it black. also walls need to be made black
-      #  ctx.arc(object.transform.position.x, object.transform.position.y, 10, 0, Math.PI*2, true)
-      #  ctx.fill()
+        # draw other player
+        ctx.beginPath()
+        ctx.fillStyle = 'black'
+        # TODO: actually draw imported player model. but i need to make it black. also walls need to be made black
+        {x,y} = getObjectCoords object
+        ctx.arc(x, y, 10, 0, Math.PI*2, true)
+        ctx.fill()
 
       #  # lift other player's clipping mask
       #  ctx.restore()
 
       # TODO: draw props
-      # lift my clipping mask
-      ctx.restore()
 
       # draw myself
       draw_segments ctx, @object
 
+      # lift my clipping mask
+      ctx.restore()
 
 
 getWall = (engine) ->
   for object in engine.objects when object.constructor.name is 'Wall'
     return object
 
-getOtherPlayers = (engine) ->
+getOtherPlayers = (engine, me) ->
   players = []
   for object in engine.objects
     if ((object.constructor.name is 'Player' or
       object.constructor.name is 'Monster') and
       object.enabled and
-      object isnt @object) # not me
+      object isnt me)
         players.push object
   return players
 
