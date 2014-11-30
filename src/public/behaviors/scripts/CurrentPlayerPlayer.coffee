@@ -4,10 +4,14 @@ define [
 ], (Script, Input) ->
   class CurrentPlayerPlayer extends Script
     OnControllerColliderHit: (engine, collidingObject) ->
-      console.log "#{@object.constructor.name} would collide with #{collidingObject.constructor.name}"
       if @object.constructor.name is 'Player' and collidingObject.constructor.name is 'Monster'
-        alert 'You were caught by the seeker! You LOOSE!'
-        location.reload()
+        if collidingObject.visible
+          # TODO: in multiplayer, wait for network server to tell player
+          #  that they were attacked during collision and lost
+          alert 'You were caught by the seeker! You LOOSE!'
+          location.reload()
+        else
+          console.log 'eerie breathing is heard'
 
     Update: (engine) ->
       if Input.GetButtonDown 'Use'
@@ -19,4 +23,4 @@ define [
 
       if Input.GetButtonDown 'Alt Fire'
         console.log 'toggle flashlight'
-        @object.flashlightLit = not @object.flashlightLit
+        @object.ToggleFlashlight()

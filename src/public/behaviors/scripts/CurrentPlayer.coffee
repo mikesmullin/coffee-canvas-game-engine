@@ -14,10 +14,6 @@ define [
     OnControllerColliderHit: (engine, collidingObject) ->
       console.log "#{@object.constructor.name} would collide with #{collidingObject.constructor.name}"
 
-      if @object.constructor.name is 'Monster' and collidingObject.constructor.name is 'Player'
-        alert 'You caught them! You WIN!'
-        location.reload()
-
     Update: (engine) ->
       @v.ResetSegments()
       object = getWall engine
@@ -59,32 +55,33 @@ define [
       #draw_segments ctx, object
 
       # draw my light
-      drawPlayerLight ctx, @object
+      drawPlayerLight ctx, @object, @object
 
       # draw myself
       #draw_segments ctx, @object
       draw_vertices ctx, @object
 
-      # draw other players
-      for object in getOtherPlayers engine, @object
-        if object.visible isnt false
-          # apply other player's clipping mask
-          traceSvgClippingArea ctx, object.visibleArea
+      unless @object.constructor.name is 'Monster' and not @object.visible # monster cant see other players when invisible
+        # draw other players
+        for object in getOtherPlayers engine, @object
+          unless object.constructor.name is 'Monster' and not object.visible # other players cannot see monster when its invisible
+            # apply other player's clipping mask
+            traceSvgClippingArea ctx, object.visibleArea
 
-          # draw other player's light
-          drawPlayerLight ctx, object
+            # draw other player's light
+            drawPlayerLight ctx, object, @object
 
-          # draw other player
-          # TODO: actually draw imported player model. but i need to make it black. also walls need to be made black
-          ctx.beginPath()
-          ctx.fillStyle = 'black'
-          {x,y} = getObjectCoords object
-          ctx.arc(x, y, 10, 0, Math.PI*2, true)
-          #draw_vertices ctx, object
-          ctx.fill()
+            # draw other player
+            # TODO: actually draw imported player model. but i need to make it black. also walls need to be made black
+            ctx.beginPath()
+            ctx.fillStyle = 'black'
+            {x,y} = getObjectCoords object
+            ctx.arc(x, y, 10, 0, Math.PI*2, true)
+            #draw_vertices ctx, object
+            ctx.fill()
 
-          # lift other player's clipping mask
-          ctx.restore()
+            # lift other player's clipping mask
+            ctx.restore()
 
       # TODO: draw props
 
@@ -188,16 +185,16 @@ define [
 
   size = 640
 
-  drawPlayerLight = (ctx, object) ->
+  drawPlayerLight = (ctx, object, me) ->
     {x, y} = getObjectCoords object
     if object.constructor.name is 'Monster'
-      # TODO: make monster's vision only visible to monster?
-      # monster's 360-degree limited vision
-      grd=ctx.createRadialGradient(x, y, 10, x, y, 200)
-      grd.addColorStop(0, 'rgba(255,255,255,.1)')
-      grd.addColorStop(1,'rgba(0,0,0,0)')
-      ctx.fillStyle=grd
-      ctx.fillRect 0, 0, size, size
+      if object is me
+        # monster's 360-degree limited vision
+        grd=ctx.createRadialGradient(x, y, 10, x, y, 200)
+        grd.addColorStop(0, 'rgba(255,255,255,.1)')
+        grd.addColorStop(1,'rgba(0,0,0,0)')
+        ctx.fillStyle=grd
+        ctx.fillRect 0, 0, size, size
 
     else if object.constructor.name is 'Player'
       if object.flashlightLit
@@ -207,12 +204,15 @@ define [
         grd.addColorStop(1,'rgba(0,0,0,0)')
         ctx.fillStyle=grd
         ctx.fillRect 0, 0, size, size
-      else
+      else if object is me
         # 360-degree limited vision
         grd=ctx.createRadialGradient(x, y, 10, x, y, 200)
         grd.addColorStop(0, 'rgba(255,255,255,.1)')
         grd.addColorStop(1,'rgba(0,0,0,0)')
         ctx.fillStyle=grd
         ctx.fillRect 0, 0, size, size
+      else
+        # monster will see no light from player with flashlight off
+        # only their black dot moving against dark gray floor
 
   return CurrentPlayer
