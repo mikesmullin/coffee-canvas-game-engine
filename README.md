@@ -25,3 +25,4 @@ Statically-hosted demos:
 * [Demo 2: Transformations](http://mikesmullin.github.io/coffee-canvas-game-engine/snapshots/2)
 * [Demo 3: Visibility and lighting](http://mikesmullin.github.io/coffee-canvas-game-engine/snapshots/3)
 * [Demo 4: Perspective light and shadow](http://mikesmullin.github.io/coffee-canvas-game-engine/snapshots/4)
+* [Demo 5: Maze game with lights](http://mikesmullin.github.io/coffee-canvas-game-engine/snapshots/5)

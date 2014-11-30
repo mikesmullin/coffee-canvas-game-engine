@@ -14,9 +14,9 @@ define [
     OnControllerColliderHit: (engine, collidingObject) ->
       console.log "#{@object.constructor.name} would collide with #{collidingObject.constructor.name}"
 
-      #if collidingObject.name is 'Monster'
-        #alert 'game over!'
-        #location.reload()
+      if @object.constructor.name is 'Monster' and collidingObject.constructor.name is 'Player'
+        alert 'You caught them! You WIN!'
+        location.reload()
 
     Update: (engine) ->
       @v.ResetSegments()

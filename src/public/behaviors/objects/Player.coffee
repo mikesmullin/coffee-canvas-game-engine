@@ -10,5 +10,5 @@ define [
       super
       @transform = new Transform object: @
       @collider = new SegmentCollider object: @, is_trigger: true
-      @BindScript CurrentPlayer
-      #@BindScript AutoPilot
+      #@BindScript CurrentPlayer
+      @BindScript AutoPilot
