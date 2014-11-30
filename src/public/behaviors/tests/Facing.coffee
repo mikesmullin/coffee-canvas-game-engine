@@ -27,11 +27,13 @@ define [
       @renderer.vcount = [4]
       @renderer.indices = [0, 0, 1, 0, 2, 0, 3, 0]
       # position model within game world
-      @transform.position = new Vector3 100, 100, 0
+      @transform.position = new Vector3 300, 300, 0
       @transform.localScale.Add new Vector3 20, 20, 0
       @renderer.width = 20
       @renderer.height = 20
-      @facing = 0
+      @facing = 130
+      @flashlightConeAngle = 60
+      @flashlightRange = 100
 
     Start: (engine, cb) ->
       cb()
@@ -40,17 +42,25 @@ define [
       @facing = GMath.Repeat angle, 360
 
     Update: (engine) ->
-      @SetFacing GMath.Oscillate 360/2, 15, 360/2, engine.time
-      #@SetFacing @facing+1
+      o = (min, max, interval, time) ->
+        GMath.Oscillate (max-min)/2, interval, min, time
+      @SetFacing o 0, 360, 15*10, engine.time
+      @flashlightConeAngle = GMath.Clamp (Math.abs GMath.Oscillate 80-20, 10, 20, engine.time), 20, 50
+      @flashlightRange = GMath.Clamp (Math.abs GMath.Oscillate 500, 45, 50, engine.time), 150, 500
 
     Draw: (engine) ->
       ctx = engine.canvas.ctx
 
-      # draw my light
-      drawPlayerLight ctx, @
-
+      # draw my flashlight
       drawFacingAngle ctx, @
-      engine.Info Math.round(@facing), line: 10, size: 12
+      drawFlashlightCone ctx, @
+      ctx.save()
+      ctx.clip()
+      drawPlayerLight ctx, @
+      ctx.restore()
+
+      engine.Info "θ="+Math.round(@facing), line: 10, size: 14
+      engine.Info "cone="+Math.round(@flashlightConeAngle), line: 11, size: 14
 
   size = 640
 
@@ -61,28 +71,49 @@ define [
   drawPlayerLight = (ctx, object) ->
     {x, y} = getObjectCoords object
     # draw player's 360-degree lantern light
-    grd=ctx.createRadialGradient(x, y, 10, x, y, 300)
+    grd=ctx.createRadialGradient(x, y, 10, x, y, object.flashlightRange+10)
     grd.addColorStop(0, 'rgba(255,255,100,.3)')
     grd.addColorStop(1,'rgba(0,0,0,0)')
     ctx.fillStyle=grd
     ctx.fillRect 0, 0, size, size
 
 
-  angleSideToXY = (A, len) ->
+  angleHypToXY = (A, len) ->
     A = Trigonometry.Degrees2Radians A
     o = Math.sin(A) * len
     a = Math.cos(A) * len
     return [o,a]
 
   drawFacingAngle = (ctx, object) ->
-    dist = 100
     ctx.lineWidth   = 1
     ctx.strokeStyle = 'yellow'
     {x, y} = getObjectCoords object
-    [x2, y2] = angleSideToXY object.facing, dist
+    [x2, y2] = angleHypToXY object.facing, object.flashlightRange
     ctx.beginPath()
     ctx.moveTo x, y
     ctx.lineTo x+x2, y+y2
-    ctx.stroke()
+    #ctx.stroke()
+
+  drawFlashlightCone = (ctx, object) ->
+    ctx.lineWidth   = 1
+    ctx.strokeStyle = 'gray'
+    {x, y} = getObjectCoords object
+
+    A = object.facing
+    D = object.flashlightConeAngle
+    C = A + (D/2)
+    B = A - (D/2)
+
+    # draw isosceles triangle representing 2d top-down cone shape of flashlight
+    edist = Math.abs object.flashlightRange / Math.cos((D/2) / (180/Math.PI)) # outside equilateral distance
+    [x2, y2] = angleHypToXY C, edist
+    [x3, y3] = angleHypToXY B, edist
+
+    ctx.beginPath()
+    ctx.moveTo x, y
+    ctx.lineTo x+x2, y+y2
+    ctx.lineTo x+x3, y+y3
+    ctx.closePath()
+    #ctx.stroke()
 
   return Facing
