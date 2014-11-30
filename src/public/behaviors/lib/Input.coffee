@@ -29,6 +29,8 @@ define [
 
     @FinalUpdate: (engine) ->
       button.clearFrame() for nil, button of @buttons
+      @axis['Mouse X'] = 0
+      @axis['Mouse Y'] = 0
 
     @Start: (engine, cb) ->
       canvas = engine.canvas.canvas
@@ -43,7 +45,7 @@ define [
       capturedMouseMove = (e) =>
         @axis['Mouse X'] = dX = e[prefix 'movementX']
         @axis['Mouse Y'] = dY = e[prefix 'movementY']
-        SENSITIVITY = .5
+        SENSITIVITY = 1
         @mousePosition.x = GMath.Clamp @mousePosition.x + (SENSITIVITY * dX), 0, engine.canvas.canvas.width
         @mousePosition.y = GMath.Clamp @mousePosition.y + (SENSITIVITY * dY), 0, engine.canvas.canvas.height
         e.preventDefault() # prevent browser fro reacting to event

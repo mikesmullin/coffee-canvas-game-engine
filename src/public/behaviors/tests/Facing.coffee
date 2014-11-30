@@ -30,6 +30,7 @@ define [
       # position model within game world
       @transform.position = new Vector3 300, 300, 0
       @transform.localScale.Add new Vector3 20, 20, 0
+      @transform.rotation = new Vector3 0, 0, 0
       @renderer.width = 20
       @renderer.height = 20
       @facing = 130
@@ -45,9 +46,13 @@ define [
     Update: (engine) ->
       o = (min, max, interval, time) ->
         GMath.Oscillate (max-min)/2, interval, min, time
-      @SetFacing o 0, 360, 15*10, engine.time
+      #@SetFacing o 0, 360, 15*10, engine.time
       @flashlightConeAngle = GMath.Clamp (Math.abs GMath.Oscillate 80-20, 10, 20, engine.time), 20, 50
       @flashlightRange = GMath.Clamp (Math.abs GMath.Oscillate 500, 45, 50, engine.time), 150, 500
+      SENSITIVITY = 0.2
+      d = GMath.Repeat @facing - (SENSITIVITY * Input.GetAxisRaw('Mouse X')), 360
+      #@transform.rotation.x = Trig.Deg2Rad d * -1
+      @facing = d
 
     Draw: (engine) ->
       ctx = engine.canvas.ctx
@@ -62,7 +67,7 @@ define [
 
     DrawGUI: (engine) ->
       ctx = engine.canvas.ctx
-      drawCursor ctx
+      #drawCursor ctx
       engine.Info "θ="+Math.round(@facing), line: 10, size: 14
       engine.Info "cone="+Math.round(@flashlightConeAngle), line: 11, size: 14
       engine.Info "x: #{Math.round Input.mousePosition.x}, y: #{Math.round Input.mousePosition.y}, dX: #{Math.round Input.GetAxisRaw('Mouse X')}, dY: #{Math.round Input.GetAxisRaw('Mouse Y')}", line: 30

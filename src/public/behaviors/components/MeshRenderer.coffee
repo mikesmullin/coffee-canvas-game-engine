@@ -23,7 +23,7 @@ define [
     wv = [] # world vertices
     for vec3 in @vertices
       wv.push( vec3.Clone()
-        #.RotateX @object.transform.rotation.x
+        .RotateX @object.transform.rotation.x
         .Scale @object.transform.localScale
         .Add @object.transform.position
         #.RotateY @object.transform.rotation.y
