@@ -33,9 +33,15 @@ define [
     if data.pm?
       [player_name, x, y] = data.pm
       for object in @engine.objects when object.renderer?.mesh_name is player_name
-        # NOTICE: position not checked for collision; trusting server and other client
-        object.transform.position.x = x
-        object.transform.position.y = y
+        dX = x - object.transform.position.x
+        dY = y - object.transform.position.y
+        if dX < 4 and dY < 4
+          # double-check collider at close distances because of network latency; not perfect but better
+          object.collider.Move @engine, x: dX, y: dY
+        else
+          # allow teleport long distances
+          object.transform.position.x = x
+          object.transform.position.y = y
     else if data.pf?
       [player_name, f] = data.pf
       for object in @engine.objects when object.renderer?.mesh_name is player_name
