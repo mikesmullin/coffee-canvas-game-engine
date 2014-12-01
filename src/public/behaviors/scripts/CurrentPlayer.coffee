@@ -111,8 +111,8 @@ define [
             ctx.beginPath()
             ctx.fillStyle = 'black'
             {x,y} = getObjectCoords object
-            ctx.arc(x, y, 10, 0, Math.PI*2, true)
-            #draw_vertices ctx, object
+            #ctx.arc(x, y, 10, 0, Math.PI*2, true)
+            draw_vertices ctx, object, fillStyle: 'black'
             ctx.fill()
 
             # lift other player's clipping mask
@@ -190,10 +190,10 @@ define [
       ctx.lineTo seg.p2.x, seg.p2.y
       ctx.stroke()
 
-  draw_vertices = (ctx, object) ->
-    ctx.lineWidth   = object.renderer.materials[0].lineWidth
-    ctx.strokeStyle = object.renderer.materials[0].strokeStyle
-    ctx.fillStyle   = object.renderer.materials[0].fillStyle
+  draw_vertices = (ctx, object, material_override={}) ->
+    ctx.lineWidth   = material_override.lineWidth or object.renderer.materials[0].lineWidth
+    ctx.strokeStyle = material_override.strokeStyle or object.renderer.materials[0].strokeStyle
+    ctx.fillStyle   = material_override.fillStyle or object.renderer.materials[0].fillStyle
     wv = transformed_vertices object
     offset = 0
     indices = object.renderer.indices
