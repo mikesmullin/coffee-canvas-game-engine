@@ -8,7 +8,7 @@ define [
         if collidingObject.visible
           # TODO: in multiplayer, wait for network server to tell player
           #  that they were attacked during collision and lost
-          alert 'You were caught by the seeker! You LOOSE!'
+          alert 'You were caught by the seeker! You LOSE!'
           location.reload()
         else
           console.log 'eerie breathing is heard'

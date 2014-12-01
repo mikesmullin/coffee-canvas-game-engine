@@ -15,7 +15,7 @@
       CurrentPlayerPlayer.prototype.OnControllerColliderHit = function(engine, collidingObject) {
         if (this.object.constructor.name === 'Player' && collidingObject.constructor.name === 'Monster') {
           if (collidingObject.visible) {
-            alert('You were caught by the seeker! You LOOSE!');
+            alert('You were caught by the seeker! You LOSE!');
             return location.reload();
           } else {
             return console.log('eerie breathing is heard');
