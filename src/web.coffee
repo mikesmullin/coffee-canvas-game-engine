@@ -83,9 +83,9 @@ http = app.listen app.PORT, '0.0.0.0', ->
         player = players[player_id]
         broadcast rooms[player.room_id].players, player.id, pv: [player.name, v]
       else if data.pw? # player win
-        [player_id] = data.pw
+        [player_id, who] = data.pw
         player = players[player_id]
-        broadcast rooms[player.room_id].players, player.id, pw: [player.name]
+        broadcast rooms[player.room_id].players, player.id, pw: [player.name, who]
 
     socket.on 'close', ->
       delete players[player.id]

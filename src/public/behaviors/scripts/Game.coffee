@@ -5,10 +5,11 @@ define [
   'objects/Player'
   'objects/Monster'
   'objects/Wall'
+  'objects/Exit'
   'scripts/CurrentPlayer'
   'scripts/CurrentPlayerPlayer'
   'scripts/CurrentMonsterPlayer'
-], (Behavior, Collada, Network, Player, Monster, Wall, CurrentPlayer, CurrentPlayerPlayer, CurrentMonsterPlayer) ->
+], (Behavior, Collada, Network, Player, Monster, Wall, Exit, CurrentPlayer, CurrentPlayerPlayer, CurrentMonsterPlayer) ->
   class Game extends Behavior
     PreloadData: (engine, cb) ->
       Collada.LoadModel 'models/map1/map1.json', cb, (mesh) ->
@@ -17,6 +18,7 @@ define [
           when 'player1' then obj = Player
           when 'player2' then obj = Monster
           when 'wall'    then obj = Wall
+          when 'exit'    then obj = Exit
           else
             engine.Log "cannot load mesh #{mesh.renderer.mesh_name}: corresponding game object not implemented."
             return
@@ -25,7 +27,7 @@ define [
         # instantiate game object
         inst = new obj
         inst.renderer.object = inst
-        #engine.Log inst
+        engine.Log inst
         engine.Bind inst
 
     EstablishNetwork: (engine, cb) ->

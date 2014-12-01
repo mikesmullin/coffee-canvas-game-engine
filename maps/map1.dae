@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.71.0 commit date:2014-06-25, commit time:18:36, hash:9337574</authoring_tool>
     </contributor>
-    <created>2014-11-28T23:53:22</created>
-    <modified>2014-11-28T23:53:22</modified>
+    <created>2014-12-01T08:08:17</created>
+    <modified>2014-12-01T08:08:17</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -90,6 +90,32 @@
         </technique>
       </profile_COMMON>
     </effect>
+    <effect id="exit-effect">
+      <profile_COMMON>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.64 0.3897894 0.02371981 1</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.5 0.5 0.5 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
   </library_effects>
   <library_materials>
     <material id="wall-material" name="wall">
@@ -101,14 +127,17 @@
     <material id="player2-material" name="player2">
       <instance_effect url="#player2-effect"/>
     </material>
+    <material id="exit-material" name="exit">
+      <instance_effect url="#exit-effect"/>
+    </material>
   </library_materials>
   <library_geometries>
     <geometry id="wall-mesh" name="wall">
       <mesh>
         <source id="wall-mesh-positions">
-          <float_array id="wall-mesh-positions-array" count="102">-7.257853 -7.558903 0 -3.257853 -7.558903 0 -5.757853 3.4411 0 -2.757853 3.4411 0 -2.757853 -8.058903 0 -7.757853 -8.058903 0 -7.757853 8.441102 0 8.24215 8.441102 0 -1.757852 4.9411 0 -3.257853 4.9411 0 -3.257853 7.941101 0 -7.257853 7.941101 0 -2.757853 7.941101 0 8.24215 -8.058903 0 7.74215 7.941101 0 7.74215 -7.558903 0 -2.757853 -8.058903 0 -2.757853 -7.558903 0 -2.757853 5.441101 0 -1.757852 5.441101 0 -3.257853 2.9411 0 -5.757853 2.9411 0 6.242149 -1.058901 0 -3.257853 -1.058901 0 -3.257853 -2.558901 0 6.242149 -2.558901 0 6.242149 -3.058901 0 -2.757853 -3.058901 0 6.242149 -0.558901 0 -2.757853 -0.558901 0 -3.257853 -4.558902 0 -3.257853 -6.058902 0 -2.757853 -4.558902 0 -2.757853 -6.058902 0</float_array>
+          <float_array id="wall-mesh-positions-array" count="231">-7.257853 -7.558903 0 -3.257853 -7.558903 0 -5.757853 3.4411 0 -2.757853 3.4411 0 -2.757853 -8.058903 0 -7.757853 -8.058903 0 -7.757853 8.441102 0 8.24215 8.441102 0 -1.757852 4.9411 0 -3.257853 4.9411 0 -3.257853 7.941101 0 -7.257853 6.941101 0 -2.757853 7.941101 0 8.24215 -8.058903 0 7.74215 7.941101 0 7.74215 -7.558903 0 -2.757853 -8.058903 0 -2.757853 -7.558903 0 -2.757853 5.441101 0 -1.757852 5.441101 0 -3.257853 2.9411 0 -5.757853 2.9411 0 6.242149 -1.058901 0 -3.257853 -1.058901 0 -3.257853 -2.558901 0 6.242149 -2.558901 0 6.242149 -3.058901 0 -2.757853 -3.058901 0 6.242149 -0.558901 0 -2.757853 -0.558901 0 -3.257853 -4.558902 0 -3.257853 -6.058902 0 -2.757853 -4.558902 0 -2.757853 -6.058902 0 -0.2578518 -3.058902 0 -0.2578517 -6.058902 0 0.2421482 -6.058902 0 0.2421481 -3.058902 0 -3.257853 -0.558901 0 -4.757853 -1.058901 0 -4.757853 -0.558901 0 -6.757853 6.941101 0 -6.757853 7.441101 0 -6.257853 7.441101 0 -6.257853 7.941101 0 -5.257853 4.9411 0 -5.257853 5.4411 0 -5.757853 5.4411 0 -5.757853 4.9411 0 6.242149 0.9410997 0 6.242149 1.4411 0 5.742149 1.4411 0 5.742149 0.9410997 0 4.242149 0.9410997 0 4.242149 1.4411 0 3.742149 1.4411 0 3.742149 0.9410997 0 2.242148 0.9410997 0 2.242148 1.4411 0 1.742148 1.4411 0 1.742148 0.9410997 0 0.2421479 0.9410997 0 0.2421479 1.4411 0 -0.2578521 1.4411 0 -0.2578521 0.9410997 0 7.74215 4.9411 0 7.74215 5.441101 0 5.74215 4.9411 0 5.74215 5.441101 0 4.242149 4.941101 0 4.242149 5.441101 0 -0.2578521 5.441101 0 -0.2578521 4.941101 0 7.74215 5.941101 0 8.242151 5.941101 0 7.74215 7.441101 0 8.242151 7.441101 0</float_array>
           <technique_common>
-            <accessor source="#wall-mesh-positions-array" count="34" stride="3">
+            <accessor source="#wall-mesh-positions-array" count="77" stride="3">
               <param name="X" type="float"/>
               <param name="Y" type="float"/>
               <param name="Z" type="float"/>
@@ -116,9 +145,9 @@
           </technique_common>
         </source>
         <source id="wall-mesh-normals">
-          <float_array id="wall-mesh-normals-array" count="9">0 0 -1 0 0 -1 0 0 -1</float_array>
+          <float_array id="wall-mesh-normals-array" count="36">0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 -1 0 0 1 0 0 -1</float_array>
           <technique_common>
-            <accessor source="#wall-mesh-normals-array" count="3" stride="3">
+            <accessor source="#wall-mesh-normals-array" count="12" stride="3">
               <param name="X" type="float"/>
               <param name="Y" type="float"/>
               <param name="Z" type="float"/>
@@ -128,11 +157,11 @@
         <vertices id="wall-mesh-vertices">
           <input semantic="POSITION" source="#wall-mesh-positions"/>
         </vertices>
-        <polylist material="wall-material" count="3">
+        <polylist material="wall-material" count="12">
           <input semantic="VERTEX" source="#wall-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#wall-mesh-normals" offset="1"/>
-          <vcount>20 6 8 </vcount>
-          <p>0 0 1 0 31 0 33 0 4 0 5 0 6 0 7 0 13 0 16 0 17 0 15 0 14 0 12 0 18 0 19 0 8 0 9 0 10 0 11 0 27 1 32 1 30 1 24 1 25 1 26 1 2 2 3 2 29 2 28 2 22 2 23 2 20 2 21 2</p>
+          <vcount>22 10 9 4 4 4 4 4 4 4 4 8 </vcount>
+          <p>0 0 1 0 31 0 33 0 4 0 5 0 6 0 7 0 76 0 75 0 14 0 12 0 18 0 19 0 8 0 9 0 10 0 44 0 43 0 42 0 41 0 11 0 27 1 32 1 30 1 24 1 25 1 26 1 37 1 36 1 35 1 34 1 2 2 3 2 29 2 28 2 22 2 23 2 38 2 20 2 21 2 38 3 23 3 39 3 40 3 46 4 47 4 48 4 45 4 50 5 51 5 52 5 49 5 54 6 55 6 56 6 53 6 58 7 59 7 60 7 57 7 62 8 63 8 64 8 61 8 66 9 65 9 67 9 68 9 70 10 71 10 72 10 69 10 73 11 74 11 13 11 16 11 17 11 15 11 65 11 66 11</p>
         </polylist>
       </mesh>
     </geometry>
@@ -202,6 +231,39 @@
         </polylist>
       </mesh>
     </geometry>
+    <geometry id="exit-mesh" name="exit">
+      <mesh>
+        <source id="exit-mesh-positions">
+          <float_array id="exit-mesh-positions-array" count="12">0.625 1.875 0 0.625 -1.875 0 -0.625 1.875 0 -0.625 -1.875 0</float_array>
+          <technique_common>
+            <accessor source="#exit-mesh-positions-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="exit-mesh-normals">
+          <float_array id="exit-mesh-normals-array" count="3">0 0 -1</float_array>
+          <technique_common>
+            <accessor source="#exit-mesh-normals-array" count="1" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="exit-mesh-vertices">
+          <input semantic="POSITION" source="#exit-mesh-positions"/>
+        </vertices>
+        <polylist material="exit-material" count="1">
+          <input semantic="VERTEX" source="#exit-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#exit-mesh-normals" offset="1"/>
+          <vcount>4 </vcount>
+          <p>0 0 1 0 3 0 2 0</p>
+        </polylist>
+      </mesh>
+    </geometry>
   </library_geometries>
   <library_controllers/>
   <library_visual_scenes>
@@ -217,7 +279,7 @@
         </instance_geometry>
       </node>
       <node id="player1" name="player1" type="NODE">
-        <matrix sid="transform">0.4 0 0 -0.7500002 0 0.4 0 -5.250001 0 0 0.4 0 0 0 0 1</matrix>
+        <matrix sid="transform">0.4 0 0 -1.75 0 0.4 0 -1.25 0 0 0.4 0 0 0 0 1</matrix>
         <instance_geometry url="#player1-mesh">
           <bind_material>
             <technique_common>
@@ -227,11 +289,21 @@
         </instance_geometry>
       </node>
       <node id="player2" name="player2" type="NODE">
-        <matrix sid="transform">0.4 0 0 4.250001 0 0.4 0 8.750002 0 0 0.4 0 0 0 0 1</matrix>
+        <matrix sid="transform">0.4 0 0 5.250001 0 0.4 0 8.250002 0 0 0.4 0 0 0 0 1</matrix>
         <instance_geometry url="#player2-mesh">
           <bind_material>
             <technique_common>
               <instance_material symbol="player2-material" target="#player2-material"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="exit" name="exit" type="NODE">
+        <matrix sid="transform">0.4 0 0 11.25 0 0.4 0 8.250002 0 0 0.4 0 0 0 0 1</matrix>
+        <instance_geometry url="#exit-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="exit-material" target="#exit-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>

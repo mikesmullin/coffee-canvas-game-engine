@@ -28,15 +28,15 @@ define [
         y2
       ]
 
-    OnWin: (engine) ->
-      @won = true
-      # winner notifies server
-      @object.engine.network.Send pw: [ @object.engine.network.player_id ]
-      Time.Delay 3000, -> location.reload()
-
-    OnLose: (engine) ->
-      @won = false
-      Time.Delay 3000, -> location.reload()
+    OnEndRound: (engine, winningObject, fromServer=false) ->
+      if @object is winningObject
+        @won = true
+        Time.Delay 4000, -> location.reload()
+      else
+        @won = false
+        Time.Delay 4000, -> location.reload()
+      unless fromServer
+        @object.engine.network.Send pw: [ @object.engine.network.player_id, winningObject.constructor.name ]
 
     DrawGUI: (engine) ->
       if @won is true
@@ -46,9 +46,13 @@ define [
 
     Update: (engine) ->
       @v.ResetSegments()
-      object = getWall engine
+
+      object = engine.GetObject 'Wall'
       parse_segments object
       @v.AddSegments object.renderer.segments
+
+      object = engine.GetObject 'Exit'
+      parse_segments object
 
       # calculate visibility for other players
       for object in getOtherPlayers engine, @object
@@ -79,7 +83,7 @@ define [
       #ctx.fillRect 0, 0, size, size
 
       # draw walls
-      #object = getWall engine
+      #object = engine.GetObject 'Wall'
       #ctx.lineWidth   = 1
       #ctx.strokeStyle = 'rgba(255, 255, 255, .8)'
       #ctx.fillStyle   = 'rgba(255, 255, 255, .1)'
@@ -115,15 +119,11 @@ define [
             ctx.restore()
 
       # TODO: draw props
+      draw_vertices ctx, engine.GetObject 'Exit'
 
       # lift my clipping mask
       ctx.restore()
 
-
-
-  getWall = (engine) ->
-    for object in engine.objects when object.constructor.name is 'Wall'
-      return object
 
   getOtherPlayers = (engine, me) ->
     players = []

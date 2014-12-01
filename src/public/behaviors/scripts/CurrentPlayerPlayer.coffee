@@ -4,17 +4,20 @@ define [
 ], (Script, Input) ->
   class CurrentPlayerPlayer extends Script
     OnControllerColliderHit: (engine, collidingObject) ->
-      if @object.constructor.name is 'Player' and collidingObject.constructor.name is 'Monster'
-        if collidingObject.visible
-          unless @object.engine.network.connected # only used for single-player
-            @object.engine.TriggerObjectSync 'OnEndRound', @object, collidingObject
-        else
-          console.log 'eerie breathing is heard'
+      if @object.constructor.name is 'Player'
+        switch collidingObject.constructor.name
+          when 'Monster'
+            if collidingObject.visible
+              unless @object.engine.network.connected # only used for single-player
+                @object.engine.TriggerObjectSync 'OnEndRound', @object, collidingObject
+            else
+              console.log 'eerie breathing is heard'
 
-    OnEndRound: (engine, winningObject) ->
-      if @object isnt winningObject
-        @object.engine.TriggerObjectSync 'OnLose', @object
-      #else # player escaped exit?
+          when 'Exit'
+            if @object.constructor.name is 'Player'
+              console.log 'player escaped'
+              @object.engine.TriggerObjectSync 'OnEndRound', @object, @object
+
 
     Update: (engine) ->
       # set facing direction based on mouse input; mimic 3D mouse look

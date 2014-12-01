@@ -21,6 +21,10 @@ define [
     @canvas.ctx.fillStyle = color
     @canvas.ctx.fillText msg, @canvas.canvas.width - (size*msg.length) - 10, 10+(line*size)
 
+  GetObject: (name) ->
+    for object in @objects when object.constructor.name is name
+      return object
+
   Start: (engine, cb) ->
     @started = Time.Now()
     @time = 0

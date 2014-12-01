@@ -33,7 +33,7 @@ define [
     projected_segments = pseg @object.renderer.segments, dest
     intersect = (ps) =>
       # check this object's segments against every other object's segments for an intersection
-      for obj, i in engine.objects when obj isnt @object and obj.renderer?.segments?
+      for obj, i in engine.objects when obj isnt @object and obj.renderer?.segments.length
         for segA, ii in ps
           for segB, iii in obj.renderer.segments
             if @SegmentsCollide(segA.p1.x, segA.p1.y, segA.p2.x, segA.p2.y,

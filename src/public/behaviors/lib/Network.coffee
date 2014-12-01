@@ -49,6 +49,6 @@ define [
       for object in @engine.objects when object.renderer?.mesh_name is player_name
         object.visible = v
     else if data.pw? # player win
-      [player_name] = data.pw
+      [player_name, who] = data.pw
       for object in @engine.objects when object.renderer?.mesh_name is player_name
-        @engine.TriggerSync 'OnEndRound', object
+        @engine.TriggerSync 'OnEndRound', @engine.GetObject(who), true

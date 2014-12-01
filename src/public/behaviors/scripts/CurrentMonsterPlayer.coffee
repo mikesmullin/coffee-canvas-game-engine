@@ -4,15 +4,15 @@ define [
 ], (Script, Input) ->
   class CurrentMonsterPlayer extends Script
     OnControllerColliderHit: (engine, collidingObject) ->
-      if @object.constructor.name is 'Monster' and collidingObject.constructor.name is 'Player'
-        if @object.visible and Input.GetButtonDown 'Fire'
-          console.log 'hit'
-          @object.engine.TriggerObjectSync 'OnEndRound', @object, @object
-
-    OnEndRound: (engine, winningObject) ->
-      if @object is winningObject
-        @object.engine.TriggerObjectSync 'OnWin', @object
-      #else # player escaped exit?
+      if @object.constructor.name is 'Monster'
+        switch collidingObject.constructor.name
+          when 'Player'
+            if @object.visible and Input.GetButtonDown 'Fire'
+              console.log 'monster hit player'
+              @object.engine.TriggerObjectSync 'OnEndRound', @object, @object
+          when 'Exit'
+            console.log 'monster gave up'
+            @object.engine.TriggerObjectSync 'OnEndRound', @object, engine.GetObject 'Player'
 
     Update: (engine) ->
       if Input.GetButtonDown 'Use'
