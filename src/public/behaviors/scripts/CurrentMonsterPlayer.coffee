@@ -7,8 +7,12 @@ define [
       if @object.constructor.name is 'Monster' and collidingObject.constructor.name is 'Player'
         if @object.visible and Input.GetButtonDown 'Fire'
           console.log 'hit'
-          alert 'You grabbed the hider! You WIN!'
-          location.reload()
+          @object.engine.TriggerObjectSync 'OnEndRound', @object, @object
+
+    OnEndRound: (engine, winningObject) ->
+      if @object is winningObject
+        @object.engine.TriggerObjectSync 'OnWin', @object
+      #else # player escaped exit?
 
     Update: (engine) ->
       if Input.GetButtonDown 'Use'

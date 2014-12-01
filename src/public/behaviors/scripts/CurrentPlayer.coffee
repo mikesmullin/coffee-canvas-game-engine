@@ -5,15 +5,44 @@ define [
   'lib/Visibility'
   'lib/Geometry'
   'lib/Trig'
-], (Script, TopDownController2D, Input, {Visibility}, {Point, Segment}, Trig) ->
+  'lib/Time'
+], (Script, TopDownController2D, Input, {Visibility}, {Point, Segment}, Trig, Time) ->
   class CurrentPlayer extends Script
     constructor: ->
       super
       @object.BindScript TopDownController2D
       @v = new Visibility
+      @won = null
 
     OnControllerColliderHit: (engine, collidingObject) ->
       console.log "#{@object.constructor.name} would collide with #{collidingObject.constructor.name}"
+
+    OnControllerMove: (engine, x1, y1, x2, y2) ->
+      # transmit new position to network
+      dX = Math.abs(x2 - x1)
+      dY = Math.abs(y2 - y1)
+      return if dX is 0 and dY is 0 # inconsequential for network
+      engine.network.Send pm: [
+        engine.network.player_id,
+        x2,
+        y2
+      ]
+
+    OnWin: (engine) ->
+      @won = true
+      # winner notifies server
+      @object.engine.network.Send pw: [ @object.engine.network.player_id ]
+      Time.Delay 3000, -> location.reload()
+
+    OnLose: (engine) ->
+      @won = false
+      Time.Delay 3000, -> location.reload()
+
+    DrawGUI: (engine) ->
+      if @won is true
+        engine.Info 'You WON!', color: 'green', line: 10, size: 50
+      else if @won is false
+        engine.Info 'You LOST!', color: 'red', line: 10, size: 50
 
     Update: (engine) ->
       @v.ResetSegments()
@@ -193,7 +222,7 @@ define [
       if object is me
         # monster's 360-degree limited vision
         grd=ctx.createRadialGradient(x, y, 10, x, y, 200)
-        grd.addColorStop(0, 'rgba(255,255,255,.1)')
+        grd.addColorStop(0, 'rgba(255,255,255,.2)')
         grd.addColorStop(1,'rgba(0,0,0,0)')
         ctx.fillStyle=grd
         ctx.fillRect 0, 0, size, size
@@ -213,8 +242,8 @@ define [
 
       else if object is me
         # 360-degree limited vision
-        grd=ctx.createRadialGradient(x, y, 10, x, y, 75)
-        grd.addColorStop(0, 'rgba(255,255,255,.1)')
+        grd=ctx.createRadialGradient(x, y, 10, x, y, 90)
+        grd.addColorStop(0, 'rgba(255,255,255,.2)')
         grd.addColorStop(1,'rgba(0,0,0,0)')
         ctx.fillStyle=grd
         ctx.fillRect 0, 0, size, size

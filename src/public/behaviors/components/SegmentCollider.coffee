@@ -15,6 +15,7 @@ define [
 
   @CollisionFlags:
     None: 0
+    Partial: 1
     Sides: 2
     Above: 4
     Below: 8
@@ -22,7 +23,7 @@ define [
   Move: (engine, dest) ->
     # project new segments at dest vec3
     throw 'cant check an object without segments' unless @object.renderer?.segments
-  
+
     pseg = (segs, d, x=true, y=true) =>
       for s in segs
         new Segment(
@@ -38,28 +39,31 @@ define [
             if @SegmentsCollide(segA.p1.x, segA.p1.y, segA.p2.x, segA.p2.y,
               segB.p1.x, segB.p1.y, segB.p2.x, segB.p2.y)
                 if @is_trigger
-                  event = 'OnControllerColliderHit'
-                  @object[event]?(engine, obj)
-                  for component in ['renderer', 'collider'] when @object[component]?.enabled
-                    @object[component][event]?(engine, obj)
-                  for cls, script of @object.scripts when script.enabled
-                    script[event]?(engine, obj)
+                  engine.TriggerObjectSync 'OnControllerColliderHit', @object, obj
+                return false if @object.constructor.name is 'Monster' and not @object.visible and obj.constructor.name is 'Player' # monster goes through players
+                return false if obj.constructor.name is 'Monster' and not obj.visible and @object.constructor.name is 'Player' # players go through monster
                 return true
       return false
+    apply_and_notify_network = (xD, yD) =>
+      x1 = @object.transform.position.x
+      y1 = @object.transform.position.y
+      @object.transform.position.x += xD
+      @object.transform.position.y += yD
+      engine.TriggerObjectSync 'OnControllerMove', @object, x1, y1, x1 + xD, y1 + yD
     if intersect projected_segments
       psX = pseg @object.renderer.segments, dest, true, false
       psY = pseg @object.renderer.segments, dest, false, true
-      if not intersect psX
-        # use X
-        @object.transform.position.x += dest.x
-      else if not intersect psY
-        # use Y
-        @object.transform.position.y += dest.y
-      return SegmentCollider.CollisionFlags.Sides
+      if not intersect psX # use X
+        apply_and_notify_network dest.x, 0
+        return SegmentCollider.CollisionFlags.Partial
+      else if not intersect psY # use Y
+        apply_and_notify_network 0, dest.y
+        return SegmentCollider.CollisionFlags.Partial
+      else
+        return SegmentCollider.CollisionFlags.Sides
 
     # apply move to object.transform.position
-    @object.transform.position.x += dest.x
-    @object.transform.position.y += dest.y
+    apply_and_notify_network dest.x, dest.y
     # NOTICE: 2D only
     return SegmentCollider.CollisionFlags.None
 

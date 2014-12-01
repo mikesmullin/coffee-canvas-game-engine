@@ -106,6 +106,7 @@ define [
     #TODO: we may want to make this async
 
   Bind: (obj) ->
+    obj.engine = @
     @objects.push obj
 
   TriggerSync: (event, args...) ->
@@ -117,6 +118,15 @@ define [
         obj[component][event]?.apply obj[component], args
       for cls, script of obj.scripts when script.enabled
         script[event]?.apply script, args
+    return
+
+  TriggerObjectSync: (event, obj, args...) ->
+    args.unshift @
+    obj[event]?.apply obj, args
+    for component in ['renderer', 'collider'] when obj[component]?.enabled
+      obj[component][event]?.apply obj[component], args
+    for cls, script of obj.scripts when script.enabled
+      script[event]?.apply script, args
     return
 
   Trigger: (event, cb) ->

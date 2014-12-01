@@ -6,12 +6,15 @@ define [
     OnControllerColliderHit: (engine, collidingObject) ->
       if @object.constructor.name is 'Player' and collidingObject.constructor.name is 'Monster'
         if collidingObject.visible
-          # TODO: in multiplayer, wait for network server to tell player
-          #  that they were attacked during collision and lost
-          alert 'You were caught by the seeker! You LOSE!'
-          location.reload()
+          unless @object.engine.network.connected # only used for single-player
+            @object.engine.TriggerObjectSync 'OnEndRound', @object, collidingObject
         else
           console.log 'eerie breathing is heard'
+
+    OnEndRound: (engine, winningObject) ->
+      if @object isnt winningObject
+        @object.engine.TriggerObjectSync 'OnLose', @object
+      #else # player escaped exit?
 
     Update: (engine) ->
       # set facing direction based on mouse input; mimic 3D mouse look

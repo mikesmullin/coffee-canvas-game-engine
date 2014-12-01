@@ -13,7 +13,7 @@ define [
       @transform = new Transform object: @
       @collider = new SegmentCollider object: @, is_trigger: true
       #@BindScript CurrentPlayer; @BindScript CurrentMonsterPlayer
-      @BindScript AutoPilot
+      #@BindScript AutoPilot
       @renderer.enabled = false
 
     ToggleVisibility: (force) ->
@@ -24,3 +24,8 @@ define [
       else
         @renderer.materials[0].fillStyle = 'gray'
         console.log 'end scary monster music.'
+
+      @engine.network.Send pv: [
+        @engine.network.player_id,
+        @visible
+      ]

@@ -52,8 +52,7 @@ define [
       x = (speed * engine.deltaTime * Input.GetAxisRaw 'Horizontal')
       y = (speed * engine.deltaTime * Input.GetAxisRaw 'Vertical')
       if x isnt 0 or y isnt 0
-        @object.collider.Move engine, new Vector3 x, y, 0
-      return
+        collisionFlags = @object.collider.Move engine, new Vector3 x, y, 0
 
       #@UpdateSmoothedMovementDirection()
 
@@ -65,11 +64,6 @@ define [
       #controller = GetComponent(CharacterController)
       #collisionFlags = controller.Move(movement)
 
-      if collisionFlags is 0 # successful move
-        1
-        # transmit new position to network
-        # TODO: try to do this via a callback like @object.SuccessfulMove
-        #socket.send JSON.stringify pm: [myid, obj.x, obj.y]
 
 
     UpdateSmoothedMovementDirection: ->

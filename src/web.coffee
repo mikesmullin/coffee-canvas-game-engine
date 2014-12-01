@@ -66,10 +66,27 @@ http = app.listen app.PORT, '0.0.0.0', ->
     socket.on 'message', (data) ->
       console.log data
       data = JSON.parse data
-      if data.pm?
+      if data.pm? # player move
         [player_id, x, y] = data.pm
         player = players[player_id]
         broadcast rooms[player.room_id].players, player.id, pm: [player.name, x, y]
+      else if data.pf? # player facing
+        [player_id, f] = data.pf
+        player = players[player_id]
+        broadcast rooms[player.room_id].players, player.id, pf: [player.name, f]
+      else if data.pl? # player light
+        [player_id, l] = data.pl
+        player = players[player_id]
+        broadcast rooms[player.room_id].players, player.id, pl: [player.name, l]
+      else if data.pv? # monster visibility
+        [player_id, v] = data.pv
+        player = players[player_id]
+        broadcast rooms[player.room_id].players, player.id, pv: [player.name, v]
+      else if data.pw? # player win
+        [player_id] = data.pw
+        player = players[player_id]
+        broadcast rooms[player.room_id].players, player.id, pw: [player.name]
+
     socket.on 'close', ->
       delete players[player.id]
 
