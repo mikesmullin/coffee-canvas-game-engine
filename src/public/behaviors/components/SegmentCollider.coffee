@@ -22,27 +22,40 @@ define [
   Move: (engine, dest) ->
     # project new segments at dest vec3
     throw 'cant check an object without segments' unless @object.renderer?.segments
-    projected_segments =  []
-    for seg in @object.renderer.segments
-      projected_segments.push new Segment(
-        new Point(seg.p1.x + dest.x, seg.p1.y + dest.y),
-        new Point(seg.p2.x + dest.x, seg.p2.y + dest.y)
-      )
-
-    # check this object's segments against every other object's segments for an intersection
-    for obj in engine.objects when obj isnt @object and obj.renderer?.segments?
-      for segA in projected_segments
-        for segB in obj.renderer.segments
-          if @SegmentsCollide(segA.p1.x, segA.p1.y, segA.p2.x, segA.p2.y,
-            segB.p1.x, segB.p1.y, segB.p2.x, segB.p2.y)
-              if @is_trigger
-                event = 'OnControllerColliderHit'
-                @object[event]?(engine, obj)
-                for component in ['renderer', 'collider'] when @object[component]?.enabled
-                  @object[component][event]?(engine, obj)
-                for cls, script of @object.scripts when script.enabled
-                  script[event]?(engine, obj)
-              return SegmentCollider.CollisionFlags.Sides
+  
+    pseg = (segs, d, x=true, y=true) =>
+      for s in segs
+        new Segment(
+          new Point(s.p1.x + (if x then d.x else 0), s.p1.y + (if y then d.y else 0)),
+          new Point(s.p2.x + (if x then d.x else 0), s.p2.y + (if y then d.y else 0))
+        )
+    projected_segments = pseg @object.renderer.segments, dest
+    intersect = (ps) =>
+      # check this object's segments against every other object's segments for an intersection
+      for obj, i in engine.objects when obj isnt @object and obj.renderer?.segments?
+        for segA, ii in ps
+          for segB, iii in obj.renderer.segments
+            if @SegmentsCollide(segA.p1.x, segA.p1.y, segA.p2.x, segA.p2.y,
+              segB.p1.x, segB.p1.y, segB.p2.x, segB.p2.y)
+                if @is_trigger
+                  event = 'OnControllerColliderHit'
+                  @object[event]?(engine, obj)
+                  for component in ['renderer', 'collider'] when @object[component]?.enabled
+                    @object[component][event]?(engine, obj)
+                  for cls, script of @object.scripts when script.enabled
+                    script[event]?(engine, obj)
+                return true
+      return false
+    if intersect projected_segments
+      psX = pseg @object.renderer.segments, dest, true, false
+      psY = pseg @object.renderer.segments, dest, false, true
+      if not intersect psX
+        # use X
+        @object.transform.position.x += dest.x
+      else if not intersect psY
+        # use Y
+        @object.transform.position.y += dest.y
+      return SegmentCollider.CollisionFlags.Sides
 
     # apply move to object.transform.position
     @object.transform.position.x += dest.x
