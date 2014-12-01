@@ -30,5 +30,5 @@ define [
         @object.ToggleFlashlight()
 
     DrawGUI: (engine) ->
-      engine.Info 'Controls: LClick - Interact, RClick - toggle light', 50, 'red', 12
-      engine.Info 'Objective: Sneak and hide from the seeker', 51, 'gray', 12
+      engine.Info 'Controls: LClick - Interact, RClick - toggle light', line: 50, color: 'red', size: 12
+      engine.Info 'Objective: Sneak and hide from the seeker', line: 51, color: 'gray', size: 12

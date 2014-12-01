@@ -12,12 +12,12 @@ define [
       super
       @facing = 0
       @flashlightLit = true
-      @flashlightConeAngle = 30
+      @flashlightConeAngle = 60
       @flashlightRange = 300
       @transform = new Transform object: @
       @collider = new SegmentCollider object: @, is_trigger: true
-      #@BindScript CurrentPlayer; @BindScript CurrentPlayerPlayer
-      @BindScript AutoPilot
+      @BindScript CurrentPlayer; @BindScript CurrentPlayerPlayer
+      #@BindScript AutoPilot
       @renderer.enabled = false
 
     ToggleFlashlight: (force) ->

@@ -23,5 +23,5 @@ define [
         console.log 'alt attack'
 
     DrawGUI: (engine) ->
-      engine.Info 'Controls: E - toggle visibility, LClick - capture', 50, 'red', 12
-      engine.Info 'Objective: Scare or capture the hider', 51, 'gray', 12
+      engine.Info 'Controls: E - toggle visibility, LClick - capture', line: 50, color: 'red', size: 12
+      engine.Info 'Objective: Scare or capture the hider', line: 51, color: 'gray', size: 12
