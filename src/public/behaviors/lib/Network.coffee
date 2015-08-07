@@ -7,7 +7,7 @@ define [
     @connected = false
 
   Connect: (cb) ->
-    address = window.location.href.split('/')[2].split(':')[0]
+    address = window.location.href.split('/')[2]
     @socket = new eio.Socket 'ws://'+address+'/'
     @socket.on 'open', =>
       @connected = true
