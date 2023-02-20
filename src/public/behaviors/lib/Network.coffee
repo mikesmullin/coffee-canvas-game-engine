@@ -26,7 +26,7 @@ define [
   @lastData = null
   Send: (data) ->
     @socket.send JSON.stringify data
-    console.log 'sent: '+JSON.stringify data
+    # console.debug 'sent: '+JSON.stringify data
     @lastData = data
 
   Receive: (data) =>

@@ -64,7 +64,7 @@ http = app.listen app.PORT, '0.0.0.0', ->
     player.room_id = room.id
     socket.send JSON.stringify player: id: player.id, name: player.name
     socket.on 'message', (data) ->
-      console.log data
+      # console.debug data
       data = JSON.parse data
       if data.pm? # player move
         [player_id, x, y] = data.pm
