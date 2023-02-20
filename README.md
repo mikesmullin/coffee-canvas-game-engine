@@ -27,3 +27,12 @@ Statically-hosted demos:
 * [Demo 4: Perspective light and shadow](http://mikesmullin.github.io/coffee-canvas-game-engine/snapshots/4)
 * [Demo 5: Seeker game](http://mikesmullin.github.io/coffee-canvas-game-engine/snapshots/5)
 * [Demo 6: Hider game](http://mikesmullin.github.io/coffee-canvas-game-engine/snapshots/6)
+
+## Building
+
+The multiplayer server (used in most recent demo).
+
+```bash
+docker build -t mazehunt:local .
+docker run --name mazehunt -p 3000:3000 mazehunt:local
+```
