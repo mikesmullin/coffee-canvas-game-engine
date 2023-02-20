@@ -1,25 +1,28 @@
-FROM mhart/alpine-node:7
+FROM node:19-alpine
 
-WORKDIR /home/node
+ARG user=app
+ARG home=/home/$user
+RUN addgroup -S $user
+RUN adduser \
+    --disabled-password \
+    --gecos "" \
+    --home $home \
+    --ingroup $user \
+    $user
+WORKDIR $home
 
-ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/bin/dumb-init
+COPY --chown=node package.json ./
 
-COPY package.json ./
-
-RUN \
-  chmod +x /usr/bin/dumb-init \
-  && adduser -D node \
-  && npm install -g coffee-script \
+RUN wget -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64 \
+  && chmod +x /usr/local/bin/dumb-init \
+  && npm install -g coffeescript \
   && npm install --production
 
-COPY . ./
+COPY --chown=node . ./
 
-RUN chown -R node.node .
+USER $user
 
 EXPOSE 3000
 
-USER node
-
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
-
+ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
 CMD ["coffee", "src/web.coffee"]
