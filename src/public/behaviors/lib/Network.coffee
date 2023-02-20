@@ -8,7 +8,7 @@ define [
 
   Connect: (cb) ->
     address = window.location.href.split('/')[2]
-    @socket = new eio.Socket 'ws://'+address+'/'
+    @socket = new eio.Socket ''+(if window.location.protocol == 'https:' then 'wss' else 'ws')+'://'+address+'/'
     @socket.on 'open', =>
       @connected = true
       @socket.on 'message', (data) =>
