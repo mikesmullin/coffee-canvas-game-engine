@@ -12,7 +12,7 @@ define [
     @socket.on 'open', =>
       @connected = true
       @socket.on 'message', (data) =>
-        console.log 'recv: '+data
+        # console.debug 'recv: '+data
         data = JSON.parse data
         if data.player?
           whoami = data.player.name
