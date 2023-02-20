@@ -1,6 +1,6 @@
 # TODO: implement my fancy binary xor comm protocol later
 define [
-  'engine.io-client/engine.io'
+  'engine.io-client/dist/engine.io'
 ], (eio) -> class Network
   constructor: ({ @engine }) ->
     @socket = null
