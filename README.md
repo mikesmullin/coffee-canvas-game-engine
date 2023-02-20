@@ -36,3 +36,6 @@ The multiplayer server (used in most recent demo).
 docker build -t mazehunt:local .
 docker run --name mazehunt -p 3000:3000 mazehunt:local
 ```
+
+Dedicated server is hosted here:  
+https://games.mikesmullin.com/mazehunt.html
